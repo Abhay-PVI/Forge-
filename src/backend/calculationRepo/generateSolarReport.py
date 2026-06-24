@@ -253,35 +253,35 @@ def generate_solar_report(data, filename="Solar_String_Sizing_Report.pdf"):
 # FLASK ROUTING BACKEND ENDPOINTS
 # =======================================================
 
-@app.route('/api/generate-solar-report', methods=['POST'])
-def handle_sync_generation():
-    try:
-        payload = request.get_json(silent=True) or {}
-        react_data = payload.get('values')
+# @app.route('/api/generate-solar-report', methods=['POST'])
+# def handle_sync_generation():
+#     try:
+#         payload = request.get_json(silent=True) or {}
+#         react_data = payload.get('values')
         
-        print("RECEIVED VALUES FROM REACT:", react_data)
+#         print("RECEIVED VALUES FROM REACT:", react_data)
 
-        if not react_data:
-            return jsonify({"status": "error", "message": "Missing form metrics values parameter object"}), 400
+#         if not react_data:
+#             return jsonify({"status": "error", "message": "Missing form metrics values parameter object"}), 400
 
-        pdf_buffer = io.BytesIO()
-        generate_solar_report(data=react_data, filename=pdf_buffer)
+#         pdf_buffer = io.BytesIO()
+#         generate_solar_report(data=react_data, filename=pdf_buffer)
         
-        return send_file(
-            pdf_buffer,
-            mimetype='application/pdf',
-            as_attachment=False,
-            download_name='Solar_String_Sizing_Report.pdf'
-        )
-    except Exception as e:
-        error_trace = traceback.format_exc()
-        print("Exception encountered during production compilation:")
-        print(error_trace)
-        return jsonify({
-            "status": "error",
-            "message": "Server error during report generation.",
-            "details": error_trace
-        }), 500
+#         return send_file(
+#             pdf_buffer,
+#             mimetype='application/pdf',
+#             as_attachment=False,
+#             download_name='Solar_String_Sizing_Report.pdf'
+#         )
+#     except Exception as e:
+#         error_trace = traceback.format_exc()
+#         print("Exception encountered during production compilation:")
+#         print(error_trace)
+#         return jsonify({
+#             "status": "error",
+#             "message": "Server error during report generation.",
+#             "details": error_trace
+#         }), 500
 
 
 @app.route('/api/generate-solar-report-test', methods=['GET'])

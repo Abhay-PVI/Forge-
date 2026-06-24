@@ -177,26 +177,47 @@ function TabBody({ tab, values, setValue, files, setFile, showErrors }) {
           if (!result.values || Object.keys(result.values).length === 0) {
             console.warn("parseModuleExcel returned an empty or missing values object:", result);
           }
-
+          const API_BASE =import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
+          
           async function triggerPdfCompilation(excelMetrics) {
             try {
-              const response = await fetch('http://127.0.0.1:5000/api/generate-solar-report', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ values: excelMetrics }),
-              });
+              const response = await fetch(
+                `${API_BASE}/generate-solar-report`,
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    values: excelMetrics,
+                  }),
+                }
+              );
 
               if (!response.ok) {
-                const faultData = await response.json().catch(() => ({}));
-                throw new Error(faultData.details || `Server response fault: ${response.status}`);
+                let errorMessage = `Server response fault: ${response.status}`;
+
+                try {
+                  const faultData = await response.json();
+                  errorMessage =
+                    faultData?.details ||
+                    faultData?.message ||
+                    errorMessage;
+                } catch {
+                  // ignore JSON parse failure
+                }
+
+                throw new Error(errorMessage);
               }
 
               const pdfBlob = await response.blob();
               const sessionUrl = window.URL.createObjectURL(pdfBlob);
-              window.open(sessionUrl, '_blank');
-              setTimeout(() => window.URL.revokeObjectURL(sessionUrl), 15000);
+              window.open(sessionUrl, "_blank");
+
+              setTimeout(() => {
+                window.URL.revokeObjectURL(sessionUrl);
+              }, 15000);
+
             } catch (pdfError) {
               console.error("PDF Pipeline Error:", pdfError);
               alert(`Failed to auto-generate PDF Report: ${pdfError.message}`);
@@ -434,32 +455,32 @@ export default function FormScreen({ report, vertical, sub, values, setValue, fi
     }
   };
 
-  const next =  () => {
+  const next = () => {
     const st = tabStatus(tab, values, files);
 
     if (st !== "complete") { setShowErrors(true); return; }
 
 
-  // ==========================
-  // ASHRAE FETCH
-  // ==========================
-if (
-  tab.id === "project" &&
-  values.latitude &&
-  values.longitude
-) {
-  generateAshrae(
-    Number(values.latitude),
-    Number(values.longitude)
-  );
-}
+    // ==========================
+    // ASHRAE FETCH
+    // ==========================
+    if (
+      tab.id === "project" &&
+      values.latitude &&
+      values.longitude
+    ) {
+      generateAshrae(
+        Number(values.latitude),
+        Number(values.longitude)
+      );
+    }
 
-  // }
+    // }
 
-  // const next =  () => {
-  //   const st = tabStatus(tab, values, files);
+    // const next =  () => {
+    //   const st = tabStatus(tab, values, files);
 
-  //   if (st !== "complete") { setShowErrors(true); return; }
+    //   if (st !== "complete") { setShowErrors(true); return; }
     // ==========================
     // VOC CSV PROCESSING
     // ==========================
