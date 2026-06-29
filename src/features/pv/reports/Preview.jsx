@@ -18,7 +18,8 @@ const TODAY = new Date().toLocaleDateString(undefined, { year: 'numeric', month:
 export default function Preview({ values, calc, files, onBack, onNew }) {
   const fname = docNumber(values) + '.docx';
   const [selectedFormat, setSelectedFormat] = useState("pdf");
-  
+  const [selectedPageSize, setPageSize] = useState("A4");
+  const [showStamp, setShowStamp] = useState(false);
   // Collapse state for the right download rail panel
   const [railCollapsed, setRailCollapsed] = useState(() => {
     const saved = localStorage.getItem("forge_rail_collapsed");
@@ -33,8 +34,14 @@ export default function Preview({ values, calc, files, onBack, onNew }) {
     });
   };
 
- const handleDownload = () => { if (selectedFormat === "pdf") { exportPdf( "PV_DBR-report", fname.replace(".docx", ".pdf") ); }
-  else { exportDocx( "PV_DBR-report", fname ); } };
+  const handleDownload = () => {
+    if (selectedFormat === "pdf") {
+      exportPdf("PV_DBR-report", fname.replace(".docx", ".pdf"), selectedPageSize);
+    } else {
+      exportDocx("PV_DBR-report", fname);
+    }
+  };
+
 
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
@@ -48,11 +55,11 @@ export default function Preview({ values, calc, files, onBack, onNew }) {
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 8, alignItems: 'center' }}>
           <button className="btn btn-soft btn-sm" onClick={onNew}><Icon name="plus" size={14} />New report</button>
           <button className="btn btn-primary btn-sm" onClick={handleDownload}><Icon name="download" size={14} />Download .docx</button>
-          
+
           {/* Toggle Rail Button panel */}
-          <button 
-            className="btn btn-ghost btn-sm" 
-            onClick={toggleRail} 
+          <button
+            className="btn btn-ghost btn-sm"
+            onClick={toggleRail}
             title={railCollapsed ? "Expand sidebar panel" : "Collapse sidebar panel"}
             style={{ height: 30, width: 30, padding: 0, display: 'grid', placeItems: 'center', marginLeft: 4 }}
           >
@@ -63,20 +70,20 @@ export default function Preview({ values, calc, files, onBack, onNew }) {
 
       {/* Main Layout Area - Flex container ensures smooth transition animations */}
       <div style={{ flex: 1, display: 'flex', minHeight: 0 }}>
-        
+
         {/* doc canvas */}
         <div style={{ flex: 1, overflowY: 'auto', background: 'var(--surface-2)', padding: '34px 0' }}>
-          <div style={{ display: 'grid', placeItems: 'start center' }} className="fade-up">
-            <ReportDoc values={values} calc={calc} files={files} solarCalcValues={values?.solarCalcValues} />
+          <div style={{ display: 'grid', placeItems: 'start center' }} className={`fade-up preview-size-${selectedPageSize.toLowerCase()}`}>
+            <ReportDoc values={values} calc={calc} files={files} solarCalcValues={values?.solarCalcValues} showStamp={showStamp} />
           </div>
         </div>
 
         {/* download rail */}
-        <div style={{ 
+        <div style={{
           width: railCollapsed ? 64 : 320,
-          borderLeft: '1px solid var(--border)', 
-          background: 'var(--surface)', 
-          overflowY: 'auto', 
+          borderLeft: '1px solid var(--border)',
+          background: 'var(--surface)',
+          overflowY: 'auto',
           overflowX: 'hidden',
           padding: railCollapsed ? '20px 0' : 20,
           transition: 'width 0.25s ease, padding 0.25s ease',
@@ -88,16 +95,16 @@ export default function Preview({ values, calc, files, onBack, onNew }) {
           {railCollapsed ? (
             /* Collapsed State View */
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, width: '100%' }}>
-              <button 
-                className="btn btn-primary" 
-                onClick={handleDownload} 
+              <button
+                className="btn btn-primary"
+                onClick={handleDownload}
                 title={`Download standard document: ${fname}`}
                 style={{ width: 40, height: 40, padding: 0, display: 'grid', placeItems: 'center', borderRadius: 8 }}
               >
                 <Icon name="download" size={16} />
               </button>
-              
-              <div 
+
+              <div
                 title="Generated from coded template STR v2.4. Formulae and static text are locked to the approved engineering standard."
                 style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--accent-soft)', color: 'var(--accent-text)', display: 'grid', placeItems: 'center', cursor: 'help' }}
               >
@@ -115,7 +122,53 @@ export default function Preview({ values, calc, files, onBack, onNew }) {
                     <div className="mono" style={{ fontSize: 12, fontWeight: 600, marginTop: 4, wordBreak: 'break-all', lineHeight: 1.4 }}>{fname}</div>
                   </div>
                 </div>
-                <button className="btn btn-primary" style={{ width: '100%', marginTop: 14 }} onClick={handleDownload}><Icon name="download" size={15}  />Download</button>
+                <button className="btn btn-primary" style={{ width: '100%', marginTop: 14 }} onClick={handleDownload}><Icon name="download" size={15} />Download</button>
+                
+                {/* Dynamic Slider Segment Switch */}
+                <div className="segmented-control" style={{ marginTop: "10px" }}>
+                  {/* Selector pill */}
+                  <div className={`segmented-control-pill ${selectedPageSize === "Letter" ? "left" : "right"}`} />
+                  
+                  {/* Letter option */}
+                  <div 
+                    onClick={() => setPageSize("Letter")}
+                    className={`segmented-control-option ${selectedPageSize === "Letter" ? "active" : ""}`}
+                  >
+                    Letter
+                  </div>
+                  
+                  {/* A4 option */}
+                  <div 
+                    onClick={() => setPageSize("A4")}
+                    className={`segmented-control-option ${selectedPageSize === "A4" ? "active" : ""}`}
+                  >
+                    A4
+                  </div>
+                </div>
+
+                {/* Stamp Certification Toggle Segment Switch */}
+                <div className="label-eyebrow" style={{ marginTop: "14px", marginBottom: "6px" }}>Certification Stamp</div>
+                <div className="segmented-control">
+                  {/* Selector pill */}
+                  <div className={`segmented-control-pill ${!showStamp ? "left" : "right"}`} />
+                  
+                  {/* No Stamp option */}
+                  <div 
+                    onClick={() => setShowStamp(false)}
+                    className={`segmented-control-option ${!showStamp ? "active" : ""}`}
+                  >
+                    No Stamp
+                  </div>
+                  
+                  {/* Stamp option */}
+                  <div 
+                    onClick={() => setShowStamp(true)}
+                    className={`segmented-control-option ${showStamp ? "active" : ""}`}
+                  >
+                    Add Stamp
+                  </div>
+                </div>
+
                 <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
                   <button className="btn btn-soft btn-sm" style={{ flex: 1 }} onClick={() => setSelectedFormat("docx")}>.docx</button>
                   <button className="btn btn-soft btn-sm" style={{ flex: 1 }} onClick={() => setSelectedFormat("pdf")}>.pdf</button>
@@ -125,11 +178,11 @@ export default function Preview({ values, calc, files, onBack, onNew }) {
               <div className="label-eyebrow" style={{ marginTop: 22, marginBottom: 10 }}>Document details</div>
               <div style={{ display: 'grid', gap: 1, background: 'var(--border)', borderRadius: 'var(--r-md)', overflow: 'hidden', border: '1px solid var(--border)' }}>
                 {[
-                  ['Project', V(values.projectName)], 
-                  ['Client', V(values.clientName)], 
-                  ['Revision', V(values.revision)], 
-                  ['String size', calc.valid && calc.feasible ? calc.recommended + ' modules' : '—'], 
-                  ['Pages', '3'], 
+                  ['Project', V(values.projectName)],
+                  ['Client', V(values.clientName)],
+                  ['Revision', V(values.revision)],
+                  ['String size', calc.valid && calc.feasible ? calc.recommended + ' modules' : '—'],
+                  ['Pages', '3'],
                   ['Generated', TODAY]
                 ].map(([k, v]) => (
                   <div key={k} style={{ display: 'flex', justifyContent: 'space-between', gap: 12, background: 'var(--surface)', padding: '9px 12px' }}>

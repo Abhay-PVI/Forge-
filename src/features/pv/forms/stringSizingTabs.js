@@ -143,16 +143,16 @@ export const STRING_SIZE_TABS = [{
       label: "Client Logo",
       type: "file"
     },
-    {
-      key: "issueDate",
-      label: "Issue Date",
-      type: "date"
-    },
-    {
-      key: "documentNumber",
-      label: "Document Number",
-      type: "text"
-    },
+    // {
+    //   key: "issueDate",
+    //   label: "Issue Date",
+    //   type: "date"
+    // },
+    // {
+    //   key: "documentNumber",
+    //   label: "Document Number",
+    //   type: "text"
+    // },
     {
       key: "submittedTo",
       label: "Submitted To",
@@ -575,7 +575,17 @@ export const STRING_SIZE_TABS = [{
   label: "Module Datasheet Excel",
   required: false,
   hint: "Upload extracted module datasheet workbook"
-},
+}, {
+  key: "Results_of_26-year_voltage",
+  label: "Results of 26-year historical SAM simulation voltage chart",
+  hint: "Image file (PNG, JPG) · simulation chart",
+  required: false
+}, {
+  key: "Results_of_26-year_current",
+  label: "Results of 26-year historical SAM simulation current chart",
+  hint: "Image file (PNG, JPG) · simulation chart",
+  required: false
+}
   
   ]
 },

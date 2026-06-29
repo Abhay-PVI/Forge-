@@ -24,6 +24,46 @@ export default function Field({ field, value, onChange, error }) {
         style={error ? errStyle : null}
       />
     );
+  } else if (field.type === 'file') {
+    control = (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <input
+          id={id}
+          type="file"
+          accept="image/*"
+          className="input"
+          onChange={(event) => {
+            const file = event.target.files[0];
+            if (file) {
+              const reader = new FileReader();
+              reader.onloadend = () => {
+                onChange(reader.result);
+              };
+              reader.readAsDataURL(file);
+            }
+          }}
+          style={error ? errStyle : null}
+        />
+        {value && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span style={{ fontSize: 11, color: 'var(--text-3)' }}>Current logo:</span>
+            <img 
+              src={value} 
+              alt="Preview" 
+              style={{ 
+                maxHeight: 30, 
+                maxWidth: 100, 
+                objectFit: 'contain', 
+                border: '1px solid var(--border)', 
+                borderRadius: 'var(--r-xs)', 
+                padding: 2, 
+                background: 'white' 
+              }} 
+            />
+          </div>
+        )}
+      </div>
+    );
   } else if (field.type === 'select') {
     control = (
       <select

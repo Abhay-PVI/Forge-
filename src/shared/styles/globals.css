@@ -210,6 +210,7 @@ input, select, textarea { font-family: inherit; }
 
 .btn-sm { height: 32px; padding: 0 12px; font-size: 12.5px; }
 .btn-lg { height: 44px; padding: 0 22px; font-size: 14.5px; }
+.btn-selected:hover { background: #15803d; border-color: #15803d; }
 
 /* ---------- inputs ---------- */
 .field-label {
@@ -365,4 +366,90 @@ textarea.input { height: auto; min-height: 78px; padding: 9px 11px; line-height:
     overflow: visible !important;
     page-break-inside: avoid !important;
   }
+}
+
+/* Page size overrides for report previews */
+.preview-size-a4 .page,
+.preview-size-a4 .cover-page,
+.preview-size-a4 .report-page {
+  width: 210mm !important;
+  min-height: 297mm !important;
+}
+
+.preview-size-letter .page,
+.preview-size-letter .cover-page,
+.preview-size-letter .report-page {
+  width: 215.9mm !important;
+  min-height: 279.4mm !important;
+}
+
+/* Ensure smooth page transitions and centering in report preview panels */
+.page,
+.cover-page,
+.report-page {
+  margin: 20px auto !important;
+  background: #ffffff !important;
+  border: 1px solid #d8dee7 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08), 0 3px 10px rgba(0, 0, 0, 0.04) !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+  transition: width 0.25s ease, min-height 0.25s ease;
+}
+
+/* Reusable Segmented Control Slider switch */
+.segmented-control {
+  display: flex;
+  position: relative;
+  background: var(--surface-3);
+  padding: 3px;
+  border-radius: var(--r-md);
+  height: 36px;
+  border: 1px solid var(--border);
+  user-select: none;
+}
+
+.segmented-control-pill {
+  position: absolute;
+  top: 3px;
+  width: calc(50% - 4px);
+  height: calc(100% - 6px);
+  background: var(--surface);
+  border-radius: calc(var(--r-md) - 2px);
+  box-shadow: var(--sh-sm);
+  transition: left 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+}
+
+.segmented-control-pill.left {
+  left: 3px;
+}
+
+.segmented-control-pill.right {
+  left: calc(50% + 1px);
+}
+
+.segmented-control-option {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-3);
+  z-index: 2;
+  cursor: pointer;
+  transition: color 0.2s ease, font-weight 0.2s ease;
+}
+
+.segmented-control-option.active {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* Center-align report tables */
+#PV_DBR-report table,
+#bess-report table {
+  margin-left: auto !important;
+  margin-right: auto !important;
 }

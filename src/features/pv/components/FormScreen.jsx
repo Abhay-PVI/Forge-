@@ -13,6 +13,56 @@ import { buildMinVoltageDegradationTable } from "../forms/utils/buildVoc&IscTabl
 import { extractPvsyst, generateAshrae, } from '../api/extractionApi';
 import { parseModuleExcel } from "../forms/utils/parseModuleExcel";
 
+async function convertPdfToImages(pdfBlob) {
+  return new Promise((resolve, reject) => {
+    if (window.pdfjsLib) {
+      processPdf(window.pdfjsLib, pdfBlob, resolve, reject);
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js";
+    script.onload = () => {
+      const pdfjsLib = window.pdfjsLib;
+      pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js";
+      processPdf(pdfjsLib, pdfBlob, resolve, reject);
+    };
+    script.onerror = () => reject(new Error("Failed to load PDF.js library"));
+    document.head.appendChild(script);
+  });
+}
+
+async function processPdf(pdfjsLib, pdfBlob, resolve, reject) {
+  try {
+    const arrayBuffer = await pdfBlob.arrayBuffer();
+    const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+    const pdf = await loadingTask.promise;
+    const images = [];
+
+    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+      const page = await pdf.getPage(pageNum);
+      const viewport = page.getViewport({ scale: 2.0 }); 
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+
+      const renderContext = {
+        canvasContext: context,
+        viewport: viewport
+      };
+
+      await page.render(renderContext).promise;
+      images.push(canvas.toDataURL("image/png"));
+    }
+
+    resolve(images);
+  } catch (error) {
+    reject(error);
+  }
+}
+
+
 // export default function FormScreen() {
 //   return <div>Form Screen</div>;
 // }
@@ -136,6 +186,23 @@ function TabBody({ tab, values, setValue, files, setFile, showErrors }) {
       setFile(key, value);
 
       // ===================
+      // 26-YEAR HISTORICAL IMAGES
+      // ===================
+      if (key === "Results_of_26-year_voltage" || key === "Results_of_26-year_current") {
+        if (value && value.file) {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            const dataUrl = reader.result;
+            console.log(`[FormScreen] Converted ${key} to Base64, length: ${dataUrl.length}`);
+            setValue(key, `src="${dataUrl}"`);
+          };
+          reader.readAsDataURL(value.file);
+        } else {
+          setValue(key, "");
+        }
+      }
+
+      // ===================
       // PVSYST PDF
       // ===================
 
@@ -254,15 +321,15 @@ function TabBody({ tab, values, setValue, files, setFile, showErrors }) {
               const pdfBlob = await pdfResponse.blob();
               console.log("Appendix document asset successfully compiled:", pdfBlob);
 
-              // Assign the raw blob data directly to your parent pipeline state
-              // For example: setReportAppendixFile(pdfBlob);
-
-              // Optional: Keep temporary window open handler for verification
-              const sessionUrl = window.URL.createObjectURL(pdfBlob);
-              window.open(sessionUrl, "_blank");
-              setTimeout(() => {
-                window.URL.revokeObjectURL(sessionUrl);
-              }, 15000);
+              // Convert PDF pages to high-resolution base64 images and store in state
+              try {
+                console.log("Converting appendix PDF pages to images...");
+                const images = await convertPdfToImages(pdfBlob);
+                setValue("appendixPages", images);
+                console.log("Appendix PDF successfully converted. Total pages:", images.length);
+              } catch (convErr) {
+                console.error("Failed to convert PDF pages to images:", convErr);
+              }
 
             } catch (pdfError) {
               console.error("Solar Report Processing Error:", pdfError);
@@ -310,7 +377,12 @@ function TabBody({ tab, values, setValue, files, setFile, showErrors }) {
               spec={upload}
               file={files[upload.key]}
               onSet={(value) => handleFileUpload(upload.key, value)}
-              onClear={() => setFile(upload.key, null)}
+              onClear={() => {
+                setFile(upload.key, null);
+                if (upload.key === "Results_of_26-year_voltage" || upload.key === "Results_of_26-year_current") {
+                  setValue(upload.key, "");
+                }
+              }}
             />
             {errFor(upload, true) && (
               <div className="field-hint" style={{ color: 'var(--red-text)', marginLeft: 4 }}>

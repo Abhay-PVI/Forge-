@@ -101,7 +101,7 @@ export function buildPvsystTables(pvsystData) {
     ["Beam Effective on Rear Side", "%", pvsystData.irradiation?.beamEffectiveRearSide],
     ["Shading Loss on Rear Side", "%", pvsystData.irradiation?.shadingLossRearSide],
     ["Global Irradiance on Rear Side", "%", pvsystData.irradiation?.globalIrradianceRearSide]
-  ];
+  ] .filter(([, , value]) => value !== null && value !== undefined);;
 
   const energyRows = [
     ["Array Nominal Energy (STC)", "MWh", pvsystData.energy?.arrayNominalEnergyAtSTC],
@@ -126,7 +126,7 @@ export function buildPvsystTables(pvsystData) {
     ["Active Energy Injected to Grid", "MWh", pvsystData.energy?.activeEnergyInjectedToGrid],
     ["Specific Yield", "kWh/kWp", pvsystData.energy?.specificYield],
     ["DC CUF", "%", pvsystData.energy?.dcCUF]
-  ];
+  ].filter(([, , value]) => value !== null && value !== undefined);;
 
   const buildTable = (title, rows) => {
     let html = `
@@ -225,3 +225,4 @@ export function buildSolarVocTemplateValues({
 
     return out;
 }
+

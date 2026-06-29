@@ -9,10 +9,10 @@
   <style>
     @media print {
       @page {
-        size: A4;
+        size: letter;
         width: 201mm;
         /* margin: 10mm; */
-          page-break-after: always4
+          page-break-after: always;
       }
 
       body {
@@ -252,20 +252,10 @@
       </table>
     </div>
 
-    <div class="seal-container">
+    <div class="seal-container" style="display: {{SHOW_STAMP}};">
       <!-- <h3 class="sub-heading">Professional Engineer Seal</h3> -->
       <div class="seal-box">
-        {{#if SEAL_IMAGE}}
-        <img src="{{SEAL_IMAGE}}" alt="Professional Engineer Seal" class="seal-img" />
-        {{else}}
-        <div class="seal-placeholder">
-          <strong>STATE OF TEXAS</strong><br>
-          JOSHUA D. MILLS<br>
-          No. 129710<br>
-          LICENSED PROFESSIONAL ENGINEER<br>
-          {{ISSUE_DATE}}
-        </div>
-        {{/if}}
+        {{SEAL_CONTENT}}
       </div>
     </div>
 

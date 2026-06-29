@@ -5,6 +5,7 @@ import { buildVocTable, buildIscTable, buildMinVoltageDegradationTable, buildPvs
 import coverPage from "../../../shared/reports/coverPage.html?raw";
 import documentControlPage from "../../../shared/reports/documentControlPage.html?raw";
 import listOfTables from "../../../shared/reports/listOfTables.html?raw";
+import listOfAbbreviations from "../../../shared/reports/listOfAbbreviations.html?raw";
 import { fillTemplate } from "../../report-engine/templateEngine";
 import tableOfContents from "../../../shared/reports/tableOfContents.html?raw";
 //C:\Users\AbhayPratapSingh\work\June\260605\HV DBR\Forge\forge-react\src\backend\Ashrae
@@ -52,7 +53,7 @@ function CoverStat({ label, value }) {
 
 function DocRow({ k, v }) { return ( <tr> <td>{k}</td> <td>{v}</td> </tr> ); }
 
-export default function ReportDoc( { values = {}, files = {}, solarCalcValues = null })
+export default function ReportDoc( { values = {}, files = {}, solarCalcValues = null, showStamp = false })
  {
   const safeValues = values;
   const safeFiles = files;
@@ -108,11 +109,41 @@ console.log("solarCalcValues Safest Value  =", safeSolarCalcValues);
 
 const peakTableData = values?.peakTableData || {};
 
+
+  const voltImg = values["Results_of_26-year_voltage"] || "";
+  const currImg = values["Results_of_26-year_current"] || "";
+
+  const formatImgReplacement = (imgData) => {
+    if (!imgData) return 'style="display: none;"';
+    const base64 = imgData.startsWith('src="') 
+      ? imgData.match(/src="([^"]+)"/)?.[1] || imgData 
+      : imgData;
+      
+    return `src="${base64}" style="max-width: 100%; height: auto; border: 1px solid #cbd5e1; border-radius: 6px; display: block; margin: 15px auto;"`;
+  };
+
+  const voltReplacement = formatImgReplacement(voltImg);
+  const currReplacement = formatImgReplacement(currImg);
+
+  const sealContent = values.SEAL_IMAGE
+    ? `<img src="${values.SEAL_IMAGE}" alt="Professional Engineer Seal" class="seal-img" />`
+    : `
+        <div class="seal-placeholder">
+          <strong>STATE OF TEXAS</strong><br>
+          JOSHUA D. MILLS<br>
+          No. 129710<br>
+          LICENSED PROFESSIONAL ENGINEER<br>
+          ${reportMeta.ISSUE_DATE || TODAY}
+        </div>
+      `;
+
 const templateValues = {
   ...values,
   ...reportMeta,
   ...peakTableData, // Spreads t1_datetime, t1_ghi, t2_... etc. directly into your template context
   ...solarVocTemplateValues,
+  submittedTo: values.submittedTo || "Signal Energy",
+  submittedToAddress: values.submittedToAddress || "2034 Hamilton Place BLVD. Suite 100 Chattanooga, TN 37421",
   weather_station_city: values.weather_station_city,
   weather_station_state: values.weather_station_state,
   weather_station_country: values.weather_station_country,
@@ -126,10 +157,17 @@ const templateValues = {
 
   N_MIN: nMin.exact,
   N_MIN_ROUNDED: nMin.rounded,
-  
+  SHOW_STAMP: showStamp ? "flex" : "none",
+  "Results_of_26-year_voltage": voltReplacement,
+  "Results_of_26-year_Voltage": voltReplacement,
+  "Results_of_26-year_current": currReplacement,
+  "Results_of_26-year_Current": currReplacement,
+  SEAL_CONTENT: sealContent,
 };
 
 console.log("ReportDoc values prop:", values);
+console.log("[ReportDoc] Results_of_26-year_voltage length:", (values["Results_of_26-year_voltage"] || "").length);
+console.log("[ReportDoc] Results_of_26-year_current length:", (values["Results_of_26-year_current"] || "").length);
 console.log("ReportDoc templateValues:", templateValues);
 
   console.log(
@@ -154,17 +192,29 @@ console.log("ReportDoc templateValues:", templateValues);
   ].includes(k))
 );
 
-// const degradationValues =
-//   buildMinVoltageDegradationTable(
-//     Number(values.moduleVmp) *
-//       Number(values.numberOfModules),
-//     Number(values.moduleDegradation),
-//     30
-//   );${coverPage} ${documentControlPage} ${tableOfContents} ${listOfTables}
 
 
-const completeTemplate = `${coverPage} ${documentControlPage} ${tableOfContents} ${listOfTables} ${template} `;
-const reportHtml = fillTemplate(completeTemplate, templateValues);
+
+  const appendixPages = values.appendixPages || [];
+  let appendixTemplate = "";
+
+  if (appendixPages.length > 0) {
+    appendixTemplate = `
+      <div class="report-page appendix-page" style="page-break-before: always; page-break-after: always; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; box-sizing: border-box;">
+        <h1 style="font-size: 36pt; color: #163c7a; font-weight: 700; margin-top: 250px;">Appendix</h1>
+        <p style="font-size: 14pt; color: #64748b; margin-top: 15px;">Solar String Sizing Calculations & Specs</p>
+      </div>
+      
+      ${appendixPages.map((imgData, index) => `
+        <div class="page" style="page-break-before: always; padding: 0 !important; display: flex; justify-content: center; align-items: center;">
+          <img src="${imgData}" style="width: 100%; height: 100%; object-fit: contain; display: block;" alt="Appendix Page ${index + 1}" />
+        </div>
+      `).join('')}
+    `;
+  }
+
+  const completeTemplate = `${coverPage} ${documentControlPage} ${tableOfContents} ${listOfTables} ${listOfAbbreviations} ${template} ${appendixTemplate}`;
+  const reportHtml = fillTemplate(completeTemplate, templateValues);
 
 
 

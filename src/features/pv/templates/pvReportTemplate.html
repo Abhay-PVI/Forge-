@@ -70,7 +70,6 @@
   <div class="page">
 
 
-
     <!-- <h1>Table of Contents</h1>
       <ul id="toc-list"></ul> -->
 
@@ -950,6 +949,10 @@
 
     </table>
 
+    <div>
+      <img {{Results_of_26-year_Current}}>
+    </div>
+
     <p>
       From the above table, it is evident that the average of the highest
       3-hour short circuit current obtained is
@@ -964,39 +967,39 @@
     <h4>Table 5: Highest 3-hour current from SAM simulation - NSRDB</h4>
 
     <table border="1" style="border-collapse: collapse; width: 100%; text-align: center;">
-  <thead>
-    <tr>
-      <th>Peak Slot</th>
-      <th>Date / Time</th>
-      <th>GHI</th>
-      <th>DHI</th>
-      <th>Isc</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Hr-1 Peak</td>
-      <td>{{t1_datetime}}</td>
-      <td>{{t1_ghi}}</td>
-      <td>{{t1_dhi}}</td>
-      <td>{{t1_isc}}</td>
-    </tr>
-    <tr>
-      <td>Hr-2 Peak</td>
-      <td>{{t2_datetime}}</td>
-      <td>{{t2_ghi}}</td>
-      <td>{{t2_dhi}}</td>
-      <td>{{t2_isc}}</td>
-    </tr>
-    <tr>
-      <td>Hr-3 Peak</td>
-      <td>{{t3_datetime}}</td>
-      <td>{{t3_ghi}}</td>
-      <td>{{t3_dhi}}</td>
-      <td>{{t3_isc}}</td>
-    </tr>
-  </tbody>
-</table>
+      <thead>
+        <tr>
+          <th>Peak Slot</th>
+          <th>Date / Time</th>
+          <th>GHI</th>
+          <th>DHI</th>
+          <th>Isc</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Hr-1 Peak</td>
+          <td>{{t1_datetime}}</td>
+          <td>{{t1_ghi}}</td>
+          <td>{{t1_dhi}}</td>
+          <td>{{t1_isc}}</td>
+        </tr>
+        <tr>
+          <td>Hr-2 Peak</td>
+          <td>{{t2_datetime}}</td>
+          <td>{{t2_ghi}}</td>
+          <td>{{t2_dhi}}</td>
+          <td>{{t2_isc}}</td>
+        </tr>
+        <tr>
+          <td>Hr-3 Peak</td>
+          <td>{{t3_datetime}}</td>
+          <td>{{t3_ghi}}</td>
+          <td>{{t3_dhi}}</td>
+          <td>{{t3_isc}}</td>
+        </tr>
+      </tbody>
+    </table>
 
     <p>
       The resultant gain percentage, incorporating both irradiance gain and temperature
@@ -1034,13 +1037,16 @@
 
     <h4>Table 6: Summary of ASHRAE Temperature Analysis</h4>
 
-    <!-- <table class="compact-table" border="1">
-      <th rowspan="2">DataPoint</th>
-      <th rowspan="2">Condi<br>tion</th>
-      <th rowspan="2">Temp<br>(°C)</th>
-      <th rowspan="2">Description</th>
-      <th colspan="6">Summary of Results</th>
-      <th rowspan="2">Units</th>
+
+    <table class="compact-table" border="1">
+      <tr>
+        <th rowspan="2">DataPoint</th>
+        <th rowspan="2">Condi<br>tion</th>
+        <th rowspan="2">Temp<br>(°C)</th>
+        <th rowspan="2">Description</th>
+        <th colspan="6">Summary of Results</th>
+        <th rowspan="2">Units</th>
+      </tr>
 
       <tr>
         <th>{{wp_1}}</th>
@@ -1052,8 +1058,8 @@
       </tr>
 
       <!-- ASHRAE Mean -->
-      <!-- <tr>
-        <td rowspan="3">ASHRAE Mean ({{modules_series}} Modules in Series)</td>
+      <tr>
+        <td rowspan="3">ASHRAE Mean ({{ashrae_modules_series}} Modules in Series)</td>
         <td>Min</td>
         <td>{{tempMin}}</td>
         <td>Max Voc</td>
@@ -1070,12 +1076,12 @@
         <td>Max</td>
         <td>{{tempCellMax}}</td>
         <td>Modules in Series</td>
-        <td>{{modules_series}}</td>
-        <td>{{modules_series}}</td>
-        <td>{{modules_series}}</td>
-        <td>{{modules_series}}</td>
-        <td>{{modules_series}}</td>
-        <td>{{modules_series}}</td>
+        <td>{{ashrae_modules_series}}</td>
+        <td>{{ashrae_modules_series}}</td>
+        <td>{{ashrae_modules_series}}</td>
+        <td>{{ashrae_modules_series}}</td>
+        <td>{{ashrae_modules_series}}</td>
+        <td>{{ashrae_modules_series}}</td>
         <td>No.</td>
       </tr>
 
@@ -1092,8 +1098,8 @@
       </tr>
 
       <!-- PV Syst -->
-      <!-- <tr>
-        <td rowspan="3">PV Syst ({{modules_series}} Modules in Series)</td>
+      <tr>
+        <td rowspan="3">PV Syst ({{pvsyst_modules_series}} Modules in Series)</td>
         <td>Min</td>
         <td>{{tempMin}}</td>
         <td>Max Voc</td>
@@ -1110,12 +1116,12 @@
         <td>Max</td>
         <td>{{tempCellMax}}</td>
         <td>Modules in Series</td>
-        <td>{{modules_series}}</td>
-        <td>{{modules_series}}</td>
-        <td>{{modules_series}}</td>
-        <td>{{modules_series}}</td>
-        <td>{{modules_series}}</td>
-        <td>{{modules_series}}</td>
+        <td>{{pvsyst_modules_series}}</td>
+        <td>{{pvsyst_modules_series}}</td>
+        <td>{{pvsyst_modules_series}}</td>
+        <td>{{pvsyst_modules_series}}</td>
+        <td>{{pvsyst_modules_series}}</td>
+        <td>{{pvsyst_modules_series}}</td>
         <td>No.</td>
       </tr>
 
@@ -1130,108 +1136,7 @@
         <td>{{pvsyst_string_6}}</td>
         <td>V</td>
       </tr>
-
-    </table> --> --> -->
-
- <table class="compact-table" border="1">
-  <tr>
-    <th rowspan="2">DataPoint</th>
-    <th rowspan="2">Condi<br>tion</th>
-    <th rowspan="2">Temp<br>(°C)</th>
-    <th rowspan="2">Description</th>
-    <th colspan="6">Summary of Results</th>
-    <th rowspan="2">Units</th>
-  </tr>
-
-  <tr>
-    <th>{{wp_1}}</th>
-    <th>{{wp_2}}</th>
-    <th>{{wp_3}}</th>
-    <th>{{wp_4}}</th>
-    <th>{{wp_5}}</th>
-    <th>{{wp_6}}</th>
-  </tr>
-
-  <!-- ASHRAE Mean -->
-  <tr>
-    <td rowspan="3">ASHRAE Mean ({{ashrae_modules_series}} Modules in Series)</td>
-    <td>Min</td>
-    <td>{{tempMin}}</td>
-    <td>Max Voc</td>
-    <td>{{ashrae_voc_1}}</td>
-    <td>{{ashrae_voc_2}}</td>
-    <td>{{ashrae_voc_3}}</td>
-    <td>{{ashrae_voc_4}}</td>
-    <td>{{ashrae_voc_5}}</td>
-    <td>{{ashrae_voc_6}}</td>
-    <td>V</td>
-  </tr>
-
-  <tr>
-    <td>Max</td>
-    <td>{{tempCellMax}}</td>
-    <td>Modules in Series</td>
-    <td>{{ashrae_modules_series}}</td>
-    <td>{{ashrae_modules_series}}</td>
-    <td>{{ashrae_modules_series}}</td>
-    <td>{{ashrae_modules_series}}</td>
-    <td>{{ashrae_modules_series}}</td>
-    <td>{{ashrae_modules_series}}</td>
-    <td>No.</td>
-  </tr>
-
-  <tr>
-    <td colspan="2"></td>
-    <td>Max String Voc</td>
-    <td>{{ashrae_string_1}}</td>
-    <td>{{ashrae_string_2}}</td>
-    <td>{{ashrae_string_3}}</td>
-    <td>{{ashrae_string_4}}</td>
-    <td>{{ashrae_string_5}}</td>
-    <td>{{ashrae_string_6}}</td>
-    <td>V</td>
-  </tr>
-
-  <!-- PV Syst -->
-  <tr>
-    <td rowspan="3">PV Syst ({{pvsyst_modules_series}} Modules in Series)</td>
-    <td>Min</td>
-    <td>{{tempMin}}</td>
-    <td>Max Voc</td>
-    <td>{{pvsyst_voc_1}}</td>
-    <td>{{pvsyst_voc_2}}</td>
-    <td>{{pvsyst_voc_3}}</td>
-    <td>{{pvsyst_voc_4}}</td>
-    <td>{{pvsyst_voc_5}}</td>
-    <td>{{pvsyst_voc_6}}</td>
-    <td>V</td>
-  </tr>
-
-  <tr>
-    <td>Max</td>
-    <td>{{tempCellMax}}</td>
-    <td>Modules in Series</td>
-    <td>{{pvsyst_modules_series}}</td>
-    <td>{{pvsyst_modules_series}}</td>
-    <td>{{pvsyst_modules_series}}</td>
-    <td>{{pvsyst_modules_series}}</td>
-    <td>{{pvsyst_modules_series}}</td>
-    <td>{{pvsyst_modules_series}}</td>
-    <td>No.</td>
-  </tr>
-
-  <tr>
-    <td colspan="2"></td>
-    <td>Max String Voc</td>
-    <td>{{pvsyst_string_1}}</td>
-    <td>{{pvsyst_string_2}}</td>
-    <td>{{pvsyst_string_3}}</td>
-    <td>{{pvsyst_string_4}}</td>
-    <td>{{pvsyst_string_5}}</td>
-    <td>{{pvsyst_string_6}}</td>
-    <td>V</td>
-  </tr>
-</table>
+    </table>
 
     <p>
 
@@ -1260,6 +1165,12 @@
 
 
     {{YEARLY_VOC_TABLE}}
+
+    <div>
+      <img {{Results_of_26-year_voltage}}>
+    </div>
+
+
     <p>
       From the above table it can be observed that with {{modules_series}} modules in series using SAM simulation
       method and NSRDB
@@ -2284,6 +2195,156 @@
         <h2>8.0 PVsyst Energy Loss Analysis</h2>
 
         {{PVSYST_ENERGY_TABLE}}
+
+        <h3 style="color:#2F5597; margin-bottom:5px;">
+          4.3 Description &amp; Basis of Losses Considered in PVsyst
+        </h3>
+
+        <p><strong>Table 18: Losses Description- PVSyst</strong></p>
+
+        <table style="width:100%; border-collapse:collapse; font-family:Arial, sans-serif;">
+          <thead>
+            <tr style="background-color:#002060; color:white;">
+              <th style="border:1px solid #000; padding:8px; text-align:left;">Loss Parameter</th>
+              <th style="border:1px solid #000; padding:8px; text-align:left;">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="border:1px solid #000; padding:8px;">Near shading loss</td>
+              <td style="border:1px solid #000; padding:8px;">
+                Modules are arranged in portrait with a collector bandwidth of 2.382m. PVsyst estimates the near shading
+                losses based on the configuration of the table and the interrow pitch which has been maintained at 6.858
+                meters.
+              </td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #000; padding:8px;">IAM factor</td>
+              <td style="border:1px solid #000; padding:8px;">
+                IAM losses of the modules have been considered based on the definition of PV modules option from the
+                .PAN file provided by {{IAM_factor}}.
+              </td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #000; padding:8px;">Soiling loss factor</td>
+              <td style="border:1px solid #000; padding:8px;">
+                {{Soiling_loss_factor}} soiling loss has been considered per Appendix B Project Energy Model Inputs.
+              </td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #000; padding:8px;">Ground reflection on the front side</td>
+              <td style="border:1px solid #000; padding:8px;">
+                PVsyst takes into consideration the contribution of the irradiance reflected by the ground which is
+                between the rows and reaches the front side of the PV collectors considering the albedo, geometry, and
+                full calculation of the ground points.
+              </td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #000; padding:8px;">Ground reflection loss (albedo)</td>
+              <td style="border:1px solid #000; padding:8px;">
+                PVsyst considers the loss of irradiance due to the reflection (1 - Albedo).
+              </td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #000; padding:8px;">PV loss due to irradiance level</td>
+              <td style="border:1px solid #000; padding:8px;">
+                The efficiency of a PV Module reduces at low light intensities. The loss in energy due to low irradiance
+                is calculated by the software based on the Module Technical parameters, i.e., from Rshunt and Rseries
+                considering a single diode model.
+              </td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #000; padding:8px;">PV loss due to temperature</td>
+              <td style="border:1px solid #000; padding:8px;">
+                PV modules performance reduces with an increase in the temperature. PVsyst calculates the loss factor
+                associated with rising temperature based on the module temperature coefficients and imported weather
+                data.
+              </td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #000; padding:8px;">Electrical Shading Effect</td>
+              <td style="border:1px solid #000; padding:8px;">
+                Shading losses accounting for partial shading on the solar modules. PVI has considered the string
+                partition into account while performing the EYA analysis.
+              </td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #000; padding:8px;">Module quality loss</td>
+              <td style="border:1px solid #000; padding:8px;">
+                Module quality loss is considered as {{Module_quality_loss}} for gain.
+              </td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #000; padding:8px;">LID – Light-induced degradation</td>
+              <td style="border:1px solid #000; padding:8px;">
+                LID losses have been considered as {{LID – Light-induced_degradation}}.
+              </td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #000; padding:8px;">Mismatch loss, modules, and strings</td>
+              <td style="border:1px solid #000; padding:8px;">
+                Modules are sorted according to the parameters obtained during the flash test and every module would not
+                have the same voltage and current characteristics. A mismatch loss has been considered at {{Mismatch_loss_modules}} (Module)
+                and {{Mismatch_loss_String}} (String) per Appendix B Project Energy Model Inputs.
+              </td>
+            </tr>
+
+            <tr>
+              <td style="border:1px solid #000; padding:8px;">DC Ohmic wiring loss</td>
+              <td style="border:1px solid #000; padding:8px;">
+                The estimated DC losses at IFC design stage are {{DC_Ohmic_wiring_loss}} at STC.
+              </td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #000; padding:8px;">Inverter Loss during operation</td>
+              <td style="border:1px solid #000; padding:8px;">
+                PVsyst estimates the inverter loss during the operation considering the efficiency of the inverters.
+              </td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #000; padding:8px;">Inverter Loss over nominal inv. Power</td>
+              <td style="border:1px solid #000; padding:8px;">
+                The "Overload loss" is the sum of differences between the available Pmpp and the effective limited power
+                accepted by the inverter according to Pnom. This value is computed at each simulation time step by the
+                PVsyst software.
+              </td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #000; padding:8px;">Auxiliaries</td>
+              <td style="border:1px solid #000; padding:8px;">
+                For the Yield Assessment, an auxiliary consumption of {{Auxiliaries}} has been considered based on the estimate of
+                these losses in similar capacity projects.
+              </td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #000; padding:8px;">AC ohmic loss</td>
+              <td style="border:1px solid #000; padding:8px;">
+                AC ohmic loss from Inverter to Transformer has been calculated at {{AC_ohmic_loss}} at STC based on IFC design
+                takeoffs.
+              </td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #000; padding:8px;">Medium voltage transformer loss</td>
+              <td style="border:1px solid #000; padding:8px;">
+                MV transformer losses have been considered based on the available data provided in the "Transformer Spec
+                Sheet" for a {{Medium_voltage_transformer_loss}} MVA transformer.
+              </td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #000; padding:8px;">HV Transformer</td>
+              <td style="border:1px solid #000; padding:8px;">
+                HV transformer losses have been considered based on the available data provided in the "Transformer Spec
+                Sheet" for a 220 MVA transformer.
+              </td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #000; padding:8px;">Unused energy (grid limitation)</td>
+              <td style="border:1px solid #000; padding:8px;">
+                Energy loss due to grid limitation of 280 MWac.
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
   </div>
 
