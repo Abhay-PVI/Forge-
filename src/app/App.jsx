@@ -10,7 +10,7 @@ import ReportList from "../features/dashboard/components/ReportList";
 import FormScreen from "../features/pv/components/FormScreen.jsx";
 import Generating from "../features/pv/reports/Generating.jsx";
 import Preview from "../features/pv/reports/Preview.jsx";
-import BessPreview from "../features/bess/reports/BessPreview";
+import BessPreview from "../features/electrical/bess/bess-sizing/reports/BessPreview";
 
 import { USER } from "../data/constants";
 
@@ -19,10 +19,10 @@ import computeStringSizing from "../features/pv/calculations/stringSizing";
 
 import { findReport } from "../data/navigation";
 
-import BessFormScreen from "../features/bess/components/BessFormScreen";
-import { BESS_DEFAULTS } from "../features/bess/forms/bessDefaults";
-import BessGenerating from "../features/bess/reports/bessGenerating.jsx";
-import BessReportDoc from "../features/bess/reports/BessReportDoc.jsx";
+import BessFormScreen from "../features/electrical/bess/bess-sizing/components/BessFormScreen";
+import { BESS_DEFAULTS } from "../features/electrical/bess/bess-sizing/forms/bessDefaults";
+import BessGenerating from "../features/electrical/bess/bess-sizing/reports/bessGenerating.jsx";
+import BessReportDoc from "../features/electrical/bess/bess-sizing/reports/BessReportDoc.jsx";
 
 
 export default function App() {

@@ -1,6 +1,2 @@
-export function bessDocNumber(values) {
-  const code = values?.projectCode || "SH2";
-  const rev = values?.revision || "R0";
-
-  return `${code}-STR-${rev}`;
-}
+// Deprecated: Relocated to src/features/electrical/bess/bess-sizing/forms/utils/bessDocNumber.js
+export * from "../../../electrical/bess/bess-sizing/forms/utils/bessDocNumber";

@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PV Module Data Sheet | Forge</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  :root {
+    --navy:   #1F3864;
+    --blue:   #2E75B6;
+    --lblue:  #DEEAF1;
+    --accent: #4FAEE8;
+    --text:   #1a1a2e;
+    --muted:  #6b7280;
+    --border: #9DC3E6;
+    --bg:     #f0f6fc;
+    --card:   #ffffff;
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", Calibri, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── Top bar ── */
+  header {
+    background: var(--navy);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 32px;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,.3);
+  }
+  header .logo { font-size: 20px; font-weight: 700; letter-spacing: 1px; }
+  header .logo span { color: var(--accent); }
+  header .actions { display: flex; gap: 10px; }
+  .btn {
+    padding: 8px 20px; border-radius: 6px; font-size: 13px; font-weight: 600;
+    cursor: pointer; border: none; transition: .18s;
+  }
+  .btn-primary  { background: var(--accent); color: #fff; }
+  .btn-primary:hover  { background: #3898cc; }
+  .btn-outline  { background: transparent; color: #fff; border: 1.5px solid rgba(255,255,255,.4); }
+  .btn-outline:hover  { background: rgba(255,255,255,.1); }
+  .btn-success  { background: #27ae60; color: #fff; }
+  .btn-success:hover  { background: #1e8449; }
+
+  /* ── Layout ── */
+  main { max-width: 1100px; margin: 32px auto; padding: 0 24px; }
+
+  /* ── Section card ── */
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 8px rgba(0,0,0,.08);
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .card-header {
+    background: var(--blue);
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+  }
+  .card-body { padding: 20px 24px; }
+
+  /* ── Module identity ── */
+  .identity-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  /* ── Field ── */
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field label { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; }
+  .field input, .field select {
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 14px;
+    background: #fff;
+    color: var(--text);
+    transition: .15s;
+    width: 100%;
+  }
+  .field input:focus, .field select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(79,174,232,.15);
+  }
+  .field .unit-wrap { position: relative; }
+  .field .unit-wrap input { padding-right: 52px; }
+  .field .unit-tag {
+    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+    font-size: 11px; color: var(--muted); background: var(--lblue);
+    padding: 2px 7px; border-radius: 4px; pointer-events: none;
+  }
+
+  /* ── 3-column grid ── */
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+
+  /* ── Variants table ── */
+  .variants-wrap { overflow-x: auto; }
+  table.variants-tbl {
+    width: 100%; border-collapse: collapse; font-size: 13px;
+    min-width: 620px;
+  }
+  table.variants-tbl th {
+    background: var(--navy); color: #fff;
+    padding: 10px 12px; text-align: center; font-weight: 600; font-size: 12px;
+    border: 1px solid rgba(255,255,255,.2);
+  }
+  table.variants-tbl td {
+    padding: 6px 8px; border: 1px solid var(--border); text-align: center;
+  }
+  table.variants-tbl tr:nth-child(even) td { background: var(--lblue); }
+  table.variants-tbl input {
+    border: 1px solid #c9dff0; border-radius: 4px; padding: 5px 8px;
+    font-size: 13px; width: 90px; text-align: center; background: transparent;
+  }
+  table.variants-tbl input:focus { outline: none; border-color: var(--accent); background: #fff; }
+  .variant-actions { display: flex; gap: 8px; margin-top: 12px; }
+  .btn-sm { padding: 5px 14px; font-size: 12px; border-radius: 5px; font-weight: 600; cursor: pointer; border: none; }
+  .btn-add  { background: var(--blue); color: #fff; }
+  .btn-add:hover { background: #255f92; }
+  .btn-del  { background: #e74c3c; color: #fff; }
+  .btn-del:hover { background: #c0392b; }
+
+  /* ── Toast ── */
+  #toast {
+    position: fixed; bottom: 28px; right: 28px;
+    background: #27ae60; color: #fff;
+    padding: 12px 22px; border-radius: 8px; font-size: 14px; font-weight: 600;
+    opacity: 0; transform: translateY(20px);
+    transition: .3s; pointer-events: none; z-index: 999;
+  }
+  #toast.show { opacity: 1; transform: translateY(0); }
+
+  /* ── Preview panel ── */
+  #preview-section { display: none; }
+  #preview-section.visible { display: block; }
+  .preview-table-wrap { overflow-x: auto; }
+  table.preview-tbl {
+    width: 100%; border-collapse: collapse; font-size: 12px; min-width: 700px;
+  }
+  table.preview-tbl th {
+    background: var(--navy); color: #fff; padding: 8px 12px;
+    font-size: 11px; font-weight: 700; text-align: center;
+    border: 1px solid rgba(255,255,255,.2);
+  }
+  table.preview-tbl .sec-hdr td {
+    background: var(--blue); color: #fff; font-weight: 700;
+    font-size: 11px; padding: 5px 12px; text-align: left;
+  }
+  table.preview-tbl td {
+    padding: 6px 12px; border: 1px solid var(--border); vertical-align: middle;
+  }
+  table.preview-tbl tr:nth-child(even):not(.sec-hdr) td { background: var(--lblue); }
+  table.preview-tbl .lbl { font-weight: 600; text-align: left; }
+  table.preview-tbl .unit { color: var(--muted); font-style: italic; text-align: center; }
+  table.preview-tbl .val  { text-align: center; }
+  table.preview-tbl .sno  { text-align: center; font-weight: 700; color: var(--blue); }
+
+  @media (max-width: 700px) {
+    .grid-3, .grid-2, .identity-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">⚡ Forge <span>|</span> PV Module Sheet</div>
+  <div class="actions">
+    <button class="btn btn-outline" onclick="togglePreview()">👁 Preview</button>
+    <button class="btn btn-primary" onclick="resetForm()">↺ Reset</button>
+    <button class="btn btn-success" onclick="exportExcel()">⬇ Export Excel</button>
+  </div>
+</header>
+
+<main>
+
+  <!-- Identity -->
+  <div class="card">
+    <div class="card-header">Module Identity</div>
+    <div class="card-body">
+      <div class="identity-grid">
+        <div class="field"><label>Manufacturer</label><input id="manufacturer" placeholder="e.g. SunPower"/></div>
+        <div class="field"><label>Module Model</label><input id="module_model" placeholder="e.g. SPR-MAX3-400"/></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Electrical Parameters (Variants) -->
+  <div class="card">
+    <div class="card-header">⚡ Electrical Parameters — Per Variant (STC: 1000 W/m², 25°C, AM1.5)</div>
+    <div class="card-body">
+      <div class="variants-wrap">
+        <table class="variants-tbl" id="variantTable">
+          <thead>
+            <tr>
+              <th>Variant</th>
+              <th>Pmax (Wp)</th>
+              <th>Pstc (Wp)</th>
+              <th>Voc (V)</th>
+              <th>Vmp (V)</th>
+              <th>Isc (A)</th>
+              <th>Imp (A)</th>
+              <th>Efficiency (%)</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="variantBody"></tbody>
+        </table>
+      </div>
+      <div class="variant-actions">
+        <button class="btn-sm btn-add" onclick="addVariant()">+ Add Variant</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Thermal -->
+  <div class="card">
+    <div class="card-header">🌡 Thermal Parameters</div>
+    <div class="card-body">
+      <div class="grid-3">
+        <div class="field"><label>Temp. Coeff. of Isc (α)</label>
+          <div class="unit-wrap"><input id="tc_isc" type="number" step="any" placeholder="e.g. 0.046"/><span class="unit-tag">%/°C</span></div></div>
+        <div class="field"><label>Temp. Coeff. of Voc (β)</label>
+          <div class="unit-wrap"><input id="tc_voc" type="number" step="any" placeholder="e.g. -0.25"/><span class="unit-tag">%/°C</span></div></div>
+        <div class="field"><label>Temp. Coeff. of Pm (γ)</label>
+          <div class="unit-wrap"><input id="tc_pm" type="number" step="any" placeholder="e.g. -0.30"/><span class="unit-tag">%/°C</span></div></div>
+        <div class="field"><label>NOCT</label>
+          <div class="unit-wrap"><input id="noct" type="number" step="any" placeholder="e.g. 45"/><span class="unit-tag">°C</span></div></div>
+        <div class="field"><label>Operating Temp. Range</label>
+          <input id="op_temp" placeholder="e.g. -40°C to 85°C"/></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mechanical -->
+  <div class="card">
+    <div class="card-header">🔩 Mechanical & Physical Parameters</div>
+    <div class="card-body">
+      <div class="grid-3">
+        <div class="field"><label>Series Fuse Max Rating</label>
+          <div class="unit-wrap"><input id="fuse" type="number" step="any" placeholder="e.g. 30"/><span class="unit-tag">A</span></div></div>
+        <div class="field"><label>Dimensions (L × W × H)</label>
+          <div class="unit-wrap"><input id="dims" placeholder="e.g. 2382 x 1134 x 33"/><span class="unit-tag">mm</span></div></div>
+        <div class="field"><label>Weight</label>
+          <div class="unit-wrap"><input id="weight" type="number" step="any" placeholder="e.g. 42.5"/><span class="unit-tag">Kg</span></div></div>
+        <div class="field"><label>Cells per Module</label>
+          <input id="cells_count" type="number" placeholder="e.g. 132"/></div>
+        <div class="field"><label>Cell Type</label>
+          <input id="cell_type" placeholder="e.g. Mono PERC"/></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Construction -->
+  <div class="card">
+    <div class="card-header">🏗 Construction & Components</div>
+    <div class="card-body">
+      <div class="grid-3">
+        <div class="field"><label>Front Glass</label><input id="front_glass" placeholder="e.g. 3.2mm Tempered"/></div>
+        <div class="field"><label>Back Glass</label><input id="back_glass" placeholder="e.g. 2.0mm Tempered"/></div>
+        <div class="field"><label>Output Cable</label><input id="output_cable" placeholder="e.g. 4mm² / 300mm"/></div>
+        <div class="field"><label>Connector</label><input id="connector" placeholder="e.g. MC4"/></div>
+        <div class="field"><label>Junction Box</label><input id="junction_box" placeholder="e.g. IP68"/></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Load Rating -->
+  <div class="card">
+    <div class="card-header">💨 Load Rating</div>
+    <div class="card-body">
+      <div class="grid-2">
+        <div class="field"><label>Wind Load</label>
+          <div class="unit-wrap"><input id="wind_load" type="number" placeholder="e.g. 2400"/><span class="unit-tag">Pa</span></div></div>
+        <div class="field"><label>Snow Load</label>
+          <div class="unit-wrap"><input id="snow_load" type="number" placeholder="e.g. 5400"/><span class="unit-tag">Pa</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Degradation & Warranty -->
+  <div class="card">
+    <div class="card-header">📉 Degradation & Warranty</div>
+    <div class="card-body">
+      <div class="grid-3">
+        <div class="field"><label>First Year Degradation</label>
+          <div class="unit-wrap"><input id="deg_y1" type="number" step="any" placeholder="e.g. 2.0"/><span class="unit-tag">%</span></div></div>
+        <div class="field"><label>Annual Degradation</label>
+          <div class="unit-wrap"><input id="deg_yr" type="number" step="any" placeholder="e.g. 0.55"/><span class="unit-tag">%/yr</span></div></div>
+        <div class="field"><label>30-Year Degradation</label>
+          <div class="unit-wrap"><input id="deg_30" type="number" step="any" placeholder="e.g. 83.1"/><span class="unit-tag">%</span></div></div>
+        <div class="field"><label>Product Warranty</label>
+          <div class="unit-wrap"><input id="war_product" type="number" placeholder="e.g. 12"/><span class="unit-tag">Years</span></div></div>
+        <div class="field"><label>Performance Warranty</label>
+          <div class="unit-wrap"><input id="war_perf" type="number" placeholder="e.g. 30"/><span class="unit-tag">Years</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Preview -->
+  <div id="preview-section" class="card">
+    <div class="card-header">👁 Sheet Preview</div>
+    <div class="card-body preview-table-wrap">
+      <table class="preview-tbl" id="previewTbl"></table>
+    </div>
+  </div>
+
+</main>
+
+<div id="toast">✅ Excel exported successfully!</div>
+
+<script>
+// ── Variant management ──────────────────────────────────────────────────────
+let variantCount = 0;
+
+function addVariant(data={}) {
+  variantCount++;
+  const id = variantCount;
+  const tbody = document.getElementById('variantBody');
+  const tr = document.createElement('tr');
+  tr.id = `vrow_${id}`;
+  const fields = ['pmax','pstc','voc','vmp','isc','imp','efficiency'];
+  tr.innerHTML = `
+    <td><strong>V${id}</strong></td>
+    ${fields.map(f=>`<td><input id="v${id}_${f}" type="number" step="any" value="${data[f]??''}" placeholder="—"/></td>`).join('')}
+    <td><button class="btn-sm btn-del" onclick="removeVariant(${id})">✕</button></td>
+  `;
+  tbody.appendChild(tr);
+}
+
+function removeVariant(id) {
+  const el = document.getElementById(`vrow_${id}`);
+  if (el) el.remove();
+}
+
+// ── Read form data ──────────────────────────────────────────────────────────
+function readForm() {
+  const v = id => { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
+  const n = id => { const val = v(id); return val === '' ? null : Number(val); };
+
+  // Collect variant rows
+  const variants = [];
+  document.querySelectorAll('[id^="vrow_"]').forEach(row => {
+    const vid = row.id.split('_')[1];
+    const fields = ['pmax','pstc','voc','vmp','isc','imp','efficiency'];
+    const obj = {};
+    fields.forEach(f => { obj[f] = document.getElementById(`v${vid}_${f}`)?.value?.trim() || null; });
+    variants.push(obj);
+  });
+
+  return {
+    manufacturer: v('manufacturer'),
+    module_model: v('module_model'),
+    noct: n('noct'),
+    series_fuse_rating: n('fuse'),
+    operating_temperature_range: v('op_temp'),
+    dimensions_mm: v('dims'),
+    weight_kg: n('weight'),
+    cells_count: n('cells_count'),
+    cell_type: v('cell_type'),
+    front_glass: v('front_glass'),
+    back_glass: v('back_glass'),
+    output_cable: v('output_cable'),
+    connector: v('connector'),
+    junction_box: v('junction_box'),
+    temperature_coefficients: { isc_alpha: n('tc_isc'), voc_beta: n('tc_voc'), pm_gamma: n('tc_pm') },
+    load_rating: { wind: n('wind_load'), snow: n('snow_load') },
+    degradation: { first_year: n('deg_y1'), yearly: n('deg_yr'), year_30: n('deg_30') },
+    warranty: { product: n('war_product'), performance: n('war_perf') },
+    variants
+  };
+}
+
+// ── Excel Export via SheetJS ────────────────────────────────────────────────
+function exportExcel() {
+  const d = readForm();
+  const wb = XLSX.utils.book_new();
+  const ws_data = [];
+
+  const mfr = d.manufacturer || '—';
+  const mdl = d.module_model || '—';
+
+  // Title row
+  ws_data.push([`PV Module Data Sheet — ${mfr} | ${mdl}`]);
+
+  // Column headers
+  const varHeaders = d.variants.map((v,i)=> `Variant ${i+1}${v.pmax ? '\n('+v.pmax+' Wp)' : ''}`);
+  ws_data.push(['Sr. No', 'Technical Parameters', 'Unit', ...varHeaders]);
+
+  // Helper to push a section header
+  const section = label => ws_data.push([null, label]);
+
+  // Helper to push a data row
+  const row = (sr, label, unit, ...vals) => ws_data.push([sr, label, unit, ...vals]);
+
+  const variantVal = key => d.variants.map(v => v[key] ?? '—');
+
+  // Electrical
+  section('ELECTRICAL PARAMETERS (STC: 1000 W/m², 25°C, AM1.5)');
+  row(1,  'Module Rated Power (Pmax)',              'Wp',    ...variantVal('pmax'));
+  row(2,  'Pstc (Front Side)',                      'Wp',    ...variantVal('pstc'));
+  row(3,  'Voc (Front Side)',                       'V',     ...variantVal('voc'));
+  row(4,  'Vmp (Front Side)',                       'V',     ...variantVal('vmp'));
+  row(5,  'Isc (Front Side)',                       'A',     ...variantVal('isc'));
+  row(6,  'Imp (Front Side)',                       'A',     ...variantVal('imp'));
+  row(7,  'Module Efficiency',                      '%',     ...variantVal('efficiency'));
+
+  // Thermal
+  section('THERMAL PARAMETERS');
+  const tc = d.temperature_coefficients;
+  row(8,  'Temp. Coefficient of Isc (α)',           '%/°C',  tc.isc_alpha??'—');
+  row(9,  'Temp. Coefficient of Voc (β)',           '%/°C',  tc.voc_beta??'—');
+  row(10, 'Temp. Coefficient of Pm (γ)',            '%/°C',  tc.pm_gamma??'—');
+  row(11, 'NOCT',                                   '°C',    d.noct??'—');
+
+  // Mechanical
+  section('MECHANICAL & PHYSICAL PARAMETERS');
+  row(12, 'Operating Temperature Range',            '°C',    d.operating_temperature_range||'—');
+  row(13, 'Series Fuse Max Rating',                 'A',     d.series_fuse_rating??'—');
+  row(14, 'Dimensions (L × W × H)',                 'mm',    d.dimensions_mm||'—');
+  row(15, 'Weight',                                 'Kg',    d.weight_kg??'—');
+  row(16, 'Solar Cells per Module',                 'Units', d.cells_count??'—');
+  row(17, 'Solar Cell Type',                        '—',     d.cell_type||'—');
+
+  // Construction
+  section('CONSTRUCTION & COMPONENTS');
+  row(18, 'Front Glass',                            '—',     d.front_glass||'—');
+  row(19, 'Back Glass',                             '—',     d.back_glass||'—');
+  row(20, 'Output Cable',                           '—',     d.output_cable||'—');
+  row(21, 'Connector',                              '—',     d.connector||'—');
+  row(22, 'Junction Box',                           '—',     d.junction_box||'—');
+
+  // Load
+  section('LOAD RATING');
+  row(23, 'Wind Load',                              'Pa',    d.load_rating.wind??'—');
+  row(24, 'Snow Load',                              'Pa',    d.load_rating.snow??'—');
+
+  // Degradation & Warranty
+  section('DEGRADATION & WARRANTY');
+  row(25, 'First Year Degradation',                 '%',     d.degradation.first_year??'—');
+  row(26, 'Annual Degradation',                     '%/year',d.degradation.yearly??'—');
+  row(27, '30-Year Degradation',                    '%',     d.degradation.year_30??'—');
+  row(28, 'Product Warranty',                       'Years', d.warranty.product??'—');
+  row(29, 'Performance Warranty',                   'Years', d.warranty.performance??'—');
+
+  ws_data.push([]);
+  ws_data.push(['Generated by Forge Extractor Pipeline | PVInsight Inc.']);
+
+  const ws = XLSX.utils.aoa_to_sheet(ws_data);
+
+  // Basic column widths
+  const totalCols = 3 + d.variants.length;
+  ws['!cols'] = [
+    {wch: 8}, {wch: 40}, {wch: 14},
+    ...Array(d.variants.length).fill({wch: 18})
+  ];
+
+  // Merge title across all columns
+  ws['!merges'] = [
+    { s:{r:0,c:0}, e:{r:0,c:totalCols-1} }
+  ];
+
+  XLSX.utils.book_append_sheet(wb, ws, 'Module Data Sheet');
+  const fname = `module_data_${(d.module_model||'sheet').replace(/\s+/g,'_')}.xlsx`;
+  XLSX.writeFile(wb, fname);
+  showToast();
+}
+
+// ── Preview ─────────────────────────────────────────────────────────────────
+function togglePreview() {
+  const sec = document.getElementById('preview-section');
+  if (sec.classList.contains('visible')) {
+    sec.classList.remove('visible');
+  } else {
+    renderPreview();
+    sec.classList.add('visible');
+    sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function renderPreview() {
+  const d = readForm();
+  const variants = d.variants;
+  const tc = d.temperature_coefficients;
+  const tbl = document.getElementById('previewTbl');
+
+  const varCols = variants.map((_,i) => {
+    const p = variants[i].pmax;
+    return `Variant ${i+1}${p ? '<br/><small>('+p+' Wp)</small>' : ''}`;
+  });
+
+  const th = cols => `<tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr>`;
+  const secRow = label => `<tr class="sec-hdr"><td colspan="${3+variants.length}"><b>${label}</b></td></tr>`;
+  const dataRow = (sr, label, unit, ...vals) => `
+    <tr>
+      <td class="sno">${sr}</td>
+      <td class="lbl">${label}</td>
+      <td class="unit">${unit}</td>
+      ${vals.map(v=>`<td class="val">${v??'—'}</td>`).join('')}
+    </tr>`;
+  const vv = key => variants.map(v => v[key]??'—');
+
+  let html = th(['Sr.', 'Technical Parameter', 'Unit', ...varCols]);
+
+  html += secRow('⚡ Electrical Parameters (STC)');
+  html += dataRow(1,  'Module Rated Power (Pmax)',        'Wp',     ...vv('pmax'));
+  html += dataRow(2,  'Pstc (Front Side)',                 'Wp',     ...vv('pstc'));
+  html += dataRow(3,  'Voc (Front Side)',                  'V',      ...vv('voc'));
+  html += dataRow(4,  'Vmp (Front Side)',                  'V',      ...vv('vmp'));
+  html += dataRow(5,  'Isc (Front Side)',                  'A',      ...vv('isc'));
+  html += dataRow(6,  'Imp (Front Side)',                  'A',      ...vv('imp'));
+  html += dataRow(7,  'Module Efficiency',                 '%',      ...vv('efficiency'));
+
+  html += secRow('🌡 Thermal Parameters');
+  html += dataRow(8,  'Temp. Coeff. Isc (α)',             '%/°C',   tc.isc_alpha??'—');
+  html += dataRow(9,  'Temp. Coeff. Voc (β)',             '%/°C',   tc.voc_beta??'—');
+  html += dataRow(10, 'Temp. Coeff. Pm (γ)',              '%/°C',   tc.pm_gamma??'—');
+  html += dataRow(11, 'NOCT',                              '°C',     d.noct??'—');
+
+  html += secRow('🔩 Mechanical & Physical');
+  html += dataRow(12, 'Operating Temp. Range',             '°C',     d.operating_temperature_range||'—');
+  html += dataRow(13, 'Series Fuse Max Rating',            'A',      d.series_fuse_rating??'—');
+  html += dataRow(14, 'Dimensions (L × W × H)',            'mm',     d.dimensions_mm||'—');
+  html += dataRow(15, 'Weight',                            'Kg',     d.weight_kg??'—');
+  html += dataRow(16, 'Solar Cells per Module',            'Units',  d.cells_count??'—');
+  html += dataRow(17, 'Solar Cell Type',                   '—',      d.cell_type||'—');
+
+  html += secRow('🏗 Construction & Components');
+  html += dataRow(18, 'Front Glass',                       '—',      d.front_glass||'—');
+  html += dataRow(19, 'Back Glass',                        '—',      d.back_glass||'—');
+  html += dataRow(20, 'Output Cable',                      '—',      d.output_cable||'—');
+  html += dataRow(21, 'Connector',                         '—',      d.connector||'—');
+  html += dataRow(22, 'Junction Box',                      '—',      d.junction_box||'—');
+
+  html += secRow('💨 Load Rating');
+  html += dataRow(23, 'Wind Load',                         'Pa',     d.load_rating.wind??'—');
+  html += dataRow(24, 'Snow Load',                         'Pa',     d.load_rating.snow??'—');
+
+  html += secRow('📉 Degradation & Warranty');
+  html += dataRow(25, 'First Year Degradation',            '%',      d.degradation.first_year??'—');
+  html += dataRow(26, 'Annual Degradation',                '%/year', d.degradation.yearly??'—');
+  html += dataRow(27, '30-Year Degradation',               '%',      d.degradation.year_30??'—');
+  html += dataRow(28, 'Product Warranty',                  'Years',  d.warranty.product??'—');
+  html += dataRow(29, 'Performance Warranty',              'Years',  d.warranty.performance??'—');
+
+  tbl.innerHTML = html;
+}
+
+// ── Utilities ───────────────────────────────────────────────────────────────
+function resetForm() {
+  if (!confirm('Reset all fields?')) return;
+  document.querySelectorAll('input').forEach(el => el.value = '');
+  document.getElementById('variantBody').innerHTML = '';
+  variantCount = 0;
+  document.getElementById('preview-section').classList.remove('visible');
+}
+
+function showToast() {
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── Init ────────────────────────────────────────────────────────────────────
+window.onload = () => {
+  // Seed one default variant row
+  addVariant();
+};
+</script>
+</body>
+</html>

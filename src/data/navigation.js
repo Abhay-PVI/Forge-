@@ -31,7 +31,7 @@ export const NAV = [{
       id: 'cable-sizing',
       name: 'DC Cable Sizing Design Basis',
       code: 'DCC',
-      status: 'beta'
+      status: 'soon'
     }, {
       id: 'lps',
       name: 'Lightning Protection Design Basis',
@@ -184,4 +184,3 @@ export default {
   findReport
 };
 
- 
