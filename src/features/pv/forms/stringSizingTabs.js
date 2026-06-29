@@ -530,22 +530,24 @@ export const STRING_SIZE_TABS = [{
   name: 'Datasheets & Uploads',
   icon: 'paperclip',
   blurb: 'Attach source datasheets. These feed the technical inputs and are referenced in the report appendix.',
-  uploads: [{
-    key: 'moduleDs',
-    label: 'Module datasheet',
-    hint: 'PDF · manufacturer spec sheet',
-  require: false
-  }, {
-    key: 'inverterDs',
-    label: 'Inverter datasheet',
-    hint: 'PDF · manufacturer spec sheet',
-     required:  false
-  }, {
-    key: 'weatherData',
-    label: 'Site weather / temperature data',
-    hint: 'CSV, XLSX · TMY or measured',
-     required: false
-  },{
+  uploads: [
+  //   {
+  //   key: 'moduleDs',
+  //   label: 'Module datasheet',
+  //   hint: 'PDF · manufacturer spec sheet',
+  // require: false
+  // }, {
+  //   key: 'inverterDs',
+  //   label: 'Inverter datasheet',
+  //   hint: 'PDF · manufacturer spec sheet',
+  //    required:  false
+  // }, {
+  //   key: 'weatherData',
+  //   label: 'Site weather / temperature data',
+  //   hint: 'CSV, XLSX · TMY or measured',
+  //    required: false
+  // },
+  {
     key: "dhiCsv",
     label: "Hourly DHI CSV",
     hint: "CSV containing yearly hourly Diffuse Horizontal Irradiance data",
