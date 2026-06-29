@@ -631,6 +631,8 @@ export default function FormScreen({ report, vertical, sub, values, setValue, fi
 
                 setValue("yearlyVocSummary", vocSummary.data);
                 setValue("yearlyIscSummary", iscSummary.data);
+                setValue("max_3hr_isc", iscSummary.max_3hr_isc);
+                setValue("max_isc_year", iscSummary.max_isc_year);
                 setValue("peakTableData", peakTableData.tableTemplateData);
 
                 console.log("Form values for degradation:", {

@@ -63,9 +63,28 @@ export async function parseModuleExcel(file) {
         </tr>
       `;
 
-      [row[2], row[3], row[4], row[5], row[6], row[7]].forEach((cell, index) => {
+      const cells = [row[2], row[3], row[4], row[5], row[6], row[7]];
+      cells.forEach((cell, index) => {
         values[`${keyPrefix}_${index + 1}`] = cell != null ? String(cell).trim() : "";
       });
+
+      if (keyPrefix === "wp") {
+        const wpCells = cells
+          .map(c => (c != null ? String(c).trim() : ""))
+          .filter(c => c !== "");
+        let maxVal = 0;
+        let maxStr = "";
+        wpCells.forEach(cell => {
+          const num = parseFloat(cell.replace(/[^\d.]/g, ""));
+          if (!isNaN(num) && num > maxVal) {
+            maxVal = num;
+            maxStr = cell;
+          }
+        });
+        if (maxStr !== "") {
+          values.max_module_power = maxStr;
+        }
+      }
       return;
     }
 

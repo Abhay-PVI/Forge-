@@ -12,7 +12,7 @@
         size: letter;
         width: 201mm;
         /* margin: 10mm; */
-          page-break-after: always;
+        page-break-after: always;
       }
 
       body {
@@ -66,7 +66,7 @@
       justify-content: flex-start;
       height: 60px;
       /* Constrains logo space visually */
-      margin-top: 70px ;
+      margin-top: calc(70px - 1cm);
       margin-bottom: 15px;
     }
 
@@ -121,14 +121,15 @@
       /* Dynamically forces this entire group into the lower half of the page */
       display: flex;
       flex-direction: column;
-      gap: 30px;
+      gap: 50px;
       /* Precise 20px reference padding between internal sections */
       width: 100%;
     }
 
     .revision-section {
       width: 100%;
-      margin:  auto;
+      margin: auto;
+      margin-top: 2cm;
     }
 
     .table {
@@ -160,6 +161,7 @@
     }
 
     .seal-container {
+      margin-top: 1cm;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -230,6 +232,8 @@
     <div class="bottom-layout-group">
       <h2 class="heading">Design Basis Report - PV </h2>
     </div>
+
+
     <div class="revision-section">
       <!-- <h3 class="sub-heading">Revision History</h3> -->
       <table class="table">

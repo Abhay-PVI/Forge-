@@ -11,8 +11,8 @@ import tableOfContents from "../../../shared/reports/tableOfContents.html?raw";
 //C:\Users\AbhayPratapSingh\work\June\260605\HV DBR\Forge\forge-react\src\backend\Ashrae
 import ashraeTableTemplate from "../../../backend/Ashrae/ASHARE.html?raw";
 import { buildReportMeta } from "../../../shared/reports/buildReportMeta";
-console.log(ashraeTableTemplate);
-import { prepareTableData } from '../calculations/calculateYearlyVoc&Isc';
+// console.log(ashraeTableTemplate);
+// import { prepareTableData } from '../calculations/calculateYearlyVoc&Isc';
 
 
 
@@ -40,7 +40,7 @@ function DocPage({ children }) {
   );
 }
 
-function DocH({ n, t }) { return ( <h3 style={{ marginTop: 20 }}> {n}. {t} </h3> ); }
+function DocH({ n, t }) { return (<h3 style={{ marginTop: 20 }}> {n}. {t} </h3>); }
 
 function CoverStat({ label, value }) {
   return (
@@ -51,31 +51,30 @@ function CoverStat({ label, value }) {
   );
 }
 
-function DocRow({ k, v }) { return ( <tr> <td>{k}</td> <td>{v}</td> </tr> ); }
+function DocRow({ k, v }) { return (<tr> <td>{k}</td> <td>{v}</td> </tr>); }
 
-export default function ReportDoc( { values = {}, files = {}, solarCalcValues = null, showStamp = false })
- {
+export default function ReportDoc({ values = {}, files = {}, solarCalcValues = null, showStamp = false }) {
   const safeValues = values;
   const safeFiles = files;
 
-  
-let yearlyIscTable = "";
-try {
-  yearlyIscTable = buildIscTable(values.yearlyIscSummary || []);
-} catch (error) {
-  console.error("buildIscTable failed:", error, values.yearlyIscSummary);
-  yearlyIscTable = "";
-}
 
-const degradationData = buildMinVoltageDegradationTable(
-   Number(values.moduleVmp) *Number(values.modules_series), Number(values.moduleDegradation), 30);
+  let yearlyIscTable = "";
+  try {
+    yearlyIscTable = buildIscTable(values.yearlyIscSummary || []);
+  } catch (error) {
+    console.error("buildIscTable failed:", error, values.yearlyIscSummary);
+    yearlyIscTable = "";
+  }
 
-const degradationRows = [];
+  const degradationData = buildMinVoltageDegradationTable(
+    Number(values.moduleVmp) * Number(values.modules_series), Number(values.moduleDegradation), 30);
 
-for (let year = 1; year <= 30; year += 1) {
-  if (degradationData[`year${year}`] == null) break;
+  const degradationRows = [];
 
-  degradationRows.push(`
+  for (let year = 1; year <= 30; year += 1) {
+    if (degradationData[`year${year}`] == null) break;
+
+    degradationRows.push(`
     <tr>
       <td>${degradationData[`year${year}`]}</td>
       <td>${degradationData[`year${year}_min`]}</td>
@@ -83,32 +82,32 @@ for (let year = 1; year <= 30; year += 1) {
       <td>${degradationData[`year${year}_after`]}</td>
     </tr>
   `);
-}
+  }
 
-const safeSolarCalcValues = solarCalcValues || values.solarCalcValues || values.calc_values || {};
+  const safeSolarCalcValues = solarCalcValues || values.solarCalcValues || values.calc_values || {};
 
-console.log("solarCalcValues in form in report state state====>>:",solarCalcValues);
-
-
-const solarVocTemplateValues = buildSolarVocTemplateValues({
-  solarCalcValues: safeSolarCalcValues,
-  tempMin: values?.tempMin,
-  tempCellMax: values?.tempCellMax,
-});
-const nMin = calculateNMin( values.PCS_Min_PV_Input_Voltage, values.vmpMaxTemp );
-const {irradiationTable,energyTable} = buildPvsystTables(values.pvsystData || {});
-const pvsystLossTemplateValues = buildPvsystLossTemplateValues(values.pvsystData || {});
-const reportMeta = buildReportMeta( values, { name: "PV Electrical Design Basis Report" } );
-
-console.log("ReportDoc degradationData:", degradationData);
-console.log("ReportDoc values.minVoltageDegradationTable:", values.minVoltageDegradationTable);
-console.log("PVsyst Data:",values.pvsystData);
-
-console.log("values =", values);
-console.log("solarCalcValues Safest Value  =", safeSolarCalcValues);
+  console.log("solarCalcValues in form in report state state====>>:", solarCalcValues);
 
 
-const peakTableData = values?.peakTableData || {};
+  const solarVocTemplateValues = buildSolarVocTemplateValues({
+    solarCalcValues: safeSolarCalcValues,
+    tempMin: values?.tempMin,
+    tempCellMax: values?.tempCellMax,
+  });
+  const nMin = calculateNMin(values.PCS_Min_PV_Input_Voltage, values.vmpMaxTemp);
+  const { irradiationTable, energyTable } = buildPvsystTables(values.pvsystData || {});
+  const pvsystLossTemplateValues = buildPvsystLossTemplateValues(values.pvsystData || {});
+  const reportMeta = buildReportMeta(values, { name: "PV Electrical Design Basis Report" });
+
+  console.log("ReportDoc degradationData:", degradationData);
+  console.log("ReportDoc values.minVoltageDegradationTable:", values.minVoltageDegradationTable);
+  console.log("PVsyst Data:", values.pvsystData);
+
+  console.log("values =", values);
+  console.log("solarCalcValues Safest Value  =", safeSolarCalcValues);
+
+
+  const peakTableData = values?.peakTableData || {};
 
 
   const voltImg = values["Results_of_26-year_voltage"] || "";
@@ -116,10 +115,10 @@ const peakTableData = values?.peakTableData || {};
 
   const formatImgReplacement = (imgData) => {
     if (!imgData) return 'style="display: none;"';
-    const base64 = imgData.startsWith('src="') 
-      ? imgData.match(/src="([^"]+)"/)?.[1] || imgData 
+    const base64 = imgData.startsWith('src="')
+      ? imgData.match(/src="([^"]+)"/)?.[1] || imgData
       : imgData;
-      
+
     return `src="${base64}" style="max-width: 100%; height: auto; border: 1px solid #cbd5e1; border-radius: 6px; display: block; margin: 15px auto;"`;
   };
 
@@ -138,61 +137,61 @@ const peakTableData = values?.peakTableData || {};
         </div>
       `;
 
-const templateValues = {
-  ...values,
-  ...reportMeta,
-  ...peakTableData, // Spreads t1_datetime, t1_ghi, t2_... etc. directly into your template context
-  ...solarVocTemplateValues,
-  ...pvsystLossTemplateValues,
-  submittedTo: values.submittedTo || "Signal Energy",
-  submittedToAddress: values.submittedToAddress || "2034 Hamilton Place BLVD. Suite 100 Chattanooga, TN 37421",
-  weather_station_city: values.weather_station_city,
-  weather_station_state: values.weather_station_state,
-  weather_station_country: values.weather_station_country,
-  weather_station_id: values.weather_station_id,
-  minVoltageDegradationTable: degradationRows.join(""),
-  YEARLY_ISC_TABLE: yearlyIscTable,
-  ASHRAE_TABLE: ashraeTableTemplate,
-  YEARLY_VOC_TABLE: buildVocTable(values.yearlyVocSummary || []),
-  PVSYST_IRRADIATION_TABLE:irradiationTable,
-  PVSYST_ENERGY_TABLE:energyTable,
+  const templateValues = {
+    ...values,
+    ...reportMeta,
+    ...peakTableData, // Spreads t1_datetime, t1_ghi, t2_... etc. directly into your template context
+    ...solarVocTemplateValues,
+    ...pvsystLossTemplateValues,
+    submittedTo: values.submittedTo || "Signal Energy",
+    submittedToAddress: values.submittedToAddress || "2034 Hamilton Place BLVD. Suite 100 Chattanooga, TN 37421",
+    weather_station_city: values.weather_station_city,
+    weather_station_state: values.weather_station_state,
+    weather_station_country: values.weather_station_country,
+    weather_station_id: values.weather_station_id,
+    minVoltageDegradationTable: degradationRows.join(""),
+    YEARLY_ISC_TABLE: yearlyIscTable,
+    ASHRAE_TABLE: ashraeTableTemplate,
+    YEARLY_VOC_TABLE: buildVocTable(values.yearlyVocSummary || []),
+    PVSYST_IRRADIATION_TABLE: irradiationTable,
+    PVSYST_ENERGY_TABLE: energyTable,
 
-  N_MIN: nMin.exact,
-  N_MIN_ROUNDED: nMin.rounded,
-  SHOW_STAMP: showStamp ? "flex" : "none",
-  "Results_of_26-year_voltage": voltReplacement,
-  "Results_of_26-year_Voltage": voltReplacement,
-  "Results_of_26-year_current": currReplacement,
-  "Results_of_26-year_Current": currReplacement,
-  SEAL_CONTENT: sealContent,
-};
+    N_MIN: nMin.exact,
+    N_MIN_ROUNDED: nMin.rounded,
+    SHOW_STAMP: showStamp ? "flex" : "none",
+    "Results_of_26-year_voltage": voltReplacement,
+    "Results_of_26-year_Voltage": voltReplacement,
+    "Results_of_26-year_current": currReplacement,
+    "Results_of_26-year_Current": currReplacement,
+    SEAL_CONTENT: sealContent,
+  };
 
-console.log("ReportDoc values prop:", values);
-console.log("[ReportDoc] Results_of_26-year_voltage length:", (values["Results_of_26-year_voltage"] || "").length);
-console.log("[ReportDoc] Results_of_26-year_current length:", (values["Results_of_26-year_current"] || "").length);
-console.log("ReportDoc templateValues:", templateValues);
+  console.log("ReportDoc values prop:", values);
+  console.log("[ReportDoc] Results_of_26-year_voltage length:", (values["Results_of_26-year_voltage"] || "").length);
+  console.log("[ReportDoc] Results_of_26-year_current length:", (values["Results_of_26-year_current"] || "").length);
+  console.log("ReportDoc templateValues:", templateValues);
 
   console.log(
-  "ReportDoc template value keys:",
-  Object.keys(templateValues).filter((k) => [
-    // Existing variants
-    "module_model",
-    "wp_1", "wp_2", "wp_3", "wp_4", "wp_5", "wp_6",
-    "pstc_1", "pstc_2", "pstc_3", "pstc_4", "pstc_5", "pstc_6",
-    "voc_1", "voc_2", "voc_3", "voc_4", "voc_5", "voc_6",
-    "vmp_1", "vmp_2", "vmp_3", "vmp_4", "vmp_5", "vmp_6",
-    "isc_1", "isc_2", "isc_3", "isc_4", "isc_5", "isc_6",
-    "imp_1", "imp_2", "imp_3", "imp_4", "imp_5", "imp_6",
-    "eff_1", "eff_2", "eff_3", "eff_4", "eff_5", "eff_6",
-    
-    // New Technical & Mechanical variables
-    "temp_coeff_isc", "temp_coeff_voc", "temp_coeff_pm", "noct", "fuse_rating", "module_length", "module_width", "module_height", 
-    "cell_count", "cell_type", "front_glass", "back_glass", "output_cable", "connector",
-    "junction_box", "wind_load", "snow_load", "deg_year1", "deg_year30", "deg_yearly",
-    "warranty_product",
-    "warranty_performance"
-  ].includes(k))
-);
+    "ReportDoc template value keys:",
+    Object.keys(templateValues).filter((k) => [
+      // Existing variants
+      "module_model",
+      "wp_1", "wp_2", "wp_3", "wp_4", "wp_5", "wp_6",
+      "pstc_1", "pstc_2", "pstc_3", "pstc_4", "pstc_5", "pstc_6",
+      "voc_1", "voc_2", "voc_3", "voc_4", "voc_5", "voc_6",
+      "vmp_1", "vmp_2", "vmp_3", "vmp_4", "vmp_5", "vmp_6",
+      "isc_1", "isc_2", "isc_3", "isc_4", "isc_5", "isc_6",
+      "imp_1", "imp_2", "imp_3", "imp_4", "imp_5", "imp_6",
+      "eff_1", "eff_2", "eff_3", "eff_4", "eff_5", "eff_6",
+
+      // New Technical & Mechanical variables
+      "temp_coeff_isc", "temp_coeff_voc", "temp_coeff_pm", "noct", "fuse_rating", "module_length", "module_width", "module_height",
+      "cell_count", "cell_type", "front_glass", "back_glass", "output_cable", "connector",
+      "junction_box", "wind_load", "snow_load", "deg_year1", "deg_year30", "deg_yearly",
+      "warranty_product",
+      "warranty_performance"
+    ].includes(k))
+  );
 
 
 
@@ -230,9 +229,9 @@ console.log("ReportDoc templateValues:", templateValues);
   }, [values, files, safeFiles.batteryDs]);
 
   return (
-   
-        <div   id="PV_DBR-report" dangerouslySetInnerHTML={{__html: reportHtml}}/>
+
+    <div id="PV_DBR-report" dangerouslySetInnerHTML={{ __html: reportHtml }} />
 
   );
 }
-  
+

@@ -98,6 +98,8 @@ export function calculateYearlyIsc(rows) {
     }
 
     let allTimeMaxIsc = -Infinity;
+    let max3hrIsc = -Infinity;
+    let maxIscYear = "";
 
     let globalMaxH1 = { isc: -Infinity, serialNo: 0, year: "", date: "" };
     let globalMaxH2 = { isc: -Infinity, serialNo: 0, year: "", date: "" };
@@ -179,12 +181,18 @@ export function calculateYearlyIsc(rows) {
         allTimeMaxIsc = yearlyMax;
       }
 
+      const yearlyAvg = Number(((h1 + h2 + h3) / 3).toFixed(2));
+      if (yearlyAvg > max3hrIsc) {
+        max3hrIsc = yearlyAvg;
+        maxIscYear = year;
+      }
+
       return {
         year,
         h1,
         h2,
         h3,
-        avg: Number(((h1 + h2 + h3) / 3).toFixed(2)),
+        avg: yearlyAvg,
       };
     });
 
@@ -201,6 +209,8 @@ export function calculateYearlyIsc(rows) {
       success: true,
       data: summary,
       allTimeMaxIsc: Number(allTimeMaxIsc.toFixed(2)),
+      max_3hr_isc: max3hrIsc !== -Infinity ? max3hrIsc : null,
+      max_isc_year: maxIscYear !== "" ? maxIscYear : null,
       date1: globalMaxH1.date,
       date2: globalMaxH2.date,
       date3: globalMaxH3.date,
