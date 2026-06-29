@@ -63,7 +63,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
-        "https://YOUR-VERCEL-APP.vercel.app",
+        "https://forge-i4alqi129-abhi-pvinsights-projects.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],

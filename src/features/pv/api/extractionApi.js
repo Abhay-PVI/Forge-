@@ -1,21 +1,29 @@
+import { API_BASE_URL } from "./config";
+
+// PVsyst
 export async function extractPvsyst(file) {
   const formData = new FormData();
   formData.append("file", file);
 
   const response = await fetch(
-    "http://localhost:8000/extract/pvsyst",
+    `${API_BASE_URL}/extract/pvsyst`,
     {
       method: "POST",
       body: formData,
     }
   );
 
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+
   return response.json();
 }
-// Helper for the ashare 
+
+// ASHRAE
 export async function generateAshrae(latitude, longitude) {
   const response = await fetch(
-    "http://localhost:8000/ashrae",
+    `${API_BASE_URL}/ashrae`,
     {
       method: "POST",
       headers: {
@@ -27,6 +35,10 @@ export async function generateAshrae(latitude, longitude) {
       }),
     }
   );
+
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
 
   return response.json();
 }
