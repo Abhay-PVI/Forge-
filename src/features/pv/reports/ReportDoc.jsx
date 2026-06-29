@@ -1,7 +1,7 @@
 import React from 'react';
 
 import template from "../templates/pvReportTemplate.html?raw";
-import { buildVocTable, buildIscTable, buildMinVoltageDegradationTable, buildPvsystTables, calculateNMin, buildSolarVocTemplateValues } from "../forms/utils/buildVoc&IscTable";
+import { buildVocTable, buildIscTable, buildMinVoltageDegradationTable, buildPvsystTables, calculateNMin, buildSolarVocTemplateValues, buildPvsystLossTemplateValues } from "../forms/utils/buildVoc&IscTable";
 import coverPage from "../../../shared/reports/coverPage.html?raw";
 import documentControlPage from "../../../shared/reports/documentControlPage.html?raw";
 import listOfTables from "../../../shared/reports/listOfTables.html?raw";
@@ -97,6 +97,7 @@ const solarVocTemplateValues = buildSolarVocTemplateValues({
 });
 const nMin = calculateNMin( values.PCS_Min_PV_Input_Voltage, values.vmpMaxTemp );
 const {irradiationTable,energyTable} = buildPvsystTables(values.pvsystData || {});
+const pvsystLossTemplateValues = buildPvsystLossTemplateValues(values.pvsystData || {});
 const reportMeta = buildReportMeta( values, { name: "PV Electrical Design Basis Report" } );
 
 console.log("ReportDoc degradationData:", degradationData);
@@ -142,6 +143,7 @@ const templateValues = {
   ...reportMeta,
   ...peakTableData, // Spreads t1_datetime, t1_ghi, t2_... etc. directly into your template context
   ...solarVocTemplateValues,
+  ...pvsystLossTemplateValues,
   submittedTo: values.submittedTo || "Signal Energy",
   submittedToAddress: values.submittedToAddress || "2034 Hamilton Place BLVD. Suite 100 Chattanooga, TN 37421",
   weather_station_city: values.weather_station_city,

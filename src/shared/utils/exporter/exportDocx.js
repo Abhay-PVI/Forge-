@@ -61,14 +61,16 @@ export async function exportDocx(elementId, fileName) {
       <body>
   `;
   const footer = "</body></html>";
-  
+
   const htmlContent = header + element.innerHTML + footer;
-  
+
   // Create Word document Blob
+  // 1. Keep the legacy MIME type for .doc
   const blob = new Blob(['\ufeff' + htmlContent], {
     type: 'application/msword;charset=utf-8'
   });
 
-  const finalName = fileName.toLowerCase().endsWith('.docx') ? fileName : `${fileName}.docx`;
+  // 2. FORCE the extension to be .doc, NOT .docx
+  const finalName = fileName.toLowerCase().endsWith('.doc') ? fileName : `${fileName}.doc`;
   saveAs(blob, finalName);
 }

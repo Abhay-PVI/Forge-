@@ -226,3 +226,44 @@ export function buildSolarVocTemplateValues({
     return out;
 }
 
+export function buildPvsystLossTemplateValues(pvsystData) {
+  if (!pvsystData) {
+    return {
+      IAM_factor: "—",
+      Soiling_loss_factor: "—",
+      Module_quality_loss: "—",
+      "LID – Light-induced_degradation": "—",
+      "LID - Light-induced_degradation": "—",
+      "LID_Light_induced_degradation": "—",
+      Mismatch_loss_modules: "—",
+      Mismatch_loss_String: "—",
+      DC_Ohmic_wiring_loss: "—",
+      Auxiliaries: "—",
+      AC_ohmic_loss: "—",
+      Medium_voltage_transformer_loss: "—"
+    };
+  }
+
+  const formatPercent = (val) => {
+    if (val === undefined || val === null || val === "") return "—";
+    const valStr = String(val).trim();
+    if (valStr.endsWith("%")) return valStr;
+    return `${valStr}%`;
+  };
+
+  return {
+    IAM_factor: formatPercent(pvsystData.irradiation?.iamFactorOnGlobal),
+    Soiling_loss_factor: formatPercent(pvsystData.irradiation?.soilingLossFactor),
+    Module_quality_loss: formatPercent(pvsystData.energy?.moduleQualityLoss),
+    "LID – Light-induced_degradation": formatPercent(pvsystData.energy?.lidLoss),
+    "LID - Light-induced_degradation": formatPercent(pvsystData.energy?.lidLoss),
+    "LID_Light_induced_degradation": formatPercent(pvsystData.energy?.lidLoss),
+    Mismatch_loss_modules: formatPercent(pvsystData.energy?.mismatchLossModuleString),
+    Mismatch_loss_String: formatPercent(pvsystData.energy?.mismatchLossModuleString),
+    DC_Ohmic_wiring_loss: formatPercent(pvsystData.energy?.ohmicWiringLoss),
+    Auxiliaries: formatPercent(pvsystData.energy?.auxiliaryLoss),
+    AC_ohmic_loss: formatPercent(pvsystData.energy?.acOhmicLoss),
+    Medium_voltage_transformer_loss: formatPercent(pvsystData.energy?.mvTransformerLoss)
+  };
+}
+
