@@ -11,6 +11,7 @@ import Papa from "papaparse";
 import { calculateYearlyVoc, calculateYearlyIsc, prepareTableData } from "../calculations/calculateYearlyVoc&Isc";
 import { buildMinVoltageDegradationTable } from "../forms/utils/buildVoc&IscTable";
 import { extractPvsyst, generateAshrae, } from '../api/extractionApi';
+import { API_BASE_URL } from "../api/apiConfig";
 import { parseModuleExcel } from "../forms/utils/parseModuleExcel";
 
 async function convertPdfToImages(pdfBlob) {
@@ -247,14 +248,12 @@ function TabBody({ tab, values, setValue, files, setFile, showErrors }) {
           if (!result.values || Object.keys(result.values).length === 0) {
             console.warn("parseModuleExcel returned an empty or missing values object:", result);
           }
-          const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
-
           async function triggerPdfCompilation(excelMetrics) {
             try {
               // --- STEP 1: FETCH CALCULATION VALUES & TABLES (JSON) ---
               console.log("Fetching structured metrics data...");
               const dataResponse = await fetch(
-                `${API_BASE}/generate-solar-report-data`,
+                `${API_BASE_URL}/generate-solar-report-data`,
                 {
                   method: "POST",
                   headers: {
@@ -301,7 +300,7 @@ function TabBody({ tab, values, setValue, files, setFile, showErrors }) {
               // --- STEP 2: FETCH APPENDIX FILE (BINARY BLOB) ---
               console.log("Compiling appendix document structure...");
               const pdfResponse = await fetch(
-                `${API_BASE}/generate-solar-report-pdf`,
+                `${API_BASE_URL}/generate-solar-report-pdf`,
                 {
                   method: "POST",
                   headers: {

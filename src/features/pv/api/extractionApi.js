@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "./config";
+import { API_BASE_URL } from "./apiConfig";
 
 // PVsyst
 export async function extractPvsyst(file) {
