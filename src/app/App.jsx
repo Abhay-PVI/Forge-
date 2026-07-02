@@ -7,15 +7,15 @@ import Topbar from "../features/dashboard/components/Topbar";
 import Welcome from "../features/dashboard/components/Welcome";
 import ReportList from "../features/dashboard/components/ReportList";
 
-import FormScreen from "../features/pv/components/FormScreen.jsx";
-import Generating from "../features/pv/reports/Generating.jsx";
-import Preview from "../features/pv/reports/Preview.jsx";
+import FormScreen from "../features/electrical/pv/pv-design/components/FormScreen.jsx";
+import Generating from "../features/electrical/pv/pv-design/reports/Generating.jsx";
+import Preview from "../features/electrical/pv/pv-design/reports/Preview.jsx";
 import BessPreview from "../features/electrical/bess/bess-sizing/reports/BessPreview";
 
 import { USER } from "../data/constants";
 
-import { STRING_SIZE_DEFAULTS } from "../features/pv/forms/stringSizingDefaults.js";
-import computeStringSizing from "../features/pv/calculations/stringSizing";
+import { STRING_SIZE_DEFAULTS } from "../features/electrical/pv/pv-design/forms/stringSizingDefaults.js";
+import computeStringSizing from "../features/electrical/pv/pv-design/calculations/stringSizing";
 
 import { findReport } from "../data/navigation";
 
