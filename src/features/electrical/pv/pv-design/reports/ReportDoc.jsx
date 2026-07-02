@@ -182,10 +182,13 @@ export default function ReportDoc({ values = {}, calc = {}, files = {}, solarCal
         ? summary.reduce((max, row) => (row.maxVoltage > max ? row.maxVoltage : max), -Infinity)
         : 1441.33);
 
+  const degradationYear30After = degradationData ? degradationData.year30_after : 1031.42;
+
   const templateValues = {
     ...values,
     allTimeMaxVoc: typeof allTimeMaxVocVal === 'number' ? allTimeMaxVocVal.toFixed(2) : allTimeMaxVocVal,
     vmpMaxTemp: typeof vmpMaxTempVal === 'number' ? vmpMaxTempVal.toFixed(1) : vmpMaxTempVal,
+    degradation_year30_after: degradationYear30After,
     ...reportMeta,
     ...peakTableData, // Spreads t1_datetime, t1_ghi, t2_... etc. directly into your template context
     ...solarVocTemplateValues,
@@ -273,6 +276,7 @@ export default function ReportDoc({ values = {}, calc = {}, files = {}, solarCal
     .replaceAll("{{1441.33 Vdc}}", "{{allTimeMaxVoc}} Vdc")
     .replaceAll("{{1441.33}} Voc", "{{allTimeMaxVoc}} Voc")
     .replaceAll("{{36.9}}", "{{vmpMaxTemp}}")
+    .replaceAll("{{1031.42}}", "{{degradation_year30_after}}")
     .replace('font-style: normal;">{{tempCellMax}}</span>', 'font-style: normal;">{{vmpMaxTemp}}</span>')
     .replace('font-style: normal;">N_MIN</span>', 'font-style: normal;">{{N_MIN}}</span>')
     .replace('font-style: normal;">N_MIN_ROUNDED</span>', 'font-style: normal;">{{N_MIN_ROUNDED}}</span>');
