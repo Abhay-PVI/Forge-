@@ -128,6 +128,15 @@ export const STRING_SIZE_TABS = [{
     mono: true,
     placeholder: '-112.0740'
   }, {
+    key: 'Total Area of the Plant',
+    label: 'Total Area of the Plant',
+    type: 'number',
+    unit: 'Acres',
+    mono: true,
+    required: true,
+    placeholder: '1000'
+  },
+  {
     key: 'revision',
     label: 'Revision',
     type: 'select',
@@ -311,6 +320,14 @@ export const STRING_SIZE_TABS = [{
           require: true,
           placeholder: '580'
         }, {
+          key: 'string_size',
+          label: 'String Size',
+          type: 'number',
+          unit: 'No.',
+          mono: true,
+          required: true,
+          placeholder: '28'
+        }, {
           key: 'tempCoeffVoc',
           label: 'Temp. coeff. of Voc',
           type: 'number',
@@ -372,6 +389,14 @@ export const STRING_SIZE_TABS = [{
         mono: true,
         required: true,
         placeholder: '500'
+      }, {
+        key: 'ac_capacity_inv',
+        label: 'AC Capacity',
+        type: 'number',
+        unit: 'MW',
+        mono: true,
+        required: true,
+        placeholder: '150'
       },
         //  {
         //   key: 'invMpptMax',

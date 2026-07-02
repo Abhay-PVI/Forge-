@@ -56,6 +56,7 @@ plant_name: 'Sandhills Solar — Phase II',
   module_dimensions: '2384 x 1303 x 35 mm',
 
   modules_series: '28',
+  string_size: '28',
   moduleDegradation: '0.5',
 
   // Inverter
