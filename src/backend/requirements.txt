@@ -13,3 +13,4 @@ scikit-learn
 lxml
 reportlab
 llmwhisperer-client==2.7.0
+PyMuPDF
