@@ -6,6 +6,15 @@ import React from 'react';
 
 import template from "../templates/bessReportTemplate.html?raw";
 
+import coverPage from "../../../../../shared/reports/coverPage.html?raw";
+import documentControlPage from "../../../../../shared/reports/documentControlPage.html?raw";
+import listOfTables from "../../../../../shared/reports/listOfTables.html?raw";
+import listOfAbbreviations from "../../../../../shared/reports/copy/listOfAbbreviations.html?raw";
+import tableOfContents from "../../../../../shared/reports/tableOfContents.html?raw";
+import { scanAndNumberReportContent, renderSimpleList, renderSectionIfNotEmpty, renderAbbreviationsTable } from "../../../../../shared/reports/utils/tocScanner";
+// <-- NEW: bring in the navigation helper
+import { getReportNodeById } from "../../../../../data/navigation";
+
 import { fillTemplate } from "../../../../report-engine/templateEngine";
 
 import ashraeTableTemplate from "../../../../../backend/Ashrae/ASHARE.html?raw";
@@ -73,14 +82,48 @@ export default function BessReportDoc({ values = {}, files = {} }) {
   const safeValues = values;
   const safeFiles = files;
 
-  
-const finalValues = {
-  ...values,
-  ASHRAE_TABLE: ashraeTableTemplate, // ✅ injected here
-};
 
+  // 1. Fill the BESS report body template to resolve its placeholders first
+  const initialValues = {
+    ...values,
+    ASHRAE_TABLE: ashraeTableTemplate,
+    REPORT_NAME: "BESS Design Basis Report",
+  };
+  const bodyHtml = fillTemplate(template, initialValues);
 
- const reportHtml = fillTemplate(template, finalValues);
+  // 2. Scan and number the resolved body HTML
+  const { numberedBodyHtml, headings, tables, figures, abbreviations } = scanAndNumberReportContent(bodyHtml);
+
+  // 3. Assemble final values with list placeholders
+  const finalValues = {
+    ...initialValues,
+    TOC_PLACEHOLDER: renderSimpleList(headings),
+    LIST_OF_TABLES_PLACEHOLDER: renderSectionIfNotEmpty("List of Tables", tables, { key: "title" }),
+    LIST_OF_FIGURES_PLACEHOLDER: renderSectionIfNotEmpty("List of Figures", figures, { key: "title" }),
+    LIST_OF_ABBREVIATIONS_PLACEHOLDER: renderAbbreviationsTable(abbreviations),
+  };
+
+  const appendixPages = values.appendixPages || [];
+  let appendixTemplate = "";
+
+  if (appendixPages.length > 0) {
+    appendixTemplate = `
+      <div class="report-page appendix-page" style="page-break-before: always; page-break-after: always; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; box-sizing: border-box;">
+        <h1 style="font-size: 36pt; color: #163c7a; font-weight: 700; margin-top: 250px;">Appendix</h1>
+        <p style="font-size: 14pt; color: #64748b; margin-top: 15px;">Solar String Sizing Calculations & Specs</p>
+      </div>
+      
+      ${appendixPages.map((imgData, index) => `
+        <div class="page" style="page-break-before: always; padding: 0 !important; display: flex; justify-content: center; align-items: center;">
+          <img src="${imgData}" style="width: 100%; height: 100%; object-fit: contain; display: block;" alt="Appendix Page ${index + 1}" />
+        </div>
+      `).join('')}
+    `;
+  }
+
+  // 4. Concatenate and fill final template
+  const completeTemplate = `${coverPage} ${documentControlPage} ${tableOfContents} ${listOfTables} ${listOfAbbreviations} ${numberedBodyHtml} ${appendixTemplate}`;
+  const reportHtml = fillTemplate(completeTemplate, finalValues);
 
 
 
@@ -93,8 +136,8 @@ const finalValues = {
   }, [values, files, safeFiles.batteryDs]);
 
   return (
-   
-        <div   id="bess-report" dangerouslySetInnerHTML={{__html: reportHtml}}/>
+
+    <div id="bess-report" dangerouslySetInnerHTML={{ __html: reportHtml }} />
 
   );
 }

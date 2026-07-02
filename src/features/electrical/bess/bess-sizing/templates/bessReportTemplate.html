@@ -3,6 +3,17 @@
 
   <div class="page">
     <div style="font-family: 'Segoe UI'; line-height: 1.5;">
+      <div style="display: none;">
+        <span class="toc-abbreviation" data-term="BESS">Battery Energy Storage System</span>
+        <span class="toc-abbreviation" data-term="PCS">Power Conversion System</span>
+        <span class="toc-abbreviation" data-term="MV">Medium Voltage</span>
+        <span class="toc-abbreviation" data-term="DC">Direct Current</span>
+        <span class="toc-abbreviation" data-term="AC">Alternating Current</span>
+        <span class="toc-abbreviation" data-term="NEC">National Electrical Code</span>
+        <span class="toc-abbreviation" data-term="NESC">National Electrical Safety Code</span>
+        <span class="toc-abbreviation" data-term="IBC">International Building Code</span>
+        <span class="toc-abbreviation" data-term="OSHA">Occupational Safety and Health Administration</span>
+      </div>
 
       <!-- TITLE -->
       <h1 style="font-size:16pt; text-align:left;">Design Basis Report</h1>
@@ -12,7 +23,7 @@
       <div style="font-family: 'Segoe UI'; line-height: 1.5;">
 
         <!-- TITLE -->
-        <h1 style="font-size:16pt; text-align:left;">1 Introduction</h1>
+        <h1 class="toc-heading" data-toc-level="1" style="font-size:16pt; text-align:left;">Introduction</h1>
 
         <!-- INTRO PARAGRAPH -->
         <p style="text-align:justify;">
@@ -40,7 +51,7 @@
         </p>
 
         <!-- PURPOSE -->
-        <h2 style="font-size:13.5pt;">1.1 Purpose</h2>
+        <h2 class="toc-heading" data-toc-level="2" style="font-size:13.5pt;">Purpose</h2>
 
         <p style="text-align:justify;">
           The purpose of this document is to establish the key design considerations and technical
@@ -57,7 +68,8 @@
         </ul>
 
         <!-- STANDARDS -->
-        <h2 style="font-size:13.5pt;">1.2 Applicable Design Standards and Codes</h2>
+        <h2 class="toc-heading" data-toc-level="2" style="font-size:13.5pt;">Applicable Design Standards and Codes
+        </h2>
 
         <p style="text-align:justify;">
           The Battery Energy Storage System (BESS) shall be designed and installed as per the
@@ -85,16 +97,16 @@
           <li>IFC - International Fire Code</li>
           <li>State, City, and County Ordinances</li>
         </ul>
-/* data Added in the above list should be added in the code as well */
+        /* data Added in the above list should be added in the code as well */
         <!-- ASHRAE WEATHER DATA -->
-        <h2 style="font-size:13.5pt;">1.3 Weather Data (ASHRAE)</h2>
+        <h2 class="toc-heading" data-toc-level="2" style="font-size:13.5pt;">Weather Data (ASHRAE)</h2>
 
         <p style="text-align:justify;">
           The following table presents key weather parameters obtained from ASHRAE database.
         </p>
         <div style="width:100%; overflow-x:auto;">
-        {{ASHRAE_TABLE}}
-          </div>
+          {{ASHRAE_TABLE}}
+        </div>
 
         <!-- <!-- /div> making Single div for all content to maintain the formatting and page breaks in
                         preview and final docx
@@ -102,9 +114,9 @@
                         <!div style="font-family:'Segoe UI'; line-height:1.5;"> -->
 
         <!-- SECTION TITLE -->
-        <h1 style="font-size:16pt;">1.3 Project Details</h1>
+        <h1 class="toc-heading" data-toc-level="2" style="font-size:16pt;">Project Details</h1>
 
-        <p><b>Table 1: Project Summary</b></p>
+        <p><b class="toc-table-caption">Table 1: Project Summary</b></p>
 
         <!-- TABLE -->
         <table style="width:100%; border-collapse:collapse; font-size:10.5pt;">
@@ -339,7 +351,7 @@
                                 <!--div style="font-family:'Segoe UI'; line-height:1.5;"> -->
 
         <!-- SECTION TITLE -->
-        <h1 style="font-size:16pt;">1.4 Project Electrical Scheme</h1>
+        <h1 class="toc-heading" data-toc-level="2" style="font-size:16pt;">Project Electrical Scheme</h1>
 
         <p style="text-align:justify;">
           The project has a capacity of
@@ -394,9 +406,11 @@
         </p>
 
         <!-- SECTION 2 -->
-        <h1 style="font-size:16pt;">2 Major Equipment and Systems Design Data</h1>
+        <h1 class="toc-heading" data-toc-level="1" style="font-size:16pt;">Major Equipment and Systems Design Data
+        </h1>
 
-        <h2 style="font-size:13.5pt;">2.1 Battery Energy Storage System (BESS) Data
+        <h2 class="toc-heading" data-toc-level="2" style="font-size:13.5pt;">Battery Energy Storage System (BESS)
+          Data
         </h2>
 
         <p style="text-align:justify;">
@@ -419,9 +433,7 @@
         <!-- <!--div style="font-family:'Segoe UI'; line-height:1.5;"> -->
         <!-- PAGE 4 -->
         <!-- SECTION -->
-        <h2 style="font-size:13.5pt;">Table 2: Technical Parameters of
-          Battery Energy Storage
-          System</h2>
+        <h2 style="font-size:13.5pt;"><b class="toc-table-caption">Table 2: Technical Parameters of Battery Energy Storage System</b></h2>
 
         <table style="width:100%; border-collapse:collapse; font-size:10.5pt;">
           <thead>
@@ -562,7 +574,7 @@
         </table>
 
         <!-- BATTERY DATA -->
-        <h2 style="font-size:13.5pt;">2.1.1 Battery Data</h2>
+        <h2 class="toc-heading" data-toc-level="3" style="font-size:13.5pt;">Battery Data</h2>
 
         <p style="text-align:justify;">
           Batteries shall be shipped as per DOT regulations and UN 38.3
@@ -571,8 +583,7 @@
           manufacturer guidelines.
         </p>
 
-        <h2 style="font-size:13.5pt;">Table 3: Technical Parameters of
-          Battery</h2>
+        <h2 style="font-size:13.5pt;"><b class="toc-table-caption">Table 3: Technical Parameters of Battery</b></h2>
 
         <table style="width:100%; border-collapse:collapse; font-size:10.5pt;">
           <thead>
@@ -642,7 +653,7 @@
         </table>
 
         <!-- PCS SECTION -->
-        <h2 style="font-size:13.5pt;">2.1.2 Power Conversion System</h2>
+        <h2 class="toc-heading" data-toc-level="3" style="font-size:13.5pt;">Power Conversion System</h2>
 
         <p style="text-align:justify;">
           PCS shall operate in all four quadrants and provide voltage
@@ -650,8 +661,7 @@
           nominal.
         </p>
 
-        <h2 style="font-size:13.5pt;">Table 4: Technical Parameters of PCS
-        </h2>
+        <h2 style="font-size:13.5pt;"><b class="toc-table-caption">Table 4: Technical Parameters of PCS</b></h2>
 
         <table style="width:100%; border-collapse:collapse; font-size:10.5pt;">
           <thead>
@@ -760,364 +770,354 @@
         <!-- <!-- /div>
           <!--div style="font-family:'Segoe UI'; line-height:1.5;"> -->
 
-            <!-- 2.1.3 -->
-            <h2 style="font-size:13.5pt;">2.1.3 Medium Voltage
-              Transformer Data</h2>
+        <!-- 2.1.3 -->
+        <h2 class="toc-heading" data-toc-level="3" style="font-size:13.5pt;">Medium Voltage Transformer Data</h2>
 
-            <p style="text-align:justify;">
-              Transformers LV voltage rating shall be chosen to
-              interface effectively with
-              inverters and
-              the HV voltage will be <span id="MV_VOLTAGE"></span> kV.
-            </p>
+        <p style="text-align:justify;">
+          Transformers LV voltage rating shall be chosen to
+          interface effectively with
+          inverters and
+          the HV voltage will be <span id="MV_VOLTAGE"></span> kV.
+        </p>
 
-            <!-- TABLE 5 -->
-            <h2 style="font-size:13.5pt;">Table 5: Technical Parameters
-              of Medium Voltage
-              Transformer</h2>
+        <!-- TABLE 5 -->
+        <h2 style="font-size:13.5pt;"><b class="toc-table-caption">Table 5: Technical Parameters of Medium Voltage Transformer</b></h2>
 
-            <table style="width:100%; border-collapse:collapse; font-size:10.5pt;">
+        <table style="width:100%; border-collapse:collapse; font-size:10.5pt;">
 
-              <thead>
-                <tr>
-                  <th style="border:1px solid black;">Sr. No.</th>
-                  <th style="border:1px solid black;">Particulars
-                  </th>
-                  <th style="border:1px solid black;">Descriptions
-                  </th>
-                  <th style="border:1px solid black;">Units</th>
-                </tr>
-              </thead>
+          <thead>
+            <tr>
+              <th style="border:1px solid black;">Sr. No.</th>
+              <th style="border:1px solid black;">Particulars
+              </th>
+              <th style="border:1px solid black;">Descriptions
+              </th>
+              <th style="border:1px solid black;">Units</th>
+            </tr>
+          </thead>
 
-              <tbody>
-                <tr>
-                  <td style="border:1px solid black;">1</td>
-                  <td>Rating</td>
-                  <td><span id="MVT_RATING"></span></td>
-                  <td>kVA</td>
-                </tr>
-                <tr>
-                  <td style="border:1px solid black;">2</td>
-                  <td>Voltage ratings</td>
-                  <td><span id="MV_VOLTAGE"></span> / 0.6</td>
-                  <td>kV</td>
-                </tr>
-                <tr>
-                  <td style="border:1px solid black;">3</td>
-                  <td>Winding configuration</td>
-                  <td>HV – Wye, LV – Delta</td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td style="border:1px solid black;">4</td>
-                  <td>Cooling</td>
-                  <td>KNAN</td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td style="border:1px solid black;">5</td>
-                  <td>No. of PCS / Transformer</td>
-                  <td>1</td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td style="border:1px solid black;">6</td>
-                  <td>Impedance</td>
-                  <td>5.75</td>
-                  <td>%</td>
-                </tr>
-                <tr>
-                  <td style="border:1px solid black;">7</td>
-                  <td>Winding material</td>
-                  <td>Aluminum</td>
-                  <td></td>
-                </tr>
-              </tbody>
+          <tbody>
+            <tr>
+              <td style="border:1px solid black;">1</td>
+              <td>Rating</td>
+              <td><span id="MVT_RATING"></span></td>
+              <td>kVA</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid black;">2</td>
+              <td>Voltage ratings</td>
+              <td><span id="MV_VOLTAGE"></span> / 0.6</td>
+              <td>kV</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid black;">3</td>
+              <td>Winding configuration</td>
+              <td>HV – Wye, LV – Delta</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td style="border:1px solid black;">4</td>
+              <td>Cooling</td>
+              <td>KNAN</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td style="border:1px solid black;">5</td>
+              <td>No. of PCS / Transformer</td>
+              <td>1</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td style="border:1px solid black;">6</td>
+              <td>Impedance</td>
+              <td>5.75</td>
+              <td>%</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid black;">7</td>
+              <td>Winding material</td>
+              <td>Aluminum</td>
+              <td></td>
+            </tr>
+          </tbody>
 
-            </table>
+        </table>
 
-            <!-- 2.1.4 -->
-            <h2 style="font-size:13.5pt;">2.1.4 Auxiliary Power</h2>
+        <!-- 2.1.4 -->
+        <h2 class="toc-heading" data-toc-level="3" style="font-size:13.5pt;">Auxiliary Power</h2>
 
-            <p style="text-align:justify;">
-              Each <span id="BESS_MANUFACTURER"></span> enclosure
-              requires
-              <span id="AUX_VOLTAGE"></span> V auxiliary supply of
-              approx.
-              <span id="AUX_POWER_KVA"></span> kVA for cooling,
-              controls, communication
-              and fire systems.
+        <p style="text-align:justify;">
+          Each <span id="BESS_MANUFACTURER"></span> enclosure
+          requires
+          <span id="AUX_VOLTAGE"></span> V auxiliary supply of
+          approx.
+          <span id="AUX_POWER_KVA"></span> kVA for cooling,
+          controls, communication
+          and fire systems.
 
-              Auxiliary loads shall be fed from <span id="MV_VOLTAGE"></span>
-              kV /
-              <span id="AUX_VOLTAGE2"></span> V transformer boards.
+          Auxiliary loads shall be fed from <span id="MV_VOLTAGE"></span>
+          kV /
+          <span id="AUX_VOLTAGE2"></span> V transformer boards.
 
-              <span id="PCS_MODEL"></span> has inbuilt auxiliary
-              transformer, hence
-              external supply is not required.
-            </p>
+          <span id="PCS_MODEL"></span> has inbuilt auxiliary
+          transformer, hence
+          external supply is not required.
+        </p>
 
-            <p style="text-align:justify;">
-              EMS is located in substation control enclosure and
-              powered from SST.
-              <span id="BESS_MANUFACTURER2"></span> enclosure has
-              internal battery backup
-              for control systems.
-            </p>
+        <p style="text-align:justify;">
+          EMS is located in substation control enclosure and
+          powered from SST.
+          <span id="BESS_MANUFACTURER2"></span> enclosure has
+          internal battery backup
+          for control systems.
+        </p>
 
-            <p style="text-align:justify;">
-              FNE and IR cameras are powered via
-              <span id="FNE_AUX_POWER_KVA"></span> kVA transformer
-              tapped from
-              <span id="AUX_VOLTAGE3"></span> V board.
+        <p style="text-align:justify;">
+          FNE and IR cameras are powered via
+          <span id="FNE_AUX_POWER_KVA"></span> kVA transformer
+          tapped from
+          <span id="AUX_VOLTAGE3"></span> V board.
 
-              UPS units (<span id="UPS_POWER_KVA"></span> kVA each)
-              supply power to
-              multiple FNEs (max <span id="MAX_FNE_LOOP"></span>
-              units).
+          UPS units (<span id="UPS_POWER_KVA"></span> kVA each)
+          supply power to
+          multiple FNEs (max <span id="MAX_FNE_LOOP"></span>
+          units).
 
-              Each FNE provides <span id="DC_CONTROL_VOLTAGE"></span>
-              V DC supply.
-            </p>
+          Each FNE provides <span id="DC_CONTROL_VOLTAGE"></span>
+          V DC supply.
+        </p>
 
-            <!-- 2.1.5 -->
-            <h2 style="font-size:13.5pt;">2.1.5 Wiring Color Codes</h2>
+        <!-- 2.1.5 -->
+        <h2 class="toc-heading" data-toc-level="3" style="font-size:13.5pt;">Wiring Color Codes</h2>
 
-            <h2 style="font-size:13.5pt;">Table 6: Wiring Color Code
-            </h2>
+        <h2 style="font-size:13.5pt;"><b class="toc-table-caption">Table 6: Wiring Color Code</b></h2>
 
-            <table style="width:100%; border-collapse:collapse; font-size:10.5pt;">
+        <table style="width:100%; border-collapse:collapse; font-size:10.5pt;">
 
-              <thead>
-                <tr>
-                  <th style="border:1px solid black;">Voltage
-                    Class</th>
-                  <th style="border:1px solid black;">Wire & Cable
-                  </th>
-                  <th style="border:1px solid black;">Color</th>
-                </tr>
-              </thead>
+          <thead>
+            <tr>
+              <th style="border:1px solid black;">Voltage
+                Class</th>
+              <th style="border:1px solid black;">Wire & Cable
+              </th>
+              <th style="border:1px solid black;">Color</th>
+            </tr>
+          </thead>
 
-              <tbody>
+          <tbody>
 
-                <!-- 120V -->
-                <tr>
-                  <td style="border:1px solid black;" rowspan="4">
-                    120 / 208V</td>
-                  <td>Line A</td>
-                  <td>Black</td>
-                </tr>
-                <tr>
-                  <td>Line B</td>
-                  <td>Red</td>
-                </tr>
-                <tr>
-                  <td>Line C</td>
-                  <td>Blue</td>
-                </tr>
-                <tr>
-                  <td>Neutral</td>
-                  <td>White</td>
-                </tr>
+            <!-- 120V -->
+            <tr>
+              <td style="border:1px solid black;" rowspan="4">
+                120 / 208V</td>
+              <td>Line A</td>
+              <td>Black</td>
+            </tr>
+            <tr>
+              <td>Line B</td>
+              <td>Red</td>
+            </tr>
+            <tr>
+              <td>Line C</td>
+              <td>Blue</td>
+            </tr>
+            <tr>
+              <td>Neutral</td>
+              <td>White</td>
+            </tr>
 
-                <!-- 480 -->
-                <tr>
-                  <td style="border:1px solid black;" rowspan="4">
-                    480 / 800V</td>
-                  <td>Line A</td>
-                  <td>Brown</td>
-                </tr>
-                <tr>
-                  <td>Line B</td>
-                  <td>Orange</td>
-                </tr>
-                <tr>
-                  <td>Line C</td>
-                  <td>Yellow</td>
-                </tr>
-                <tr>
-                  <td>Neutral</td>
-                  <td>Grey</td>
-                </tr>
+            <!-- 480 -->
+            <tr>
+              <td style="border:1px solid black;" rowspan="4">
+                480 / 800V</td>
+              <td>Line A</td>
+              <td>Brown</td>
+            </tr>
+            <tr>
+              <td>Line B</td>
+              <td>Orange</td>
+            </tr>
+            <tr>
+              <td>Line C</td>
+              <td>Yellow</td>
+            </tr>
+            <tr>
+              <td>Neutral</td>
+              <td>Grey</td>
+            </tr>
 
-                <!-- MV -->
-                <tr>
-                  <td style="border:1px solid black;" rowspan="3">
-                    35kV</td>
-                  <td>Line A</td>
-                  <td rowspan="3">A / B / C phase labeling</td>
-                </tr>
-                <tr>
-                  <td>Line B</td>
-                </tr>
-                <tr>
-                  <td>Line C</td>
-                </tr>
+            <!-- MV -->
+            <tr>
+              <td style="border:1px solid black;" rowspan="3">
+                35kV</td>
+              <td>Line A</td>
+              <td rowspan="3">A / B / C phase labeling</td>
+            </tr>
+            <tr>
+              <td>Line B</td>
+            </tr>
+            <tr>
+              <td>Line C</td>
+            </tr>
 
-                <!-- DC -->
-                <tr>
-                  <td rowspan="2">DC Conductors</td>
-                  <td>Positive</td>
-                  <td>Red</td>
-                </tr>
-                <tr>
-                  <td>Negative</td>
-                  <td>Black</td>
-                </tr>
+            <!-- DC -->
+            <tr>
+              <td rowspan="2">DC Conductors</td>
+              <td>Positive</td>
+              <td>Red</td>
+            </tr>
+            <tr>
+              <td>Negative</td>
+              <td>Black</td>
+            </tr>
 
-                <!-- GROUND -->
-                <tr>
-                  <td colspan="2">Ground Conductor</td>
-                  <td>Green / Bare</td>
-                </tr>
+            <!-- GROUND -->
+            <tr>
+              <td colspan="2">Ground Conductor</td>
+              <td>Green / Bare</td>
+            </tr>
 
-              </tbody>
+          </tbody>
 
-            </table>
+        </table>
 
-            <!-- <!-- /div>
+        <!-- <!-- /div>
               <!--div style="font-family:'Segoe UI'; line-height:1.6;"> -->
 
-                <!-- SECTION TITLE -->
-                <h1 style="font-size:16pt;">3 Cable Ampacity
-                  Calculations</h1>
+        <!-- SECTION TITLE -->
+        <h1 class="toc-heading" data-toc-level="1" style="font-size:16pt;">Cable Ampacity Calculations</h1>
 
-                <!-- 3.1 -->
-                <h2 style="font-size:13.5pt;">3.1 DC Cables (Cable
-                  Tray)</h2>
-                <h3 style="font-size:12pt;">3.1.1 Notes and
-                  Assumptions</h3>
+        <!-- 3.1 -->
+        <h2 class="toc-heading" data-toc-level="2" style="font-size:13.5pt;">DC Cables (Cable Tray)</h2>
+        <h3 class="toc-heading" data-toc-level="3" style="font-size:12pt;">Notes and Assumptions</h3>
 
-                <ul>
-                  <li>Voltage and current values are based on
-                    battery enclosure
-                    specifications.</li>
+        <ul>
+          <li>Voltage and current values are based on
+            battery enclosure
+            specifications.</li>
 
-                  <li>
-                    Soil thermal resistivity is based on
-                    geotechnical report for
-                    <span id="PROJECT_NAME"></span> project
-                    prepared by
-                    <span id="GEOTECH_REPORT_COMPANY"></span>
-                    (Project No:
-                    <span id="GEOTECH_REPORT_NO"></span>, dated
-                    <span id="GEOTECH_REPORT_DATE"></span>).
-                  </li>
+          <li>
+            Soil thermal resistivity is based on
+            geotechnical report for
+            <span id="PROJECT_NAME"></span> project
+            prepared by
+            <span id="GEOTECH_REPORT_COMPANY"></span>
+            (Project No:
+            <span id="GEOTECH_REPORT_NO"></span>, dated
+            <span id="GEOTECH_REPORT_DATE"></span>).
+          </li>
 
-                  <li>DC cables are installed in above-ground
-                    trays between PCS and
-                    battery enclosure.</li>
+          <li>DC cables are installed in above-ground
+            trays between PCS and
+            battery enclosure.</li>
 
-                  <li>
-                    For this design, <span id="NO_OF_DC_RUNS"></span>
-                    runs of
-                    <span id="DC_CABLE_SIZE"></span> are used
-                    between battery
-                    enclosure and PCS.
-                  </li>
+          <li>
+            For this design, <span id="NO_OF_DC_RUNS"></span>
+            runs of
+            <span id="DC_CABLE_SIZE"></span> are used
+            between battery
+            enclosure and PCS.
+          </li>
 
-                  <li>
-                    <span id="CABLE_TRAY_WIDTH"></span> ft width
-                    cable tray proposed
-                    between enclosure and PCS.
-                  </li>
+          <li>
+            <span id="CABLE_TRAY_WIDTH"></span> ft width
+            cable tray proposed
+            between enclosure and PCS.
+          </li>
 
-                  <li>PCS DC combiners shall support side cable
-                    entry.</li>
-                </ul>
+          <li>PCS DC combiners shall support side cable
+            entry.</li>
+        </ul>
 
 
-                <!-- 3.2 -->
-                <h2 style="font-size:13.5pt;">3.2 MVAC CABLES</h2>
-                <h3 style="font-size:12pt;">3.2.1 Notes and
-                  Assumptions</h3>
+        <!-- 3.2 -->
+        <h2 class="toc-heading" data-toc-level="2" style="font-size:13.5pt;">MVAC CABLES</h2>
+        <h3 class="toc-heading" data-toc-level="3" style="font-size:12pt;">Notes and Assumptions</h3>
 
-                <ul>
+        <ul>
 
-                  <li>
-                    MV cable sizing verified using CYMCAP
-                    ensuring temperature does
-                    not exceed
-                    <span id="MV_CABLE_MAX_TEMP"></span>°C.
-                  </li>
+          <li>
+            MV cable sizing verified using CYMCAP
+            ensuring temperature does
+            not exceed
+            <span id="MV_CABLE_MAX_TEMP"></span>°C.
+          </li>
 
-                  <li>
-                    MV cables are buried at depth of
-                    <span id="MV_CABLE_BURIAL_DEPTH"></span>
-                    feet.
-                  </li>
+          <li>
+            MV cables are buried at depth of
+            <span id="MV_CABLE_BURIAL_DEPTH"></span>
+            feet.
+          </li>
 
-                  <li>Voltage and current based on transformer
-                    specifications.</li>
+          <li>Voltage and current based on transformer
+            specifications.</li>
 
-                  <li>
-                    Load factor of <span id="LOAD_FACTOR_PERCENT"></span>% used
-                    for
-                    analysis.
-                  </li>
+          <li>
+            Load factor of <span id="LOAD_FACTOR_PERCENT"></span>% used
+            for
+            analysis.
+          </li>
 
-                  <li>
-                    Soil resistivity based on report for <span id="PROJECT_NAME_2"></span> project
-                    prepared by
-                    <span id="GEOTECH_REPORT_COMPANY_2"></span>
-                    (Project No: <span id="GEOTECH_REPORT_NO_2"></span>).
-                  </li>
+          <li>
+            Soil resistivity based on report for <span id="PROJECT_NAME_2"></span> project
+            prepared by
+            <span id="GEOTECH_REPORT_COMPANY_2"></span>
+            (Project No: <span id="GEOTECH_REPORT_NO_2"></span>).
+          </li>
 
-                  <li>
-                    Soil temperature data from <span id="SOIL_TEMP_STATION"></span>,
-                    <span id="SOIL_TEMP_LOCATION"></span>. Max
-                    temp:
-                    <span id="SOIL_TEMP_MAX"></span>, selected:
-                    <span id="SOIL_TEMP_SELECTED"></span>.
-                  </li>
+          <li>
+            Soil temperature data from <span id="SOIL_TEMP_STATION"></span>,
+            <span id="SOIL_TEMP_LOCATION"></span>. Max
+            temp:
+            <span id="SOIL_TEMP_MAX"></span>, selected:
+            <span id="SOIL_TEMP_SELECTED"></span>.
+          </li>
 
-                  <li>
-                    Soil resistivity: <span id="SOIL_THERMAL_RESISTIVITY_NATIVE"></span>
-                    at
-                    <span id="SOIL_MOISTURE_CONTENT"></span>%
-                    moisture. Parcel
-                    <span id="PARCEL_NO"></span> used as
-                    backfill if required.
-                  </li>
+          <li>
+            Soil resistivity: <span id="SOIL_THERMAL_RESISTIVITY_NATIVE"></span>
+            at
+            <span id="SOIL_MOISTURE_CONTENT"></span>%
+            moisture. Parcel
+            <span id="PARCEL_NO"></span> used as
+            backfill if required.
+          </li>
 
-                  <li>
-                    Refer drawing <span id="REFERENCE_DRAWING_NO"></span> for
-                    routing details.
-                  </li>
+          <li>
+            Refer drawing <span id="REFERENCE_DRAWING_NO"></span> for
+            routing details.
+          </li>
 
-                </ul>
+        </ul>
 
-                <p><b>Cable Sizes:</b></p>
+        <p><b>Cable Sizes:</b></p>
 
-                <ul>
-                  <li><span id="MV_CABLE_SIZE_1"></span></li>
-                  <li><span id="MV_CABLE_SIZE_2"></span></li>
-                  <li><span id="MV_CABLE_SIZE_3"></span></li>
-                  <li><span id="MV_CABLE_SIZE_4"></span></li>
-                </ul>
+        <ul>
+          <li><span id="MV_CABLE_SIZE_1"></span></li>
+          <li><span id="MV_CABLE_SIZE_2"></span></li>
+          <li><span id="MV_CABLE_SIZE_3"></span></li>
+          <li><span id="MV_CABLE_SIZE_4"></span></li>
+        </ul>
 
 
-                <!-- 3.3 -->
-                <h2 style="font-size:13.5pt;">3.3 AUXILIARY CABLES
-                </h2>
-                <h3 style="font-size:12pt;">3.3.1 Notes and
-                  Assumptions</h3>
+        <!-- 3.3 -->
+        <h2 class="toc-heading" data-toc-level="2" style="font-size:13.5pt;">AUXILIARY CABLES</h2>
+        <h3 class="toc-heading" data-toc-level="3" style="font-size:12pt;">Notes and Assumptions</h3>
 
-                <ul>
-                  <li>Cable sizing verified using Cymcap & AmpCalc
-                    (90°C rating).</li>
-                  <li>Minimum burial depth = 18”.</li>
-                  <li>Load factor considered = 100%.</li>
-                  <li>Soil resistivity based on geotechnical
-                    report (Western
-                    Technologies).</li>
-                  <li>4 runs of 1C 750 KCMIL AL cables used for
-                    main distribution.
-                  </li>
-                  <li>2 AWG CU cables used for enclosure
-                    connections (as per OEM).
-                  </li>
-                </ul>
+        <ul>
+          <li>Cable sizing verified using Cymcap & AmpCalc
+            (90°C rating).</li>
+          <li>Minimum burial depth = 18”.</li>
+          <li>Load factor considered = 100%.</li>
+          <li>Soil resistivity based on geotechnical
+            report (Western
+            Technologies).</li>
+          <li>4 runs of 1C 750 KCMIL AL cables used for
+            main distribution.
+          </li>
+          <li>2 AWG CU cables used for enclosure
+            connections (as per OEM).
+          </li>
+        </ul>
 
       </div>
 

@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import Icon from "../../../shared/components/Icon";
+import Icon from "../../../../../shared/components/Icon";
 // export default function UploadZone() {
 //   return <div>Upload Zone</div>;
 // }

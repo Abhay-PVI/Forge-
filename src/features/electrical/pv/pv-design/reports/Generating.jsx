@@ -1,6 +1,6 @@
 // import React from 'react';
 import React, { useState, useEffect, useRef } from 'react';
-import Icon from "../../../shared/components/Icon";
+import Icon from "../../../../../shared/components/Icon";
 import { docNumber } from "../forms/utils/docNumber.js";
 
 // export default function Generating() {

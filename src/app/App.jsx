@@ -286,7 +286,7 @@ export default function App() {
               }))
             }
             files={files}
-            files={currentFiles}
+            // files={currentFiles}
             setFile={setFile}
             calc={pvCalc}
             layout={t.formLayout}

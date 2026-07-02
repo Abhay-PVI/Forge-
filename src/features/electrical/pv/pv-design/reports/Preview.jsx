@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import Icon from "../../../shared/components/Icon";
+import Icon from "../../../../../shared/components/Icon";
 import { docNumber } from "../forms/utils/docNumber.js";
 import ReportDoc from "./ReportDoc.jsx";
-import { exportPdf } from "../../../shared/utils/exporter/exportPdf";
-import { exportDocx } from "../../../shared/utils/exporter/exportDocx";
+import { exportPdf, exportPdfServer, exportPdfWithToc } from "../../../../../shared/utils/exporter/exportPdf";
+import { exportDocx } from "../../../../../shared/utils/exporter/exportDocx";
 
 function V(value) {
   if (value === null || value === undefined || value === "") {
@@ -36,7 +36,7 @@ export default function Preview({ values, calc, files, onBack, onNew }) {
 
   const handleDownload = () => {
     if (selectedFormat === "pdf") {
-      exportPdf("PV_DBR-report", fname.replace(".docx", ".pdf"), selectedPageSize);
+      exportPdfWithToc("PV_DBR-report", fname.replace(".docx", ".pdf"), selectedPageSize);
     } else {
       exportDocx("PV_DBR-report", fname);
     }
@@ -123,22 +123,25 @@ export default function Preview({ values, calc, files, onBack, onNew }) {
                   </div>
                 </div>
                 <button className="btn btn-primary" style={{ width: '100%', marginTop: 14 }} onClick={handleDownload}><Icon name="download" size={15} />Download</button>
-                
+                {/* <button className="btn btn-secondary" style={{ width: '100%', marginTop: 8 }} onClick={() => exportPdfServer("PV_DBR-report", fname.replace(".docx", ".pdf"), selectedPageSize)}>
+                  Test Server PDF
+                </button> */}
+
                 {/* Dynamic Slider Segment Switch */}
                 <div className="segmented-control" style={{ marginTop: "10px" }}>
                   {/* Selector pill */}
                   <div className={`segmented-control-pill ${selectedPageSize === "Letter" ? "left" : "right"}`} />
-                  
+
                   {/* Letter option */}
-                  <div 
+                  <div
                     onClick={() => setPageSize("Letter")}
                     className={`segmented-control-option ${selectedPageSize === "Letter" ? "active" : ""}`}
                   >
                     Letter
                   </div>
-                  
+
                   {/* A4 option */}
-                  <div 
+                  <div
                     onClick={() => setPageSize("A4")}
                     className={`segmented-control-option ${selectedPageSize === "A4" ? "active" : ""}`}
                   >
@@ -151,17 +154,17 @@ export default function Preview({ values, calc, files, onBack, onNew }) {
                 <div className="segmented-control">
                   {/* Selector pill */}
                   <div className={`segmented-control-pill ${!showStamp ? "left" : "right"}`} />
-                  
+
                   {/* No Stamp option */}
-                  <div 
+                  <div
                     onClick={() => setShowStamp(false)}
                     className={`segmented-control-option ${!showStamp ? "active" : ""}`}
                   >
                     No Stamp
                   </div>
-                  
+
                   {/* Stamp option */}
-                  <div 
+                  <div
                     onClick={() => setShowStamp(true)}
                     className={`segmented-control-option ${showStamp ? "active" : ""}`}
                   >

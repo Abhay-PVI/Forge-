@@ -1,3 +1,8 @@
+import sys
+import asyncio
+
+if sys.platform == "win32":
+    asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
 
 from fastapi import FastAPI, UploadFile, File
 import tempfile
@@ -12,6 +17,10 @@ from calculationRepo.generateSolarReport import build_solar_report_data, build_s
 from Ashrae.ashrae_service import process_and_populate_report
 
 from parsers.pvsyst_parser import extract_pvsyst_data
+
+from pdf_utils import generate_pdf_from_html, generate_pdf_with_toc
+
+
 
 app = FastAPI()
 
@@ -83,14 +92,15 @@ app.add_middleware(
 def generate_ashrae(data: AshraeRequest):
 
     try:
-        process_and_populate_report(
+        data_map = process_and_populate_report(
             data.latitude,
             data.longitude
         )
 
         return {
             "success": True,
-            "message": "ASHRAE data generated"
+            "message": "ASHRAE data generated",
+            "data": data_map
         }
 
     except Exception as e:
@@ -169,3 +179,38 @@ async def generate_solar_report_pdf_endpoint(payload: SolarReportRequest):
                 "details": error_trace
             }
         )
+
+
+
+@app.post("/api/generate-pdf")
+async def generate_pdf_endpoint(payload: dict):
+    """Receive the full HTML string from the front‑end and return a PDF."""
+    html = payload.get("html")
+    if not html:
+        return JSONResponse(
+            status_code=400,
+            content={"status": "error", "message": "Missing html content"},
+        )
+    pdf_bytes = await generate_pdf_from_html(html, format="Letter")
+    return StreamingResponse(
+        io.BytesIO(pdf_bytes),
+        media_type="application/pdf",
+        headers={"Content-Disposition": "attachment; filename=report.pdf"},
+    )
+
+
+@app.post("/api/generate-pdf-with-toc")
+async def generate_pdf_with_toc_endpoint(payload: dict):
+    """Two-pass PDF: discover page numbers, inject into TOC, re-render."""
+    html = payload.get("html")
+    if not html:
+        return JSONResponse(
+            status_code=400,
+            content={"status": "error", "message": "Missing html content"},
+        )
+    pdf_bytes = await generate_pdf_with_toc(html, format="Letter")
+    return StreamingResponse(
+        io.BytesIO(pdf_bytes),
+        media_type="application/pdf",
+        headers={"Content-Disposition": "attachment; filename=report.pdf"},
+    )

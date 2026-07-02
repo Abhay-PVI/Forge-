@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Icon from "../../../../../shared/components/Icon";
 import { bessDocNumber } from "../forms/utils/bessDocNumber.js";
 import BessReportDoc from "./BessReportDoc.jsx";
-import { exportPdf } from "../../../../../shared/utils/exporter/exportPdf";
+import { exportPdf, exportPdfServer, exportPdfWithToc } from "../../../../../shared/utils/exporter/exportPdf";
 import { exportDocx } from "../../../../../shared/utils/exporter/exportDocx";
 // export default function Preview() {
 //   return <div>Preview</div>;
@@ -24,7 +24,7 @@ export default function BessPreview({ values, calc, files, onBack, onNew }) {
    const [selectedPageSize, setPageSize] = useState("A4");
    const handleDownload = () => {
     if (selectedFormat === "pdf") {
-        exportPdf(
+        exportPdfWithToc(
             "bess-report",
             fname.replace(".docx", ".pdf"),
             selectedPageSize
@@ -69,6 +69,9 @@ export default function BessPreview({ values, calc, files, onBack, onNew }) {
                         </div>
                         <button className="btn btn-primary" style={{ width: '100%', marginTop: 14 }} onClick={handleDownload}>
                             <Icon name="download" size={15} />Download
+                        </button>
+                        <button className="btn btn-secondary" style={{ width: '100%', marginTop: 8 }} onClick={() => exportPdfServer("bess-report", fname.replace(".docx", ".pdf"), selectedPageSize)}>
+                            Test Server PDF
                         </button>
                         
                         {/* Dynamic Slider Segment Switch */}

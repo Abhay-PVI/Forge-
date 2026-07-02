@@ -1,22 +1,24 @@
 import React from 'react';
+import { getReportNodeById } from "../../../../../data/navigation";
 
 import template from "../templates/pvReportTemplate.html?raw";
 import { buildVocTable, buildIscTable, buildMinVoltageDegradationTable, buildPvsystTables, calculateNMin, buildSolarVocTemplateValues, buildPvsystLossTemplateValues } from "../forms/utils/buildVoc&IscTable";
-import coverPage from "../../../shared/reports/coverPage.html?raw";
-import documentControlPage from "../../../shared/reports/documentControlPage.html?raw";
-import listOfTables from "../../../shared/reports/listOfTables.html?raw";
-import listOfAbbreviations from "../../../shared/reports/listOfAbbreviations.html?raw";
-import { fillTemplate } from "../../report-engine/templateEngine";
-import tableOfContents from "../../../shared/reports/tableOfContents.html?raw";
+import coverPage from "../../../../../shared/reports/copy/coverPage.html?raw";
+import documentControlPage from "../../../../../shared/reports/copy/documentControlPage.html?raw";
+import listOfTables from "../../../../../shared/reports/copy/listOfTables.html?raw";
+import listOfAbbreviations from "../../../../../shared/reports/copy/listOfAbbreviations.html?raw";
+import { fillTemplate } from "../../../../report-engine/templateEngine";
+import tableOfContents from "../../../../../shared/reports/copy/tableOfContents.html?raw";
+import { scanAndNumberReportContent, renderSimpleList, renderSectionIfNotEmpty, renderAbbreviationsTable } from "../../../../../shared/reports/utils/tocScanner";
 //C:\Users\AbhayPratapSingh\work\June\260605\HV DBR\Forge\forge-react\src\backend\Ashrae
-import ashraeTableTemplate from "../../../backend/Ashrae/ASHARE.html?raw";
-import { buildReportMeta } from "../../../shared/reports/buildReportMeta";
+import ashraeTableTemplate from "../../../../../backend/Ashrae/ASHARE.html?raw";
+import { buildReportMeta } from "../../../../../shared/reports/copy/buildReportMeta";
 // console.log(ashraeTableTemplate);
 // import { prepareTableData } from '../calculations/calculateYearlyVoc&Isc';
 
 
 
-import Logo from "../../../shared/components/Logo";
+import Logo from "../../../../../shared/components/Logo";
 
 const TODAY = new Date().toLocaleDateString("en-GB");
 
@@ -53,7 +55,40 @@ function CoverStat({ label, value }) {
 
 function DocRow({ k, v }) { return (<tr> <td>{k}</td> <td>{v}</td> </tr>); }
 
-export default function ReportDoc({ values = {}, files = {}, solarCalcValues = null, showStamp = false }) {
+function renderAshraeTableHtml(rawHtml, values) {
+  if (!rawHtml) return "";
+  try {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(rawHtml, "text/html");
+
+    // 1. Update station header title
+    const headerTitle = doc.getElementById("station_header_title");
+    if (headerTitle) {
+      const city = values.weather_station_city || "PHOENIX SKY HARBOR";
+      const state = values.weather_station_state ? `, ${values.weather_station_state}` : "";
+      const country = values.weather_station_country ? `, ${values.weather_station_country}` : ", USA";
+      const wmo = values.weather_station_id || "722780";
+      
+      headerTitle.innerHTML = `<div class="baloon_icon" style="display:inline-block;background-position:0px 0px;position: relative;right: 10;"></div><b>${city}${state}${country} (WMO: ${wmo})</b>`;
+    }
+
+    // 2. Loop over all elements with data-key attributes and fill them
+    const cells = doc.querySelectorAll("[data-key]");
+    cells.forEach((cell) => {
+      const key = cell.getAttribute("data-key");
+      if (key && values[key] !== undefined && values[key] !== null) {
+        cell.innerHTML = `<b>${values[key]}</b>`;
+      }
+    });
+
+    return doc.body.innerHTML;
+  } catch (err) {
+    console.error("Failed to dynamically populate ASHRAE table:", err);
+    return rawHtml;
+  }
+}
+
+export default function ReportDoc({ values = {}, calc = {}, files = {}, solarCalcValues = null, showStamp = false }) {
   const safeValues = values;
   const safeFiles = files;
 
@@ -94,10 +129,13 @@ export default function ReportDoc({ values = {}, files = {}, solarCalcValues = n
     tempMin: values?.tempMin,
     tempCellMax: values?.tempCellMax,
   });
-  const nMin = calculateNMin(values.PCS_Min_PV_Input_Voltage, values.vmpMaxTemp);
+  const vmpMaxTempVal = calc.VmpHot 
+    ? Number(calc.VmpHot) 
+    : (safeSolarCalcValues?.Vmp_Tmax?.[0] || 36.9);
+  const nMin = calculateNMin(values.PCS_Min_PV_Input_Voltage, vmpMaxTempVal);
   const { irradiationTable, energyTable } = buildPvsystTables(values.pvsystData || {});
   const pvsystLossTemplateValues = buildPvsystLossTemplateValues(values.pvsystData || {});
-  const reportMeta = buildReportMeta(values, { name: "PV Electrical Design Basis Report" });
+  const reportMeta = buildReportMeta(values, { name: values.reportName || values?.report?.name || "Design Basis Report" });
 
   console.log("ReportDoc degradationData:", degradationData);
   console.log("ReportDoc values.minVoltageDegradationTable:", values.minVoltageDegradationTable);
@@ -137,8 +175,17 @@ export default function ReportDoc({ values = {}, files = {}, solarCalcValues = n
         </div>
       `;
 
+  const summary = values.yearlyVocSummary || [];
+  const allTimeMaxVocVal = values.allTimeMaxVoc
+    ? values.allTimeMaxVoc
+    : (summary.length > 0
+        ? summary.reduce((max, row) => (row.maxVoltage > max ? row.maxVoltage : max), -Infinity)
+        : 1441.33);
+
   const templateValues = {
     ...values,
+    allTimeMaxVoc: typeof allTimeMaxVocVal === 'number' ? allTimeMaxVocVal.toFixed(2) : allTimeMaxVocVal,
+    vmpMaxTemp: typeof vmpMaxTempVal === 'number' ? vmpMaxTempVal.toFixed(1) : vmpMaxTempVal,
     ...reportMeta,
     ...peakTableData, // Spreads t1_datetime, t1_ghi, t2_... etc. directly into your template context
     ...solarVocTemplateValues,
@@ -151,7 +198,14 @@ export default function ReportDoc({ values = {}, files = {}, solarCalcValues = n
     weather_station_id: values.weather_station_id,
     minVoltageDegradationTable: degradationRows.join(""),
     YEARLY_ISC_TABLE: yearlyIscTable,
-    ASHRAE_TABLE: ashraeTableTemplate,
+    ASHRAE_TABLE: renderAshraeTableHtml(ashraeTableTemplate, values),
+    // Dynamically resolve report title from navigation data
+    REPORT_NAME: (
+      (() => {
+        const node = getReportNodeById(values?.report?.id || values?.reportId);
+        return node?.reportTitle || values.reportName || values?.report?.name || "Design Basis Report";
+      })()
+    ),
     YEARLY_VOC_TABLE: buildVocTable(values.yearlyVocSummary || []),
     PVSYST_IRRADIATION_TABLE: irradiationTable,
     PVSYST_ENERGY_TABLE: energyTable,
@@ -214,8 +268,31 @@ export default function ReportDoc({ values = {}, files = {}, solarCalcValues = n
     `;
   }
 
-  const completeTemplate = `${coverPage} ${documentControlPage} ${tableOfContents} ${listOfTables} ${listOfAbbreviations} ${template} ${appendixTemplate}`;
-  const reportHtml = fillTemplate(completeTemplate, templateValues);
+  // 1. Fill the report body template with templateValues to resolve all its placeholders
+  const modifiedTemplate = template
+    .replaceAll("{{1441.33 Vdc}}", "{{allTimeMaxVoc}} Vdc")
+    .replaceAll("{{1441.33}} Voc", "{{allTimeMaxVoc}} Voc")
+    .replaceAll("{{36.9}}", "{{vmpMaxTemp}}")
+    .replace('font-style: normal;">{{tempCellMax}}</span>', 'font-style: normal;">{{vmpMaxTemp}}</span>')
+    .replace('font-style: normal;">N_MIN</span>', 'font-style: normal;">{{N_MIN}}</span>')
+    .replace('font-style: normal;">N_MIN_ROUNDED</span>', 'font-style: normal;">{{N_MIN_ROUNDED}}</span>');
+  const bodyHtml = fillTemplate(modifiedTemplate, templateValues);
+
+  // 2. Scan and number the resolved body HTML
+  const { numberedBodyHtml, headings, tables, figures, abbreviations } = scanAndNumberReportContent(bodyHtml);
+
+  // 3. Assemble final values including the list placeholders
+  const finalValues = {
+    ...templateValues,
+    TOC_PLACEHOLDER: renderSimpleList(headings),
+    LIST_OF_TABLES_PLACEHOLDER: renderSectionIfNotEmpty("List of Tables", tables, { key: "title" }),
+    LIST_OF_FIGURES_PLACEHOLDER: renderSectionIfNotEmpty("List of Figures", figures, { key: "title" }),
+    LIST_OF_ABBREVIATIONS_PLACEHOLDER: renderAbbreviationsTable(abbreviations),
+  };
+
+  // 4. Concatenate all template parts and fill placeholders
+  const completeTemplate = `${coverPage} ${documentControlPage} ${tableOfContents} ${listOfTables} ${listOfAbbreviations} ${numberedBodyHtml} ${appendixTemplate}`;
+  const reportHtml = fillTemplate(completeTemplate, finalValues);
 
 
 

@@ -161,9 +161,18 @@ export function buildPvsystTables(pvsystData) {
 
     energyTable: buildTable( "PVsyst Energy Analysis", energyRows ) };}
 
-export function calculateNMin( pcsMinPvInputVoltage,vmpMaxTemp) {
-  const raw = pcsMinPvInputVoltage / vmpMaxTemp;
-return {exact: raw.toFixed(2), rounded: Math.round(raw),};}
+export function calculateNMin(pcsMinPvInputVoltage, vmpMaxTemp) {
+  const minVoltage = typeof pcsMinPvInputVoltage === 'string'
+    ? parseFloat(pcsMinPvInputVoltage.replace(/[^\d.]/g, ''))
+    : Number(pcsMinPvInputVoltage);
+  const vmp = Number(vmpMaxTemp);
+
+  if (isNaN(minVoltage) || isNaN(vmp) || vmp === 0) {
+    return { exact: "—", rounded: "—" };
+  }
+  const raw = minVoltage / vmp;
+  return { exact: raw.toFixed(2), rounded: Math.round(raw) };
+}
 
 // building an Degradation Table 
 
@@ -203,18 +212,24 @@ export function buildSolarVocTemplateValues({
         tempCellMax
     };
 
+    const formatToTwoDecimals = (val) => {
+        if (val === undefined || val === null || val === "") return "";
+        const num = Number(val);
+        return isNaN(num) ? val : num.toFixed(2);
+    };
+
     for (let i = 0; i < 6; i++) {
         out[`ashrae_voc_${i+1}`] =
-            solarCalcValues?.Voc_Tmin?.[i] ?? "";
+            formatToTwoDecimals(solarCalcValues?.Voc_Tmin?.[i]);
 
         out[`ashrae_string_${i+1}`] =
-            solarCalcValues?.max_voc_selected?.[i] ?? "";
+            formatToTwoDecimals(solarCalcValues?.max_voc_selected?.[i]);
 
         out[`pvsyst_voc_${i+1}`] =
-            solarCalcValues?.Voc_Tmin?.[i] ?? "";
+            formatToTwoDecimals(solarCalcValues?.Voc_Tmin?.[i]);
 
         out[`pvsyst_string_${i+1}`] =
-            solarCalcValues?.max_voc_selected?.[i] ?? "";
+            formatToTwoDecimals(solarCalcValues?.max_voc_selected?.[i]);
     }
 
     out.ashrae_modules_series =

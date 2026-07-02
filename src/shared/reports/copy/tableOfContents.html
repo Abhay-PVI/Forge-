@@ -9,7 +9,7 @@
     @media print {
       @page {
         size: A4;
-        margin: 12mm;
+        margin: 10mm;
       }
 
       body {
@@ -25,7 +25,6 @@
       box-sizing: border-box;
       page-break-after: always;
       font-family: "Segoe UI", SegoeUI, Arial, sans-serif;
-      font-size: 14px;
       color: #1e293b;
       background-color: #ffffff;
     }
@@ -39,7 +38,7 @@
 
     .divider {
       border: none;
-      height: 0px;
+      height: 1px;
       background-color: #cbd5e1;
       margin: 1rem 0 2rem 0;
     }
@@ -47,7 +46,7 @@
     .list-container {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 0;
     }
 
     .list-container > .toc-row,
@@ -110,26 +109,26 @@
     .toc-dots {
       flex: 1;
       border-bottom: 1px dotted #000;
-      margin: 0 ;
+      margin: 0 4px;
       transform: translateY(-3px);
     }
 
     .toc-page-num {
       white-space: nowrap;
-      min-width: 20px;
+      min-width: 28px;
       text-align: right;
     }
 
     .title {
       background-color: #fff;
-      padding-right: 0.1rem;
+      padding-right: 0.5rem;
       z-index: 1;
     }
 
     .dot-leader {
       flex-grow: 1;
       border-bottom: 1px dotted #94a3b8;
-      margin-bottom: 0;
+      margin-bottom: 0.25rem;
     }
 
     .page-number {

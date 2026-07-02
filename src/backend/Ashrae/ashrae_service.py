@@ -180,6 +180,8 @@ def process_and_populate_report(user_lat, user_lon):
         f.write(str(soup))
         
     print("🎉 File updated in-place with all extended configurations!")
+    return data_map
+
 
 if __name__ == "__main__":
     # Test trial execution coordinates

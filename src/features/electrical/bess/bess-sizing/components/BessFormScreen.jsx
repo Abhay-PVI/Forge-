@@ -4,7 +4,7 @@ import Field from "../../../../../shared/components/Field";
 import { BESS_TABS } from "../forms/bessTabs";
 // import CalcPanel from "./CalcPanel";
 import BessStepper from "./BessStepper";
-import UploadZone from "../../../../pv/components/UploadZone";
+import UploadZone from "../../../pv/pv-design/components/UploadZone.jsx";
 // import ReportDoc from "../reports/ReportDoc";
 
 // export default function FormScreen() {

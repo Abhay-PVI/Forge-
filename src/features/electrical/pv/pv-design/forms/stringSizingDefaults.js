@@ -22,6 +22,11 @@ plant_name: 'Sandhills Solar — Phase II',
   latitude: '33.4484',
   longitude: '-112.0740',
   revision: 'R0',
+  weather_station_city: 'PHOENIX SKY HARBOR',
+  weather_station_state: 'AZ',
+  weather_station_country: 'USA',
+  weather_station_id: '722780',
+
   // Voltage Inputs
   mv_voltage: '120',
   lv_voltage: '660',

@@ -1,7 +1,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import Icon from "../../../shared/components/Icon";
-import Field from "../../../shared/components/Field";
+import Icon from "../../../../../shared/components/Icon";
+import Field from "../../../../../shared/components/Field";
 import { STRING_SIZE_TABS } from "../forms/stringSizingTabs";
 import CalcPanel from "./CalcPanel";
 import Stepper from "./Stepper";
@@ -42,7 +42,7 @@ async function processPdf(pdfjsLib, pdfBlob, resolve, reject) {
 
     for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
       const page = await pdf.getPage(pageNum);
-      const viewport = page.getViewport({ scale: 2.0 }); 
+      const viewport = page.getViewport({ scale: 2.0 });
       const canvas = document.createElement("canvas");
       const context = canvas.getContext("2d");
       canvas.height = viewport.height;
@@ -281,13 +281,13 @@ function TabBody({ tab, values, setValue, files, setFile, showErrors }) {
                 console.log("Injecting calculated constants to placeholders:", calcValues);
                 setSolarCalcValues(calcValues);
                 setValue("solarCalcValues", calcValues);
-                console.log("solarCalcValues in form state====>>:",solarCalcValues);
+                console.log("solarCalcValues in form state====>>:", solarCalcValues);
                 // Set selected modules value straight into form management state
                 if (calcValues.selected_modules && calcValues.selected_modules.length > 0) {
                   setValue("SELECTED_MODULES_IN_SERIES", calcValues.selected_modules[0]);
                 }
               }
-              
+
 
               // console.log("solarCalcValues in form state:", getValues("solarCalcValues"));
 
@@ -568,7 +568,7 @@ export default function FormScreen({ report, vertical, sub, values, setValue, fi
     }
   };
 
-  const next = () => {
+  const next = async () => {
     const st = tabStatus(tab, values, files);
 
     if (st !== "complete") { setShowErrors(true); return; }
@@ -582,10 +582,32 @@ export default function FormScreen({ report, vertical, sub, values, setValue, fi
       values.latitude &&
       values.longitude
     ) {
-      generateAshrae(
-        Number(values.latitude),
-        Number(values.longitude)
-      );
+      try {
+        const ashrae = await generateAshrae(
+          Number(values.latitude),
+          Number(values.longitude)
+        );
+
+        const ashraeData = ashrae?.data || ashrae;
+        if (ashraeData) {
+          Object.entries(ashraeData).forEach(([k, v]) => {
+            if (v !== undefined && v !== null && v !== "N/A") {
+              setValue(k, String(v));
+            }
+          });
+          
+          const tempMin = ashraeData.extreme_annual_DB_mean_min;
+          const tempCellMax = ashraeData.extreme_annual_DB_mean_max;
+          if (tempMin !== undefined && tempMin !== null && tempMin !== "N/A") {
+            setValue("tempMin", String(tempMin));
+          }
+          if (tempCellMax !== undefined && tempCellMax !== null && tempCellMax !== "N/A") {
+            setValue("tempCellMax", String(tempCellMax));
+          }
+        }
+      } catch (error) {
+        console.error("ASHRAE fetch failed:", error);
+      }
     }
 
     // }
@@ -630,6 +652,7 @@ export default function FormScreen({ report, vertical, sub, values, setValue, fi
                 console.log(peakTableData.tableTemplateData);
 
                 setValue("yearlyVocSummary", vocSummary.data);
+                setValue("allTimeMaxVoc", vocSummary.allTimeMax);
                 setValue("yearlyIscSummary", iscSummary.data);
                 setValue("max_3hr_isc", iscSummary.max_3hr_isc);
                 setValue("max_isc_year", iscSummary.max_isc_year);

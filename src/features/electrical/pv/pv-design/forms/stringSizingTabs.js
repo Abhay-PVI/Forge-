@@ -36,10 +36,11 @@ export const STRING_SIZE_TABS = [{
     label: 'Consultant / EPC',
     type: 'text',
     placeholder: 'Preparing organization',
-     required: true
+    required: true
   }]
 },
- {id: 'project',
+{
+  id: 'project',
   name: 'Project Information',
   icon: 'map',
   blurb: 'Drives the document number, revision and project descriptors.',
@@ -47,7 +48,7 @@ export const STRING_SIZE_TABS = [{
     key: 'plant_name',
     label: 'Project name',
     type: 'text',
-     required: true,
+    required: true,
     placeholder: 'e.g. Sandhills Solar Phase II'
   }, {
     key: 'projectCode',
@@ -76,19 +77,21 @@ export const STRING_SIZE_TABS = [{
     placeholder: 'AZ',
   },
 
-  {key: 'ac_capacity',
+  {
+    key: 'ac_capacity',
     label: 'AC capacity',
     type: 'number',
     unit: 'MW',
-   require:true,
+    require: true,
     placeholder: '150'
   }, {
     key: 'dc_capacity',
     label: 'DC capacity',
     type: 'number',
-   require:true,
+    require: true,
     unit: 'MW (POI)',
-    placeholder: '198'},
+    placeholder: '198'
+  },
   //  {
   //   key: 'location',
   //   label: 'Site location',
@@ -100,14 +103,14 @@ export const STRING_SIZE_TABS = [{
     key: 'delivery_company',
     label: 'Distribution Company',
     type: 'text',
-   require:true,
+    require: true,
     mono: true,
     placeholder: 'TATA POWER',
   }, {
     key: 'poi_voltage',
     label: 'POI Voltage',
     type: 'number',
-   required:true,
+    required: true,
     unit: 'kV',
     placeholder: '198'
   }, {
@@ -134,7 +137,8 @@ export const STRING_SIZE_TABS = [{
   }]
 },
 
-{id: "reportInfo",
+{
+  id: "reportInfo",
   name: "Report Information",
   icon: "fileText",
   fields: [
@@ -166,7 +170,8 @@ export const STRING_SIZE_TABS = [{
   ]
 },
 
- {id: 'technical',
+{
+  id: 'technical',
   name: 'Technical Inputs',
   icon: 'sliders',
   blurb: 'Module, inverter and site temperature data. Drives the string-sizing calculation.',
@@ -180,27 +185,27 @@ export const STRING_SIZE_TABS = [{
         type: 'number',
         unit: 'kV',
         placeholder: '120',
-       require:true
+        require: true
       }, {
         key: 'lv_voltage',
         label: 'LV Collection Voltage',
         type: 'number',
         unit: 'kV',
         placeholder: '660',
-       require:true,
+        require: true,
       }, {
         key: 'dc_ac_ratio_poi',
         label: ' DC/AC Ratio at POI',
         type: 'number',
         mono: true,
-       require:true,
+        require: true,
         placeholder: 'Greater than 1'
       }, {
         key: 'dc_ac_ratio_inv',
         label: ' DC/AC Ratio at INV',
         type: 'number',
         mono: true,
-       require:true,
+        require: true,
         placeholder: 'Greater than 1'
       }, {
         key: 'pv_area',
@@ -208,25 +213,27 @@ export const STRING_SIZE_TABS = [{
         type: 'number',
         unit: 'Acres',
         mono: true,
-         required: true,
+        required: true,
         placeholder: '1000'
-      }, {
-        key: 'temp_min',
-        label: 'Temprature Min',
-        type: 'number',
-        unit: 'Deg C',
-        mono: true,
-       require:true,
-        placeholder: '-5'
-      }, {
-        key: 'temp_max',
-        label: 'Temprature Max',
-        type: 'number',
-        unit: 'Deg C',
-        mono: true,
-       require:true,
-        placeholder: '32'
-      }]
+      }
+        // }, {
+        //   key: 'temp_min',
+        //   label: 'Temprature Min',
+        //   type: 'number',
+        //   unit: 'Deg C',
+        //   mono: true,
+        //  require:true,
+        //   placeholder: '-5'
+        // }, {
+        //   key: 'temp_max',
+        //   label: 'Temprature Max',
+        //   type: 'number',
+        //   unit: 'Deg C',
+        //   mono: true,
+        //  require:true,
+        //   placeholder: '32'
+        // }
+      ]
     },
 
     {
@@ -237,39 +244,39 @@ export const STRING_SIZE_TABS = [{
           label: 'Module Manufacture',
           type: 'text',
           placeholder: 'e.g. Adani',
-           required: true
+          required: true
         }, {
           key: 'module_model',
           label: 'Module make / model',
           type: 'text',
           placeholder: 'e.g. LR7-72HGD 580M',
-           required: true
+          required: true
         }, {
           key: 'module_wp1',
           label: 'Module Wp1',
           type: 'text',
           placeholder: 'e.g. 680Wp',
-           required: true
+          required: true
         }, {
           key: 'module_wp2',
           label: 'Module Wp2',
           type: 'text',
           placeholder: 'e600Wp',
-           required: true
+          required: true
         },
         {
           key: 'module_type',
           label: 'Module Technolgy',
           type: 'text',
           placeholder: 'Bifacial TOPCon Half-cut cel ',
-         require:true,
+          require: true,
         }, {
           key: 'moduleVoc',
           label: 'Voc (STC)',
           type: 'number',
           unit: 'V',
           mono: true,
-         required:true,
+          required: true,
           placeholder: '52.00'
         }, {
           key: 'moduleVmp',
@@ -277,7 +284,7 @@ export const STRING_SIZE_TABS = [{
           type: 'number',
           unit: 'V',
           mono: true,
-           required: true,
+          required: true,
           placeholder: '43.40'
         }, {
           key: 'moduleIsc',
@@ -293,7 +300,7 @@ export const STRING_SIZE_TABS = [{
           type: 'number',
           unit: 'A',
           mono: true,
-           require: true,
+          require: true,
           placeholder: '13.37'
         }, {
           key: 'modulePmax',
@@ -301,7 +308,7 @@ export const STRING_SIZE_TABS = [{
           type: 'number',
           unit: 'Wp',
           mono: true,
-           require: true,
+          require: true,
           placeholder: '580'
         }, {
           key: 'tempCoeffVoc',
@@ -309,20 +316,20 @@ export const STRING_SIZE_TABS = [{
           type: 'number',
           unit: '%/°C',
           mono: true,
-           required: true,
+          required: true,
           placeholder: '-0.250',
           hint: 'Negative value, from datasheet (βVoc).'
         },
-        { key: "module_qty_615", label: "Total number of PV Modules 615Wp ", type: "number",  require: true,},
-        { key: "module_qty_620", label: "Total number of PV 620W Module Quantity", type: "number",  require: true, },
-        { key: "module_dimensions", label: "Module Dimensions", type: "text",  require: true, },
+        { key: "module_qty_615", label: "Total number of PV Modules 615Wp ", type: "number", require: true, },
+        { key: "module_qty_620", label: "Total number of PV 620W Module Quantity", type: "number", require: true, },
+        { key: "module_dimensions", label: "Module Dimensions", type: "text", require: true, },
 
         {
           key: 'modules_series',
           label: 'Number of Modules in Series',
           type: 'number',
           placeholder: '2',
-           require: true,
+          require: true,
         },
         {
           key: 'moduleDegradation',
@@ -330,17 +337,18 @@ export const STRING_SIZE_TABS = [{
           type: 'number',
           unit: '%',
           placeholder: '0.5',
-           require: true,
+          require: true,
         }
       ]
     },
-     { title: 'Inverter',
+    {
+      title: 'Inverter',
       fields: [{
         key: 'Centra_inverter_make',
         label: 'Central Inverter Manufacturer',
         type: 'text',
         placeholder: 'e.g. SunGrow',
-       require:true,
+        require: true,
       },
       {
         key: 'Centarl_inverter_model',
@@ -354,7 +362,7 @@ export const STRING_SIZE_TABS = [{
         type: 'number',
         unit: 'V',
         mono: true,
-         required: true,
+        required: true,
         placeholder: '1500'
       }, {
         key: 'inverter_count',
@@ -362,7 +370,7 @@ export const STRING_SIZE_TABS = [{
         type: 'number',
         unit: 'V',
         mono: true,
-         required: true,
+        required: true,
         placeholder: '500'
       },
         //  {
@@ -388,7 +396,8 @@ export const STRING_SIZE_TABS = [{
         // }
       ]
     },
- {title: 'Transforme & ',
+    {
+      title: 'Transforme & ',
       fields: [
         {
           key: 'mv_transformer',
@@ -402,14 +411,14 @@ export const STRING_SIZE_TABS = [{
           type: 'text',
           placeholder: 'e.g.  6058 x 2896 x 2438',
           unit: 'mm',
-             required: true
+          required: true
         }, {
           key: 'annual_energy',
           label: 'Annual electricity supplied to Grid for 1st year @P50',
           type: 'text',
           placeholder: 'e.g. 125000',
           unit: 'MWh',
-           required: true
+          required: true
         },
         {
           key: 'specific_yield',
@@ -417,7 +426,7 @@ export const STRING_SIZE_TABS = [{
           type: 'text',
           placeholder: 'e.g. 1650',
           unit: 'kWh/kWp',
-            required: true
+          required: true
         },
         {
           key: 'performance_ratio',
@@ -431,167 +440,172 @@ export const STRING_SIZE_TABS = [{
           label: 'DC CUF Ratio for 1st year @P50',
           type: 'text',
           unit: '%',
-            required: true
+          required: true
         },
         {
           key: 'ac_cuf',
           label: 'AC CUF Ratio for 1st year @P50',
           type: 'text',
           unit: '%',
-             required: true
+          required: true
         }
       ]
     },
 
 
-{title: 'Site Conditions',
-      fields: [{
-        key: 'tempMin',
-        label: 'Min. ambient temperature',
-        type: 'number',
-        unit: '°C',
-        mono: true,
-        required: true,
-        placeholder: '-5',
-        hint: 'Record low — drives max string length (cold Voc).'
-      }, {
-        key: 'tempCellMax',
-        label: 'Max. cell temperature',
-        type: 'number',
-        unit: '°C',
-        mono: true,
-        required: true,
-        placeholder: '70',
-        hint: 'Drives min string length (hot Vmp).'
-      }, {
-        key: 'designStd',
-        label: 'Design standard',
-        type: 'select',
-        options: ['IEC 62548', 'NEC 2023', 'IEC 60364-7-712', 'AS/NZS 5033'],
-        mono: true
-      }, {
-        key: "ghi",
-        required: true,
-        label: "Annual Global Solar Irradiance (GHI) ",
-        type: "number",
+    {
+      title: 'Site Conditions',
+      fields: [
+        //   {
+        //   key: 'tempMin',
+        //   label: 'Min. ambient temperature',
+        //   type: 'number',
+        //   unit: '°C',
+        //   mono: true,
+        //   required: true,
+        //   placeholder: '-5',
+        //   hint: 'Record low — drives max string length (cold Voc).'
+        // }, {
+        //   key: 'tempCellMax',
+        //   label: 'Max. cell temperature',
+        //   type: 'number',
+        //   unit: '°C',
+        //   mono: true,
+        //   required: true,
+        //   placeholder: '70',
+        //   hint: 'Drives min string length (hot Vmp).'
+        // },
+        {
+          key: 'designStd',
+          label: 'Design standard',
+          type: 'select',
+          options: ['IEC 62548', 'NEC 2023', 'IEC 60364-7-712', 'AS/NZS 5033'],
+          mono: true
+        }, {
+          key: "ghi",
+          required: true,
+          label: "Annual Global Solar Irradiance (GHI) ",
+          type: "number",
 
-      }, {
-        key: "dsi",
-        label: " Annual Diffuse Solar Irradiance (DSI)",
-        type: "number",
-        required: true,
+        }, {
+          key: "dsi",
+          label: " Annual Diffuse Solar Irradiance (DSI)",
+          type: "number",
+          required: true,
 
-      }, {
-        key: "altitude",
-        label: "Altitude",
-        type: "number",
-        unit: "ft",
-        required: true,
+        }, {
+          key: "altitude",
+          label: "Altitude",
+          type: "number",
+          unit: "ft",
+          required: true,
 
-      }, {
-        key: "wind_speed",
-        label: "Wind Speed",
-        type: "number",
-        unit: "mph",
-        required: true,
+        }, {
+          key: "wind_speed",
+          label: "Wind Speed",
+          type: "number",
+          unit: "mph",
+          required: true,
 
-      }, {
-        key: "snow_load",
-        label: "Snow Load",
-        type: "number",
-        unit: "psf",
-        required: true,
+        }, {
+          key: "snow_load",
+          label: "Snow Load",
+          type: "number",
+          unit: "psf",
+          required: true,
 
-      }, {
-        key: "risk_category",
-        label: "Risk Category",
-        type: 'select',
-        options: ['CAT-I', 'CAT-II', 'IEC 60364-7-712', 'AS/NZS 5033'],
-      }, {
-        key: "met_source",
-        label: 'Meteorological Data source',
-        type: 'select',
-        options: ['IMD (India)', 'NOAA (USA)', 'NASA Earth Data', 'OPEN_METEO', 'SolarGIS'
-        ],
-      }, {
-        key: "data_format",
-        label: " Meteorological Data format",
-        type: 'select',
-        options: ['TMY (Typical Meteorological Year)',
-          'Hourly Data',
-          'SolarGIS'],
-      }
+        }, {
+          key: "risk_category",
+          label: "Risk Category",
+          type: 'select',
+          options: ['CAT-I', 'CAT-II', 'IEC 60364-7-712', 'AS/NZS 5033'],
+        }, {
+          key: "met_source",
+          label: 'Meteorological Data source',
+          type: 'select',
+          options: ['IMD (India)', 'NOAA (USA)', 'NASA Earth Data', 'OPEN_METEO', 'SolarGIS'
+          ],
+        }, {
+          key: "data_format",
+          label: " Meteorological Data format",
+          type: 'select',
+          options: ['TMY (Typical Meteorological Year)',
+            'Hourly Data',
+            'SolarGIS'],
+        }
 
       ]
     }]
 },
 
- {id: 'uploads',
+{
+  id: 'uploads',
   name: 'Datasheets & Uploads',
   icon: 'paperclip',
   blurb: 'Attach source datasheets. These feed the technical inputs and are referenced in the report appendix.',
   uploads: [
-  //   {
-  //   key: 'moduleDs',
-  //   label: 'Module datasheet',
-  //   hint: 'PDF · manufacturer spec sheet',
-  // require: false
-  // }, {
-  //   key: 'inverterDs',
-  //   label: 'Inverter datasheet',
-  //   hint: 'PDF · manufacturer spec sheet',
-  //    required:  false
-  // }, {
-  //   key: 'weatherData',
-  //   label: 'Site weather / temperature data',
-  //   hint: 'CSV, XLSX · TMY or measured',
-  //    required: false
-  // },
-  {
-    key: "dhiCsv",
-    label: "Hourly DHI CSV",
-    hint: "CSV containing yearly hourly Diffuse Horizontal Irradiance data",
-   require:false
-  }, {
-    key: "ghiCsv",
-    label: "Hourly GHI CSV",
-    hint: "CSV containing yearly hourly Global Horizontal Irradiance data",
-     required: false
-  },{
-    key: "vocCsv",
-    label: "Hourly Voc CSV",
-    hint: "CSV containing yearly hourly voltage data",
-   require: true
-  }, {
-    key: "IscCsv",
-    label: "Hourly Isc CSV",
-    hint: "CSV containing yearly hourly current data",
-     required: true
-  },{
-    key: "pvsystReport",
-    label: "PVsyst Loss Diagram Report",
-    accept: ".pdf",
-    required: false
-  },{
-  key: "moduleExcel",
-  label: "Module Datasheet Excel",
-  required: false,
-  hint: "Upload extracted module datasheet workbook"
-}, {
-  key: "Results_of_26-year_voltage",
-  label: "Results of 26-year historical SAM simulation voltage chart",
-  hint: "Image file (PNG, JPG) · simulation chart",
-  required: false
-}, {
-  key: "Results_of_26-year_current",
-  label: "Results of 26-year historical SAM simulation current chart",
-  hint: "Image file (PNG, JPG) · simulation chart",
-  required: false
-}
-  
+    //   {
+    //   key: 'moduleDs',
+    //   label: 'Module datasheet',
+    //   hint: 'PDF · manufacturer spec sheet',
+    // require: false
+    // }, {
+    //   key: 'inverterDs',
+    //   label: 'Inverter datasheet',
+    //   hint: 'PDF · manufacturer spec sheet',
+    //    required:  false
+    // }, {
+    //   key: 'weatherData',
+    //   label: 'Site weather / temperature data',
+    //   hint: 'CSV, XLSX · TMY or measured',
+    //    required: false
+    // },
+    {
+      key: "dhiCsv",
+      label: "Hourly DHI CSV",
+      hint: "CSV containing yearly hourly Diffuse Horizontal Irradiance data",
+      require: false
+    }, {
+      key: "ghiCsv",
+      label: "Hourly GHI CSV",
+      hint: "CSV containing yearly hourly Global Horizontal Irradiance data",
+      required: false
+    }, {
+      key: "vocCsv",
+      label: "Hourly Voc CSV",
+      hint: "CSV containing yearly hourly voltage data",
+      require: true
+    }, {
+      key: "IscCsv",
+      label: "Hourly Isc CSV",
+      hint: "CSV containing yearly hourly current data",
+      required: true
+    }, {
+      key: "pvsystReport",
+      label: "PVsyst Loss Diagram Report",
+      accept: ".pdf",
+      required: false
+    }, {
+      key: "moduleExcel",
+      label: "Module Datasheet Excel",
+      required: false,
+      hint: "Upload extracted module datasheet workbook"
+    }, {
+      key: "Results_of_26-year_voltage",
+      label: "Results of 26-year historical SAM simulation voltage chart",
+      hint: "Image file (PNG, JPG) · simulation chart",
+      required: false
+    }, {
+      key: "Results_of_26-year_current",
+      label: "Results of 26-year historical SAM simulation current chart",
+      hint: "Image file (PNG, JPG) · simulation chart",
+      required: false
+    }
+
   ]
 },
-{id: "tracker",
+{
+  id: "tracker",
   name: "Tracker System",
   icon: "moter",
   blurb: "Information about the tracker system used in the PV installation.",
@@ -599,34 +613,39 @@ export const STRING_SIZE_TABS = [{
     {
       title: 'Voltage Inputs  ',
       fields: [{ key: "tracker_make", label: "Tracker Make", type: "text", required: true },
-               { key: "tracker_model", label: "Tracker Model", type: "text" , required: true},
-               { key: "tracking_range", label: "Tracking Range", type: "text", required: true }, ]},
+      { key: "tracker_model", label: "Tracker Model", type: "text", required: true },
+      { key: "tracking_range", label: "Tracking Range", type: "text", required: true },]
+    },
     {
       title: 'Tracker 1 info   ',
-      fields:[
-         { key: "tracker_type_1", label: "Tracker Type 1", type: "Select", required: true, span:2, options:["1P","2P","3P","4P","5P"] },
-         { key: "tracker_module_1", label: "Module Qty per Tarcker 1", type: "number" , required: true ,  size:'half'},
-         { key: "tracker_quantity_1", label: "Tarcker Quantity 1", type: "text", required: true, size:'half'}        
-              ]},
-     {         
+      fields: [
+        { key: "tracker_type_1", label: "Tracker Type 1", type: "Select", required: true, span: 2, options: ["1P", "2P", "3P", "4P", "5P"] },
+        { key: "tracker_module_1", label: "Module Qty per Tarcker 1", type: "number", required: true, size: 'half' },
+        { key: "tracker_quantity_1", label: "Tarcker Quantity 1", type: "text", required: true, size: 'half' }
+      ]
+    },
+    {
       title: 'Tracker 2 info   ',
-      fields:[
-         { key: "tracker_type_2", label: "Tracker Type 2", type: "Select", required: true, span:2, options:["1P","2P","3P","4P","5P"] },
-         { key: "tracker_module_2", label: "Module Qty per Tarcker 2", type: "number" , required: true ,  size:'half'},
-         { key: "tracker_quantity_2", label: "Tarcker Quantity 2", type: "text", required: true, size:'half'}        
-              ]},
-    {         
+      fields: [
+        { key: "tracker_type_2", label: "Tracker Type 2", type: "Select", required: true, span: 2, options: ["1P", "2P", "3P", "4P", "5P"] },
+        { key: "tracker_module_2", label: "Module Qty per Tarcker 2", type: "number", required: true, size: 'half' },
+        { key: "tracker_quantity_2", label: "Tarcker Quantity 2", type: "text", required: true, size: 'half' }
+      ]
+    },
+    {
       title: 'Tracker 3 info   ',
-      fields:[
-         { key: "tracker_type_3", label: "Tracker Type 3", type: "Select", required: true, span:2, options:["1P","2P","3P","4P","5P"] },
-         { key: "tracker_module_3", label: "Module Qty per Tarcker 3", type: "number" , required: true ,  size:'half'},
-         { key: "tracker_quantity_3", label: "Tarcker Quantity 3", type: "text", required: true, size:'half'}        
-              ]},
-                          
+      fields: [
+        { key: "tracker_type_3", label: "Tracker Type 3", type: "Select", required: true, span: 2, options: ["1P", "2P", "3P", "4P", "5P"] },
+        { key: "tracker_module_3", label: "Module Qty per Tarcker 3", type: "number", required: true, size: 'half' },
+        { key: "tracker_quantity_3", label: "Tarcker Quantity 3", type: "text", required: true, size: 'half' }
+      ]
+    },
+
   ]
 },
 
-{id: "dcCable",
+{
+  id: "dcCable",
   name: "DC Cable",
   icon: "git-branch",
   title: "DC Cable",
@@ -634,8 +653,8 @@ export const STRING_SIZE_TABS = [{
   fields: [
     { key: "DC_Cable_Sizes", label: "Cable Sizes", type: "text", required: true },
     { key: "DC_Cable_Rated_Voltage", label: "Rated Voltage", type: "text", required: true },
-    { key: "DC_Cable_Conductor_Material", label: "Conductor Material", type: "text" , required: true},
-    { key: "DC_Cable_Conductor_Type", label: "Conductor Type", type: "text" , required: true},
+    { key: "DC_Cable_Conductor_Material", label: "Conductor Material", type: "text", required: true },
+    { key: "DC_Cable_Conductor_Type", label: "Conductor Type", type: "text", required: true },
     { key: "DC_Cable_Insulation_Type", label: "Insulation Type", type: "text", required: true },
     { key: "DC_Cable_UV_Sunlight_Resistant", label: "UV/Sunlight Resistant", type: "text", required: true },
     { key: "DC_Cable_Temperature_Rating", label: "Temperature Rating", type: "text", required: true },
@@ -645,7 +664,8 @@ export const STRING_SIZE_TABS = [{
   ]
 },
 
-{id: "pvConnector",
+{
+  id: "pvConnector",
   name: "PV Connectors",
   icon: "plug",
   title: "PV Connectors",
@@ -663,7 +683,8 @@ export const STRING_SIZE_TABS = [{
   ]
 },
 
-{id: "trunkCable",
+{
+  id: "trunkCable",
   name: "Trunk Cable",
   icon: "link",
   blurb: "Details about the trunk cables used in the system.",
@@ -678,7 +699,8 @@ export const STRING_SIZE_TABS = [{
   ]
 },
 
-{ id: "lbd",
+{
+  id: "lbd",
   name: "Load Break Disconnect",
   icon: "toggle-right",
   title: "Load Break Disconnect",
@@ -705,27 +727,37 @@ export const STRING_SIZE_TABS = [{
   blurb: "Details about the PCS technical specifications used in the system.",
 
   fields: [
-    { key: "PCS_Model_Name", label: "PCS Model Name", type: "text",required: true
-   },
+    {
+      key: "PCS_Model_Name", label: "PCS Model Name", type: "text", required: true
+    },
 
-    { key: "PCS_Max_DC_Input_Voltage", label: "Max. DC Input Voltage", type: "text", required: true
-     },
+    {
+      key: "PCS_Max_DC_Input_Voltage", label: "Max. DC Input Voltage", type: "text", required: true
+    },
 
-    { key: "PCS_Min_PV_Input_Voltage", 
-      label: "Min. PV Input Voltage ", 
-      type: "text", required: true },
+    {
+      key: "PCS_Min_PV_Input_Voltage",
+      label: "Min. PV Input Voltage ",
+      type: "text", required: true
+    },
 
-    { key: "Start_Up_Input_Voltage", 
-      label: " Min Start-up Input Voltage", 
-      type: "text", required: true },
+    {
+      key: "Start_Up_Input_Voltage",
+      label: " Min Start-up Input Voltage",
+      type: "text", required: true
+    },
 
-    { key: "PCS_MPP_Tracker_Min_Voltage_Range", 
+    {
+      key: "PCS_MPP_Tracker_Min_Voltage_Range",
       label: "MPP Tracker (MPPT) Min Voltage Range",
-       type: "text", required: true },
+      type: "text", required: true
+    },
 
-    { key: "PCS_MPP_Tracker_Max_Voltage_Range", 
-      label: "MPP Tracker (MPPT) Max Voltage Range", 
-      type: "text", required: true },
+    {
+      key: "PCS_MPP_Tracker_Max_Voltage_Range",
+      label: "MPP Tracker (MPPT) Max Voltage Range",
+      type: "text", required: true
+    },
 
     {
       key: "PCS_Full_Power_MPP_Voltage_Range_40C",
@@ -738,21 +770,21 @@ export const STRING_SIZE_TABS = [{
       key: "PCS_Available_DC_Fuse_Sizes",
       label: "Available DC Fuse Sizes",
       type: "text",
-    required: true
+      required: true
     },
 
     {
       key: "PCS_No_of_Independent_MPPT",
       label: "No. of Independent MPPT",
       type: "number",
-     required: true
+      required: true
     },
 
     {
       key: "PCS_Max_PV_Input_Current",
       label: "Max. PV Input Current",
       type: "text",
-     required: true
+      required: true
     },
 
     {
@@ -766,7 +798,7 @@ export const STRING_SIZE_TABS = [{
       key: "PCS_Number_of_DC_Inputs",
       label: "Number of DC Inputs",
       type: "number",
-     required: true
+      required: true
     },
 
     {
@@ -780,21 +812,21 @@ export const STRING_SIZE_TABS = [{
       key: "PCS_Max_AC_Output_Power",
       label: "Max. AC Output Power",
       type: "text",
-     required: true
+      required: true
     },
 
     {
       key: "PCS_Rated_Output_Frequency_Range",
       label: "Rated Output Frequency / Range",
       type: "text",
-     required: true
+      required: true
     },
 
     {
       key: "PCS_THD",
       label: "THD",
       type: "text",
-     required: true
+      required: true
     },
 
     {
@@ -822,35 +854,35 @@ export const STRING_SIZE_TABS = [{
       key: "PCS_Transformer_Vector",
       label: "Transformer Vector",
       type: "text",
-   required: true
+      required: true
     },
 
     {
       key: "PCS_Transformer_Cooling_Method",
       label: "Transformer Cooling Method",
       type: "text",
-     required: true
+      required: true
     },
 
     {
       key: "PCS_DC_Input_Protection",
       label: "DC Input Protection",
       type: "text",
-   //   required: true
+      //   required: true
     },
 
     {
       key: "PCS_Inverter_Output_Protection",
       label: "Inverter Output Protection",
       type: "text",
-   //   required: true
+      //   required: true
     },
 
     {
       key: "PCS_AC_MV_Output_Protection",
       label: "AC MV Output Protection",
       type: "text",
-   //   required: true
+      //   required: true
     },
 
     {
@@ -877,7 +909,7 @@ export const STRING_SIZE_TABS = [{
       key: "PCS_Dimensions",
       label: "Dimensions (W×H×D)",
       type: "text",
-     required: true
+      required: true
     },
 
     {
@@ -891,7 +923,7 @@ export const STRING_SIZE_TABS = [{
       key: "PCS_Auxiliary_Power_Supply",
       label: "Auxiliary Power Supply",
       type: "text",
-     required: true
+      required: true
     },
 
     {
@@ -938,20 +970,20 @@ export const STRING_SIZE_TABS = [{
   ]
 },
 
-// {
-//   id: "performance",
-//   name: "Performance",
-//   icon: "bar-chart",
-//   blurb: "Performance metrics of the PV system based on simulation and modeling.",
-//   title: "Performance Metrics",
-//   fields: [
-//     { key: "annual_energy", label: "Annual Energy", type: "number", unit: "MWh" },
-//     { key: "specific_yield", label: "Specific Yield", type: "number" },
-//     { key: "performance_ratio", label: "Performance Ratio", type: "number", unit: "%" },
-//     { key: "dc_cuf", label: "DC CUF", type: "number", unit: "%" },
-//     { key: "ac_cuf", label: "AC CUF", type: "number", unit: "%" },
-//     { key: "degradation", label: "Degradation", type: "number", unit: "%/year" }
-//   ]
-// }
+  // {
+  //   id: "performance",
+  //   name: "Performance",
+  //   icon: "bar-chart",
+  //   blurb: "Performance metrics of the PV system based on simulation and modeling.",
+  //   title: "Performance Metrics",
+  //   fields: [
+  //     { key: "annual_energy", label: "Annual Energy", type: "number", unit: "MWh" },
+  //     { key: "specific_yield", label: "Specific Yield", type: "number" },
+  //     { key: "performance_ratio", label: "Performance Ratio", type: "number", unit: "%" },
+  //     { key: "dc_cuf", label: "DC CUF", type: "number", unit: "%" },
+  //     { key: "ac_cuf", label: "AC CUF", type: "number", unit: "%" },
+  //     { key: "degradation", label: "Degradation", type: "number", unit: "%/year" }
+  //   ]
+  // }
 
 ];

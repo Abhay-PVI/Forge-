@@ -1,17 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>List of Tables</title>
+  <title>List of Figures</title>
   <style>
     @media print {
       @page {
-        size: A4;
-        margin: 10mm;
+        size: A4; margin: 10mm;
       }
-
       body {
         margin: 0;
         -webkit-print-color-adjust: exact;
@@ -19,22 +16,14 @@
       }
     }
 
-    .report-page.lot-page {
+    .report-page.lof-page {
       padding: 3.5rem;
       height: 100vh;
       box-sizing: border-box;
       page-break-after: always;
-      font-family: "Segoe UI", SegoeUI, Arial, sans-serif;
-      font-size: 12px;
-      font-weight: normal;
+      font-family: system-ui, -apple-system, sans-serif;
       color: #1e293b;
       background-color: #ffffff;
-    }
-
-    .lot-page .toc-row.toc-level-1 {
-      font-weight: normal !important;
-      font-size: 12.5px !important;
-      padding-top: 0.1rem !important;
     }
 
     .heading {
@@ -47,7 +36,6 @@
     .divider {
       border: none;
       height: 1px;
-      font-weight: normal;
       background-color: #cbd5e1;
       margin: 1rem 0 2rem 0;
     }
@@ -55,10 +43,10 @@
     .list-container {
       display: flex;
       flex-direction: column;
-      gap: 0;
+      gap: 0.6rem;
     }
 
-    .lot-row {
+    .lof-row {
       display: flex;
       align-items: flex-end;
       width: 100%;
@@ -74,13 +62,13 @@
 
     .label {
       color: #0f172a;
-      font-weight: 00;
+      font-weight: 600;
     }
 
     .dot-leader {
       flex-grow: 1;
       border-bottom: 1px dotted #94a3b8;
-      margin-bottom: 0;
+      margin-bottom: 0.25rem;
     }
 
     .page-number {
@@ -90,39 +78,18 @@
       text-align: right;
       min-width: 1.5rem;
     }
-
-    /* Support classes for dynamically rendered simple lists */
-    .toc-row {
-      display: flex;
-      align-items: flex-end;
-      width: 100%;
-      color: #334155;
-      font-size: 0.95rem;
-      margin: 0; /* remove any margin, top and bottom */
-      padding: 0; /* remove any padding, in case it exists elsewhere */
-      line-height: 1.4;
-    }
-
-    .toc-title {
-      background-color: #fff;
-      padding-right: 0.5rem;
-      z-index: 1;
-    }
   </style>
 </head>
-
 <body>
 
-  <div class="report-page lot-page" style="height: auto; min-height: 100vh;">
-    <div id="lot-content" style="margin-bottom: 3rem;">
-      {{LIST_OF_TABLES_PLACEHOLDER}}
-    </div>
-
-    <div id="lof-content">
+  <div class="report-page lof-page">
+    <h2 class="heading">List of Figures</h2>
+    <hr class="divider" />
+    
+    <div class="list-container" id="lof-content">
       {{LIST_OF_FIGURES_PLACEHOLDER}}
     </div>
   </div>
 
 </body>
-
 </html>
