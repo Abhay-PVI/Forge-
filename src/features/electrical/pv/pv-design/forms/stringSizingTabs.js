@@ -20,16 +20,19 @@ export const STRING_SIZE_TABS = [{
     key: 'clientContact',
     label: 'Primary contact',
     type: 'text',
+    required: true,
     placeholder: 'Full name'
   }, {
     key: 'clientEmail',
     label: 'Contact email',
     type: 'text',
+    required: true,
     placeholder: 'name@company.com'
   }, {
     key: 'clientAddress',
     label: 'Client address',
     type: 'textarea',
+    required: true,
     placeholder: 'Street, City, State, Country'
   }, {
     key: 'consultant',
@@ -82,13 +85,13 @@ export const STRING_SIZE_TABS = [{
     label: 'AC capacity',
     type: 'number',
     unit: 'MW',
-    require: true,
+    required: true,
     placeholder: '150'
   }, {
     key: 'dc_capacity',
     label: 'DC capacity',
     type: 'number',
-    require: true,
+    required: true,
     unit: 'MW (POI)',
     placeholder: '198'
   },
@@ -103,7 +106,7 @@ export const STRING_SIZE_TABS = [{
     key: 'delivery_company',
     label: 'Distribution Company',
     type: 'text',
-    require: true,
+    required: true,
     mono: true,
     placeholder: 'TATA POWER',
   }, {
@@ -119,6 +122,7 @@ export const STRING_SIZE_TABS = [{
     type: 'number',
     unit: '°',
     mono: true,
+    required: true,
     placeholder: '33.4484'
   }, {
     key: 'longitude',
@@ -126,6 +130,7 @@ export const STRING_SIZE_TABS = [{
     type: 'number',
     unit: '°',
     mono: true,
+    required: true,
     placeholder: '-112.0740'
   }, {
     key: 'Total Area of the Plant',
@@ -154,7 +159,8 @@ export const STRING_SIZE_TABS = [{
     {
       key: "clientLogo",
       label: "Client Logo",
-      type: "file"
+      type: "file",
+      required: true
     },
     // {
     //   key: "issueDate",
@@ -169,12 +175,14 @@ export const STRING_SIZE_TABS = [{
     {
       key: "submittedTo",
       label: "Submitted To",
-      type: "text"
+      type: "text",
+      required: true
     },
     {
       key: "submittedToAddress",
       label: "Submitted To Address",
-      type: "textarea"
+      type: "textarea",
+      required: true
     }
   ]
 },
@@ -194,27 +202,27 @@ export const STRING_SIZE_TABS = [{
         type: 'number',
         unit: 'kV',
         placeholder: '120',
-        require: true
+        required: true
       }, {
         key: 'lv_voltage',
         label: 'LV Collection Voltage',
         type: 'number',
         unit: 'kV',
         placeholder: '660',
-        require: true,
+        required: true,
       }, {
         key: 'dc_ac_ratio_poi',
         label: ' DC/AC Ratio at POI',
         type: 'number',
         mono: true,
-        require: true,
+        required: true,
         placeholder: 'Greater than 1'
       }, {
         key: 'dc_ac_ratio_inv',
         label: ' DC/AC Ratio at INV',
         type: 'number',
         mono: true,
-        require: true,
+        required: true,
         placeholder: 'Greater than 1'
       }, {
         key: 'pv_area',
@@ -278,7 +286,7 @@ export const STRING_SIZE_TABS = [{
           label: 'Module Technolgy',
           type: 'text',
           placeholder: 'Bifacial TOPCon Half-cut cel ',
-          require: true,
+          required: true,
         }, {
           key: 'moduleVoc',
           label: 'Voc (STC)',
@@ -301,7 +309,7 @@ export const STRING_SIZE_TABS = [{
           type: 'number',
           unit: 'A',
           mono: true,
-          require: true,
+          required: true,
           placeholder: '14.02'
         }, {
           key: 'moduleImp',
@@ -309,7 +317,7 @@ export const STRING_SIZE_TABS = [{
           type: 'number',
           unit: 'A',
           mono: true,
-          require: true,
+          required: true,
           placeholder: '13.37'
         }, {
           key: 'modulePmax',
@@ -317,7 +325,7 @@ export const STRING_SIZE_TABS = [{
           type: 'number',
           unit: 'Wp',
           mono: true,
-          require: true,
+          required: true,
           placeholder: '580'
         }, {
           key: 'string_size',
@@ -337,16 +345,16 @@ export const STRING_SIZE_TABS = [{
           placeholder: '-0.250',
           hint: 'Negative value, from datasheet (βVoc).'
         },
-        { key: "module_qty_615", label: "Total number of PV Modules 615Wp ", type: "number", require: true, },
-        { key: "module_qty_620", label: "Total number of PV 620W Module Quantity", type: "number", require: true, },
-        { key: "module_dimensions", label: "Module Dimensions", type: "text", require: true, },
+        { key: "module_qty_615", label: "Total number of PV Modules 615Wp ", type: "number", required: true, },
+        { key: "module_qty_620", label: "Total number of PV 620W Module Quantity", type: "number", required: true, },
+        { key: "module_dimensions", label: "Module Dimensions", type: "text", required: true, },
 
         {
           key: 'modules_series',
           label: 'Number of Modules in Series',
           type: 'number',
           placeholder: '2',
-          require: true,
+          required: true,
         },
         {
           key: 'moduleDegradation',
@@ -354,7 +362,7 @@ export const STRING_SIZE_TABS = [{
           type: 'number',
           unit: '%',
           placeholder: '0.5',
-          require: true,
+          required: true,
         }
       ]
     },
@@ -365,7 +373,7 @@ export const STRING_SIZE_TABS = [{
         label: 'Central Inverter Manufacturer',
         type: 'text',
         placeholder: 'e.g. SunGrow',
-        require: true,
+        required: true,
       },
       {
         key: 'Centarl_inverter_model',
@@ -505,7 +513,8 @@ export const STRING_SIZE_TABS = [{
           label: 'Design standard',
           type: 'select',
           options: ['IEC 62548', 'NEC 2023', 'IEC 60364-7-712', 'AS/NZS 5033'],
-          mono: true
+          mono: true,
+          required: true
         }, {
           key: "ghi",
           required: true,
@@ -544,12 +553,14 @@ export const STRING_SIZE_TABS = [{
           label: "Risk Category",
           type: 'select',
           options: ['CAT-I', 'CAT-II', 'IEC 60364-7-712', 'AS/NZS 5033'],
+          required: true
         }, {
           key: "met_source",
           label: 'Meteorological Data source',
           type: 'select',
           options: ['IMD (India)', 'NOAA (USA)', 'NASA Earth Data', 'OPEN_METEO', 'SolarGIS'
           ],
+          required: true
         }, {
           key: "data_format",
           label: " Meteorological Data format",
@@ -557,6 +568,7 @@ export const STRING_SIZE_TABS = [{
           options: ['TMY (Typical Meteorological Year)',
             'Hourly Data',
             'SolarGIS'],
+          required: true
         }
 
       ]
@@ -589,17 +601,17 @@ export const STRING_SIZE_TABS = [{
       key: "dhiCsv",
       label: "Hourly DHI CSV",
       hint: "CSV containing yearly hourly Diffuse Horizontal Irradiance data",
-      require: false
+      required: true
     }, {
       key: "ghiCsv",
       label: "Hourly GHI CSV",
       hint: "CSV containing yearly hourly Global Horizontal Irradiance data",
-      required: false
+      required: true
     }, {
       key: "vocCsv",
       label: "Hourly Voc CSV",
       hint: "CSV containing yearly hourly voltage data",
-      require: true
+      required: true
     }, {
       key: "IscCsv",
       label: "Hourly Isc CSV",
@@ -609,22 +621,22 @@ export const STRING_SIZE_TABS = [{
       key: "pvsystReport",
       label: "PVsyst Loss Diagram Report",
       accept: ".pdf",
-      required: false
+      required: true
     }, {
       key: "moduleExcel",
       label: "Module Datasheet Excel",
-      required: false,
+      required: true,
       hint: "Upload extracted module datasheet workbook"
     }, {
       key: "Results_of_26-year_voltage",
       label: "Results of 26-year historical SAM simulation voltage chart",
       hint: "Image file (PNG, JPG) · simulation chart",
-      required: false
+      required: true
     }, {
       key: "Results_of_26-year_current",
       label: "Results of 26-year historical SAM simulation current chart",
       hint: "Image file (PNG, JPG) · simulation chart",
-      required: false
+      required: true
     }
 
   ]
@@ -702,7 +714,7 @@ export const STRING_SIZE_TABS = [{
     { key: "PV_Connector_Connection_Type", label: "Connection Type", type: "text", required: true },
     { key: "PV_Connector_Contact_Material", label: "Contact Material", type: "text", required: true },
     { key: "PV_Connector_Life_Expectancy", label: "Life Expectancy", type: "text", required: true },
-    { key: "PV_Connector_Protection", label: "Protection", type: "text" },
+    { key: "PV_Connector_Protection", label: "Protection", type: "text", required: true },
     { key: "PV_Connector_Ambient_Temperature", label: "Ambient Temperature", type: "text", required: true },
     { key: "PV_Connector_UL_Certification", label: "UL Certification", type: "text", required: true }
   ]
@@ -715,12 +727,12 @@ export const STRING_SIZE_TABS = [{
   blurb: "Details about the trunk cables used in the system.",
   title: "Trunk Cable",
   fields: [
-    { key: "Trunk_Cable_Make", label: "Make", type: "text" },
-    { key: "Trunk_Cable_Max_System_Voltage", label: "Max System Voltage", type: "text" },
-    { key: "Trunk_Cable_Maximum_OCPD_per_String", label: "Maximum OCPD/String", type: "text" },
-    { key: "Trunk_Cable_Selected_Trunk_System_Size", label: "Selected Trunk Size", type: "text" },
-    { key: "Trunk_Cable_Max_No_of_Input_Circuits", label: "Max Input Circuits", type: "number" },
-    { key: "Trunk_Cable_Ambient_Temperature", label: "Ambient Temperature", type: "text" }
+    { key: "Trunk_Cable_Make", label: "Make", type: "text", required: true },
+    { key: "Trunk_Cable_Max_System_Voltage", label: "Max System Voltage", type: "text", required: true },
+    { key: "Trunk_Cable_Maximum_OCPD_per_String", label: "Maximum OCPD/String", type: "text", required: true },
+    { key: "Trunk_Cable_Selected_Trunk_System_Size", label: "Selected Trunk Size", type: "text", required: true },
+    { key: "Trunk_Cable_Max_No_of_Input_Circuits", label: "Max Input Circuits", type: "number", required: true },
+    { key: "Trunk_Cable_Ambient_Temperature", label: "Ambient Temperature", type: "text", required: true }
   ]
 },
 
@@ -732,15 +744,15 @@ export const STRING_SIZE_TABS = [{
   blurb: "Details about the load break disconnect used in the system.",
 
   fields: [
-    { key: "LBD_Manufacturer", label: "Manufacturer", type: "text" },
-    { key: "LBD_Max_System_Voltage", label: "Max System Voltage", type: "text" },
-    { key: "LBD_Amperage_Rating", label: "Amperage Rating", type: "text" },
-    { key: "LBD_Short_Circuit_Current_Rating", label: "Short Circuit Current Rating", type: "text" },
-    { key: "LBD_Input_Wire_Size", label: "Input Wire Size", type: "text" },
-    { key: "LBD_Output_Wire_Size", label: "Output Wire Size", type: "text" },
-    { key: "LBD_Max_Ambient_Temp_Rating", label: "Max Ambient Temperature", type: "text" },
-    { key: "LBD_Certification_Standards", label: "Certification Standards", type: "textarea" },
-    { key: "LBD_Enclosure_Fiberglass", label: "Enclosure Fiberglass", type: "text" }
+    { key: "LBD_Manufacturer", label: "Manufacturer", type: "text", required: true },
+    { key: "LBD_Max_System_Voltage", label: "Max System Voltage", type: "text", required: true },
+    { key: "LBD_Amperage_Rating", label: "Amperage Rating", type: "text", required: true },
+    { key: "LBD_Short_Circuit_Current_Rating", label: "Short Circuit Current Rating", type: "text", required: true },
+    { key: "LBD_Input_Wire_Size", label: "Input Wire Size", type: "text", required: true },
+    { key: "LBD_Output_Wire_Size", label: "Output Wire Size", type: "text", required: true },
+    { key: "LBD_Max_Ambient_Temp_Rating", label: "Max Ambient Temperature", type: "text", required: true },
+    { key: "LBD_Certification_Standards", label: "Certification Standards", type: "textarea", required: true },
+    { key: "LBD_Enclosure_Fiberglass", label: "Enclosure Fiberglass", type: "text", required: true }
   ]
 },
 
@@ -893,21 +905,21 @@ export const STRING_SIZE_TABS = [{
       key: "PCS_DC_Input_Protection",
       label: "DC Input Protection",
       type: "text",
-      //   required: true
+      required: true
     },
 
     {
       key: "PCS_Inverter_Output_Protection",
       label: "Inverter Output Protection",
       type: "text",
-      //   required: true
+      required: true
     },
 
     {
       key: "PCS_AC_MV_Output_Protection",
       label: "AC MV Output Protection",
       type: "text",
-      //   required: true
+      required: true
     },
 
     {
@@ -981,17 +993,17 @@ export const STRING_SIZE_TABS = [{
   blurb: "Details about the MV AC cables used in the system.",
   title: "MV AC Cable",
   fields: [
-    { key: "MVAC_Cable_Size", label: "Cable Size", type: "text" },
-    { key: "MVAC_Rated_Voltage", label: "Rated Voltage", type: "text" },
-    { key: "MVAC_Conductor_Material", label: "Conductor Material", type: "text" },
-    { key: "MVAC_Conductor_Type", label: "Conductor Type", type: "text" },
-    { key: "MVAC_Insulation_Type", label: "Insulation Type", type: "text" },
-    { key: "MVAC_Insulation_Level", label: "Insulation Level", type: "text" },
-    { key: "MVAC_Concentric_Neutral", label: "Concentric Neutral", type: "text" },
-    { key: "MVAC_Operating_Temperature", label: "Operating Temperature", type: "text" },
-    { key: "MVAC_UL_Certification", label: "UL Certification", type: "text" },
-    { key: "MVAC_Installation_Type", label: "Installation Type", type: "text" },
-    { key: "MVAC_NEC_Compliant", label: "NEC Compliant", type: "text" }
+    { key: "MVAC_Cable_Size", label: "Cable Size", type: "text", required: true },
+    { key: "MVAC_Rated_Voltage", label: "Rated Voltage", type: "text", required: true },
+    { key: "MVAC_Conductor_Material", label: "Conductor Material", type: "text", required: true },
+    { key: "MVAC_Conductor_Type", label: "Conductor Type", type: "text", required: true },
+    { key: "MVAC_Insulation_Type", label: "Insulation Type", type: "text", required: true },
+    { key: "MVAC_Insulation_Level", label: "Insulation Level", type: "text", required: true },
+    { key: "MVAC_Concentric_Neutral", label: "Concentric Neutral", type: "text", required: true },
+    { key: "MVAC_Operating_Temperature", label: "Operating Temperature", type: "text", required: true },
+    { key: "MVAC_UL_Certification", label: "UL Certification", type: "text", required: true },
+    { key: "MVAC_Installation_Type", label: "Installation Type", type: "text", required: true },
+    { key: "MVAC_NEC_Compliant", label: "NEC Compliant", type: "text", required: true }
   ]
 },
 
