@@ -59,6 +59,48 @@ supabase_admin: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 security = HTTPBearer()
 
+def _load_or_create_profile(user_id: str, email: str | None, full_name_hint: str | None = None):
+    profile_response = supabase_admin.table("profiles").select(
+        "organization_id, role, full_name"
+    ).eq("id", user_id).limit(1).execute()
+
+    if profile_response.data:
+        profile = profile_response.data[0]
+        return {
+            "organization_id": profile.get("organization_id"),
+            "role": profile.get("role") or "member",
+            "full_name": profile.get("full_name") or full_name_hint or email or "User",
+        }
+
+    org_id = None
+    try:
+        orgs = supabase_admin.table("organizations").select("id").limit(1).execute()
+        if orgs.data:
+            org_id = orgs.data[0]["id"]
+        else:
+            new_org = supabase_admin.table("organizations").insert({"name": "Default Org"}).execute()
+            org_id = new_org.data[0]["id"]
+    except Exception as e:
+        print(f"Error finding fallback organization: {e}")
+
+    profile_payload = {
+        "id": user_id,
+        "organization_id": org_id,
+        "role": "member",
+        "full_name": full_name_hint or email or "User",
+    }
+
+    try:
+        supabase_admin.table("profiles").upsert(profile_payload, on_conflict="id").execute()
+    except Exception as e:
+        print(f"Error creating fallback profile: {e}")
+
+    return {
+        "organization_id": org_id,
+        "role": "member",
+        "full_name": profile_payload["full_name"],
+    }
+
 # 2. Dependency: Validate JWT and return user authentication context
 async def get_current_user(credentials: HTTPAuthorizationCredentials = Security(security)) -> Dict[str, Any]:
     token = credentials.credentials
@@ -117,16 +159,20 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Security(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid token or expired session."
             )
-        
-        # Retrieve user profile mapping
-        profile_response = supabase_admin.table("profiles").select("organization_id, role, full_name").eq("id", user_auth.user.id).single().execute()
+
+        user_metadata = getattr(user_auth.user, "user_metadata", None) or {}
+        profile = _load_or_create_profile(
+            user_auth.user.id,
+            user_auth.user.email,
+            user_metadata.get("full_name"),
+        )
         
         return {
             "id": user_auth.user.id,
             "email": user_auth.user.email,
-            "organization_id": profile_response.data.get("organization_id") if profile_response.data else None,
-            "role": profile_response.data.get("role") if profile_response.data else "member",
-            "full_name": profile_response.data.get("full_name") if profile_response.data else None,
+            "organization_id": profile.get("organization_id"),
+            "role": profile.get("role") or "member",
+            "full_name": profile.get("full_name"),
         }
     except Exception as e:
         raise HTTPException(
