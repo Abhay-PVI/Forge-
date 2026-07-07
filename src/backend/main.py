@@ -244,7 +244,7 @@ class AuthSignInRequest(BaseModel):
 class AuthSignUpRequest(BaseModel):
     full_name: str
     email: str
-    organization_name: str
+    organization_name: str = ""
     password: str
 
 
@@ -254,6 +254,13 @@ class AuthRefreshRequest(BaseModel):
 
 class AuthForgotPasswordRequest(BaseModel):
     email: str
+
+def _derive_default_organization_name(full_name: str, email: str) -> str:
+    base = (full_name or email or "User").strip()
+    if "@" in base:
+        base = base.split("@", 1)[0]
+    token = base.split()[0] if base.split() else "User"
+    return f"{token}'s Workspace"
 
 
 def _serialize_supabase_value(value):
@@ -286,16 +293,19 @@ def auth_sign_in(payload: AuthSignInRequest):
 @app.post("/api/auth/sign-up")
 def auth_sign_up(payload: AuthSignUpRequest):
     try:
-        normalized_org = payload.organization_name.strip()
-        if not normalized_org:
-            return JSONResponse(status_code=400, content={"success": False, "error": "Organization name is required."})
+        normalized_full_name = payload.full_name.strip()
+        normalized_email = payload.email.strip()
+        normalized_org = (payload.organization_name or "").strip() or _derive_default_organization_name(
+            normalized_full_name,
+            normalized_email,
+        )
 
         auth_res = supabase_admin.auth.sign_up({
-            "email": payload.email,
+            "email": normalized_email,
             "password": payload.password,
             "options": {
                 "data": {
-                    "full_name": payload.full_name.strip(),
+                    "full_name": normalized_full_name,
                     "organization_name": normalized_org,
                 }
             }
@@ -316,7 +326,7 @@ def auth_sign_up(payload: AuthSignUpRequest):
             "id": user.id,
             "organization_id": org_id,
             "role": "member",
-            "full_name": payload.full_name.strip(),
+            "full_name": normalized_full_name,
         }, on_conflict="id").execute()
 
         return {
@@ -327,7 +337,7 @@ def auth_sign_up(payload: AuthSignUpRequest):
                 "id": user.id,
                 "organization_id": org_id,
                 "role": "member",
-                "full_name": payload.full_name.strip(),
+                "full_name": normalized_full_name,
             },
             "organization": {
                 "id": org_id,

@@ -36,14 +36,19 @@ export function signInApi(email, password) {
 }
 
 export function signUpApi({ fullName, email, organizationName, password }) {
+  const payload = {
+    full_name: fullName,
+    email,
+    password,
+  };
+
+  if (organizationName && organizationName.trim()) {
+    payload.organization_name = organizationName.trim();
+  }
+
   return authFetch("/api/auth/sign-up", {
     method: "POST",
-    body: {
-      full_name: fullName,
-      email,
-      organization_name: organizationName,
-      password,
-    },
+    body: payload,
   });
 }
 

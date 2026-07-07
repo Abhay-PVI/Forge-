@@ -61,7 +61,7 @@ function normalizeAuthError(err) {
     return "Password is too weak. Use at least 8 characters.";
   }
   if (msg.includes("organization")) {
-    return "Please provide an organization name.";
+    return "We could not create or link the organization. Please try again.";
   }
   return err?.message || "Sign up failed.";
 }

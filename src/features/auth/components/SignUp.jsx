@@ -20,7 +20,7 @@ export default function SignUp({
     event.preventDefault();
     setLocalError("");
 
-    if (!fullName.trim() || !email.trim() || !organizationName.trim() || !password || !confirmPassword) {
+    if (!fullName.trim() || !email.trim() || !password || !confirmPassword) {
       setLocalError("Please complete all fields.");
       return;
     }
@@ -137,7 +137,7 @@ export default function SignUp({
           <form onSubmit={submit} style={{ display: "grid", gap: 14 }}>
             <Field label="Full name" id="signup-name" value={fullName} onChange={setFullName} placeholder="Aman Sharma" autoComplete="name" />
             <Field label="Email" id="signup-email" type="email" value={email} onChange={setEmail} placeholder="you@company.com" autoComplete="email" />
-            <Field label="Organization name" id="signup-org" value={organizationName} onChange={setOrganizationName} placeholder="PVinsight Energy" autoComplete="organization" />
+            <Field label="Organization name (optional)" id="signup-org" value={organizationName} onChange={setOrganizationName} placeholder="PVinsight Energy" autoComplete="organization" />
             <Field label="Password" id="signup-password" type="password" value={password} onChange={setPassword} placeholder="Create a password" autoComplete="new-password" />
             <Field label="Confirm password" id="signup-confirm" type="password" value={confirmPassword} onChange={setConfirmPassword} placeholder="Repeat your password" autoComplete="new-password" />
 
