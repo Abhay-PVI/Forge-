@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import Logo from "../../../shared/components/Logo";
 import Icon from "../../../shared/components/Icon";
@@ -28,6 +28,7 @@ export default function Sidebar({
   onSelectSub, 
   user, 
   onSignOut, 
+  onGoDashboard,
   query, 
   setQuery,
   collapsed,
@@ -82,9 +83,31 @@ export default function Sidebar({
         </button>
       </div>
 
+      {collapsed && (
+        <div style={{ padding: '10px 8px 4px', flexShrink: 0 }}>
+          <button
+            className="btn btn-soft btn-sm"
+            onClick={onGoDashboard}
+            title="Back to dashboard"
+            style={{ width: 56, height: 36, padding: 0, display: 'grid', placeItems: 'center' }}
+          >
+            <Icon name="building" size={15} />
+          </button>
+        </div>
+      )}
+
       {/* search */}
       {!collapsed && (
         <div style={{ padding: '12px 12px 8px', flexShrink: 0 }}>
+          <button
+            className="btn btn-soft btn-sm"
+            onClick={onGoDashboard}
+            style={{ width: '100%', justifyContent: 'flex-start', marginBottom: 10 }}
+            title="Back to dashboard"
+          >
+            <Icon name="building" size={15} />
+            <span>Dashboard</span>
+          </button>
           <div className="input-affix" style={{ height: 36 }}>
             <span style={{ paddingLeft: 11, color: 'var(--text-3)', display: 'flex' }}><Icon name="search" size={15} /></span>
             <input className="input" placeholder="Search reports…" value={query} onChange={e => setQuery(e.target.value)} style={{ height: 34 }} />

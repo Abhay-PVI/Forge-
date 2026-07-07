@@ -1,0 +1,1198 @@
+<style>
+  .preview-panel {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    line-height: 1.5;
+    color: #1a1a1a;
+  }
+
+  .preview-panel .page {
+    max-width: 850px;
+    margin: 0 auto;
+  }
+
+  .report-title {
+    font-size: 16pt;
+    text-align: left;
+  }
+
+  .doc-h1 {
+    font-size: 16pt;
+    margin-top: 22px;
+  }
+
+  .doc-h2 {
+    font-size: 13.5pt;
+    margin-top: 16px;
+  }
+
+  .doc-h3 {
+    font-size: 12pt;
+    margin-top: 12px;
+  }
+
+  .doc-p {
+    text-align: justify;
+  }
+
+  .doc-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10.5pt;
+    margin-bottom: 14px;
+  }
+
+  .doc-table th,
+  .doc-table td {
+    border: 1px solid black;
+    padding: 5px;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .doc-table thead th {
+    background: #e6edf3;
+  }
+
+  .table-caption {
+    font-size: 13.5pt;
+    margin: 14px 0 6px;
+  }
+
+  .fig-wrap {
+    text-align: center;
+    margin: 14px 0;
+  }
+
+  .fig-wrap img {
+    max-width: 100%;
+  }
+
+  .fig-caption {
+    font-size: 10pt;
+    font-style: italic;
+    color: #444;
+  }
+
+  .abbr-block {
+    display: none;
+  }
+</style>
+
+<div class="preview-panel">
+  <div class="page">
+
+    <!-- ABBREVIATIONS (hidden — used to auto-build glossary) -->
+    <div class="abbr-block">
+      <span class="toc-abbreviation" data-term="A">Ampere</span>
+      <span class="toc-abbreviation" data-term="AC">Alternating Current</span>
+      <span class="toc-abbreviation" data-term="AL">Aluminum</span>
+      <span class="toc-abbreviation" data-term="AAC">All Aluminum Conductors</span>
+      <span class="toc-abbreviation" data-term="ATS">Automatic Transfer Switch</span>
+      <span class="toc-abbreviation" data-term="ANSI">American National Standards Institute</span>
+      <span class="toc-abbreviation" data-term="ASHRAE">American Society for Heating, Refrigerating and Air Conditioning
+        Engineers</span>
+      <span class="toc-abbreviation" data-term="ASTM">American Society for Testing and Materials</span>
+      <span class="toc-abbreviation" data-term="AWG">American Wire Gauge</span>
+      <span class="toc-abbreviation" data-term="BOM">Bill of Material</span>
+      <span class="toc-abbreviation" data-term="CCVT">Capacitor Coupled Voltage Transformer</span>
+      <span class="toc-abbreviation" data-term="CU">Copper</span>
+      <span class="toc-abbreviation" data-term="CAISO">California Independent System Operator</span>
+      <span class="toc-abbreviation" data-term="DC">Direct Current</span>
+      <span class="toc-abbreviation" data-term="DBR">Design Basic Report</span>
+      <span class="toc-abbreviation" data-term="EHV">Extra High Voltage</span>
+      <span class="toc-abbreviation" data-term="FC">Foot Candle</span>
+      <span class="toc-abbreviation" data-term="GE">General Electric</span>
+      <span class="toc-abbreviation" data-term="GFD">Ground Flash Density</span>
+      <span class="toc-abbreviation" data-term="HV">High voltage</span>
+      <span class="toc-abbreviation" data-term="HVAC">Heating, Ventilation, and Air Conditioning</span>
+      <span class="toc-abbreviation" data-term="IEEE">Institute of Electrical and Electronics Engineers</span>
+      <span class="toc-abbreviation" data-term="ICEA">Insulated Cables Engineers Association</span>
+      <span class="toc-abbreviation" data-term="KCMIL">Kilo Circular Mils</span>
+      <span class="toc-abbreviation" data-term="kV">Kilovolt</span>
+      <span class="toc-abbreviation" data-term="kVA">Kilovolt-Ampere</span>
+      <span class="toc-abbreviation" data-term="kVAr">Kilovolt-Ampere reactive</span>
+      <span class="toc-abbreviation" data-term="kW">Kilowatt</span>
+      <span class="toc-abbreviation" data-term="kWh">Kilowatt-hour</span>
+      <span class="toc-abbreviation" data-term="kWp">Kilowatt-peak</span>
+      <span class="toc-abbreviation" data-term="kA">Kilo Amperes</span>
+      <span class="toc-abbreviation" data-term="LFMC">Liquid-Tight Flexible Conduit</span>
+      <span class="toc-abbreviation" data-term="LRE">Leeward Renewable Energy</span>
+      <span class="toc-abbreviation" data-term="LV">Low Voltage</span>
+      <span class="toc-abbreviation" data-term="MV">Medium Voltage</span>
+      <span class="toc-abbreviation" data-term="MVA">Megavolt-Ampere</span>
+      <span class="toc-abbreviation" data-term="MW">Megawatt</span>
+      <span class="toc-abbreviation" data-term="MWh">Megawatt hour</span>
+      <span class="toc-abbreviation" data-term="MCOV">Maximum Continuous Operating Voltage</span>
+      <span class="toc-abbreviation" data-term="MPH">Miles per Hour</span>
+      <span class="toc-abbreviation" data-term="MPT">Main Power Transformer</span>
+      <span class="toc-abbreviation" data-term="NESC">National Electric Safety Code</span>
+      <span class="toc-abbreviation" data-term="NEC">National Electrical Code</span>
+      <span class="toc-abbreviation" data-term="NEMA">National Electrical Manufacturers Association</span>
+      <span class="toc-abbreviation" data-term="NFPA">National Fire Protection Association</span>
+      <span class="toc-abbreviation" data-term="ONAN">Oil Natural Air Natural</span>
+      <span class="toc-abbreviation" data-term="ONAF">Oil Natural Air Forced</span>
+      <span class="toc-abbreviation" data-term="POI">Point of Interconnection</span>
+      <span class="toc-abbreviation" data-term="PSF">Pounds per Square Foot</span>
+      <span class="toc-abbreviation" data-term="PV">Photovoltaic</span>
+      <span class="toc-abbreviation" data-term="PVC">Polyvinyl Chloride</span>
+      <span class="toc-abbreviation" data-term="RMC">Rigid Metallic Conduit</span>
+      <span class="toc-abbreviation" data-term="RTAC">Real Time Automation Controller</span>
+      <span class="toc-abbreviation" data-term="SCADA">Supervisory Control and Data Acquisition System</span>
+      <span class="toc-abbreviation" data-term="SEL">Schweitzer Engineering Laboratories</span>
+      <span class="toc-abbreviation" data-term="SF6">Sulfur Hexafluoride</span>
+      <span class="toc-abbreviation" data-term="SST">Station Service Transformer</span>
+      <span class="toc-abbreviation" data-term="STC">Standard Testing Conditions</span>
+      <span class="toc-abbreviation" data-term="TC">Trip Coils</span>
+      <span class="toc-abbreviation" data-term="TBD">To Be Decided</span>
+      <span class="toc-abbreviation" data-term="XLPE">Cross-linked Polyethylene</span>
+    </div>
+
+    <!-- TITLE -->
+    <figure class="fig-wrap">
+      {{coverPhoto}}
+    </figure>
+    <h1 class="report-title">{{projectTitle}}</h1>
+    <p class="doc-p">{{substationTitle}}</p>
+    <p class="doc-p">{{documentNo}} {{reportTitle}} &nbsp;|&nbsp; Rev. {{revision}}</p>
+    <p class="doc-p">Submitted to {{submittedToCompany}} &nbsp;|&nbsp; Prepared by {{preparedByCompany}}</p>
+
+    <p class="table-caption"><b class="toc-table-caption">Revision History</b></p>
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th>Revision</th>
+          <th>Issue Date</th>
+          <th>Document Name</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{rev0Number}}</td>
+          <td>{{rev0Date}}</td>
+          <td>{{reportTitle}}</td>
+          <td>{{rev0Description}}</td>
+        </tr>
+        <tr>
+          <td>{{rev1Number}}</td>
+          <td>{{rev1Date}}</td>
+          <td>{{reportTitle}}</td>
+          <td>{{rev1Description}}</td>
+        </tr>
+        <tr>
+          <td>{{rev2Number}}</td>
+          <td>{{rev2Date}}</td>
+          <td>{{reportTitle}}</td>
+          <td>{{rev2Description}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="doc-p"><b>Prepared by</b><br>{{preparedByCompany}}<br>{{preparedByAddress}}</p>
+    <p class="doc-p"><b>Submitted To</b><br>{{submittedToCompany}}<br>{{submittedToAddress}}</p>
+
+    <!-- ======================= 1. INTRODUCTION ======================= -->
+    <h1 class="toc-heading doc-h1" data-toc-level="1">Introduction</h1>
+    <p class="doc-p">
+      {{preparedByCompany}} has been tasked with the responsibility of preparation of {{voltageClass}}
+      Substation Detailed Engineering Design for a {{acCapacityMW}} MW Solar PV and Battery Storage
+      Generation Project ({{projectName}} Project).
+    </p>
+    <p class="doc-p">
+      {{preparedByCompany}} is pleased to submit this Design Basis Report, which forms the basis and sets
+      up a template for standard engineering design.
+    </p>
+    <p class="doc-p">
+      All the Design Considerations, Applicable Standards and Codes, Philosophy of equipment/material
+      selection, Protection philosophy and SCADA Architecture are highlighted in the further sections of
+      this document.
+    </p>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Purpose</h2>
+    <p class="doc-p">
+      The purpose of this document is to establish a set of criteria by which the {{projectName}}
+      Substation will be designed. The DBR will focus on the following elements.
+    </p>
+    <ol>
+      <li>Applicable Design Standards and Codes</li>
+      <li>Project Details</li>
+      <li>Project Electrical Scheme</li>
+      <li>Bill of Material</li>
+      <li>Electrical Calculations</li>
+    </ol>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Applicable Design Standards and Codes</h2>
+    <p class="doc-p">The Substation shall be designed and installed according to the following applicable codes and
+      standards.</p>
+    <ul>
+      <li>ANSI - American National Standards Institute</li>
+      <li>ASTM - American Society for Testing and Materials</li>
+      <li>IBC - International Building Code</li>
+      <li>ICEA - Insulated Cable Engineers Association</li>
+      <li>IEC - International Electrotechnical Commission</li>
+      <li>IEEE – Institute of Electrical and Electronics Engineers</li>
+      <li>ISO – International Organization for Standardization</li>
+      <li>NEC - National Electrical Code {{necEditionForAcLoad}} (NFPA)</li>
+      <li>NECA - National Electrical Contractors Association</li>
+      <li>NEMA - National Electrical Manufacturers Association</li>
+      <li>NESC - National Electrical Safety Code</li>
+      <li>NETA - National Electrical Testing Association</li>
+      <li>NFPA - National Fire Protection Association</li>
+      <li>NERC PRC-024 – Interconnection Standard</li>
+      <li>OSHA - Occupational Safety and Health Administration</li>
+      <li>State, City, and County Ordinances</li>
+      <li>UL - Underwriters Laboratories</li>
+      <li>All Control cable wiring shall use the ICEA Method 1 color code</li>
+    </ul>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Basis of the Report</h2>
+    <p class="doc-p">
+      The Design Basis Report has been prepared following the best engineering practices and the
+      applicable National &amp; International Design Codes and Standards.
+    </p>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Site Details</h2>
+    <p class="table-caption"><b class="toc-table-caption">Table 1: Project Summary</b></p>
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th>Sr. No.</th>
+          <th>Particulars</th>
+          <th>Descriptions</th>
+          <th>Units</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Project Name</td>
+          <td>{{projectName}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Name of the State</td>
+          <td>{{state}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Name of the County</td>
+          <td>{{county}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Geographical Coordinates</td>
+          <td>{{coordinates}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>POI Voltage</td>
+          <td>{{poiVoltage}}</td>
+          <td>kV</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>MV Collection Voltage</td>
+          <td>{{mvVoltage}}</td>
+          <td>kV</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>Fenced Substation Area</td>
+          <td>{{fenceArea}}</td>
+          <td>Acres</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>AC Capacity</td>
+          <td>{{acCapacityMW}} @POI</td>
+          <td>MWac</td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td>Mean Extreme High Temperature</td>
+          <td>{{meanExtremeHighTemp}}</td>
+          <td>°C</td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td>Average Annual Temperature</td>
+          <td>{{avgAnnualTemp}}</td>
+          <td>°C</td>
+        </tr>
+        <tr>
+          <td>11</td>
+          <td>Extreme High Temperature</td>
+          <td>{{extremeHighTemp}}</td>
+          <td>°C</td>
+        </tr>
+        <tr>
+          <td>12</td>
+          <td>Extreme Low Temperature</td>
+          <td>{{extremeLowTemp}}</td>
+          <td>°C</td>
+        </tr>
+        <tr>
+          <td>13</td>
+          <td>Altitude</td>
+          <td>{{altitude}}</td>
+          <td>Feet</td>
+        </tr>
+        <tr>
+          <td>14</td>
+          <td>Design Wind Speed</td>
+          <td>{{designWindSpeed}}</td>
+          <td>mph</td>
+        </tr>
+        <tr>
+          <td>15</td>
+          <td>Risk Category</td>
+          <td>{{riskCategory}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>16</td>
+          <td>Design Ground Snow Load (ASCE Report)</td>
+          <td>{{designSnowLoad}}</td>
+          <td>psf</td>
+        </tr>
+        <tr>
+          <td>17</td>
+          <td>Voltage</td>
+          <td>{{voltageClass}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>18</td>
+          <td>BIL</td>
+          <td>{{bilRating}}</td>
+          <td>kV</td>
+        </tr>
+        <tr>
+          <td>19</td>
+          <td>Continuous Current Rating</td>
+          <td>{{continuousCurrentRating}}</td>
+          <td>A</td>
+        </tr>
+        <tr>
+          <td>20</td>
+          <td>Short Circuit Rating Considered for Design @ 69 kV Level (as per SLD)</td>
+          <td>{{faultLevel69kV}}</td>
+          <td>kA</td>
+        </tr>
+        <tr>
+          <td>21</td>
+          <td>Short Circuit Rating Considered for Design at 34.5 kV Level (as per SLD)</td>
+          <td>{{faultLevel34_5kV}}</td>
+          <td>kA</td>
+        </tr>
+        <tr>
+          <td>22</td>
+          <td>System Frequency</td>
+          <td>{{systemFrequency}}</td>
+          <td>Hz</td>
+        </tr>
+        <tr>
+          <td>23</td>
+          <td>Skin Effect Coefficient</td>
+          <td>{{skinEffectCoefficient}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>24</td>
+          <td>Emissivity Coefficient of Conductor Surface</td>
+          <td>{{emissivityCoefficient}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>25</td>
+          <td>Conductivity of Aluminum Alloy of 6063 T6, as % IACS</td>
+          <td>{{conductorConductivityPercent}}</td>
+          <td>%</td>
+        </tr>
+        <tr>
+          <td>26</td>
+          <td>Ground Flash Density</td>
+          <td>{{groundFlashDensity}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>27</td>
+          <td>Conductor Irregularity Factor</td>
+          <td>{{conductorIrregularityFactor}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>28</td>
+          <td>Empirical Constant (E0)</td>
+          <td>{{empiricalConstantEo}}</td>
+          <td>kV/cm</td>
+        </tr>
+        <tr>
+          <td>29</td>
+          <td>Final Wind to Conductor Angle</td>
+          <td>{{windConductorAngle}}</td>
+          <td>deg</td>
+        </tr>
+        <tr>
+          <td>30</td>
+          <td>Altitude Correction Factor</td>
+          <td>{{altitudeCorrectionFactor}}</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Project Electrical Scheme</h2>
+    <p class="doc-p">
+      The bus bar scheme used for {{projectName}} substation design is {{busbarScheme}} with
+      {{numOfHvBreakers}} 69kV circuit breaker(s) and {{numOfMvBreakers}} 34.5kV circuit breakers.
+      Primary station power with {{backupPowerSource}} used for the second source through an automatic
+      transfer switch.
+    </p>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">General Arrangement &amp; Physical Design</h2>
+    <p class="doc-p">
+      The substation arrangement will conform to the constraints of the applicable standards and will
+      facilitate safe and reliable operations via qualified personnel. This will include being designed
+      for the applicable environmental and weather conditions. The design will exceed minimum clearances
+      and safety setbacks to allow for safe operation, maintenance, personnel, and vehicular traffic
+      within the substation.
+    </p>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Clearances</h2>
+    <p class="doc-p">
+      Electrical clearances from energized parts shall be in accordance with all state and local codes
+      and ordinances, and the latest editions of NESC, ANSI C2, IEEE Std. 1427, IEEE C37.32 &amp; NEC, and
+      will be as follows:
+    </p>
+    <p class="table-caption"><b class="toc-table-caption">Table 2: 69 kV Clearance (350 kV BIL)</b></p>
+    <table class="doc-table">
+      <tbody>
+        <tr>
+          <td>Phase to Phase Distance</td>
+          <td>{{hvPhaseToPhase}}</td>
+          <td>IEEE C37.32</td>
+        </tr>
+        <tr>
+          <td>Metal to Metal</td>
+          <td>{{hvMetalToMetal}}</td>
+          <td>IEEE 1427</td>
+        </tr>
+        <tr>
+          <td>Phase to Ground</td>
+          <td>{{hvPhaseToGround}}</td>
+          <td>IEEE 1427</td>
+        </tr>
+        <tr>
+          <td>Vertical Clearance to Live Part</td>
+          <td>{{hvVerticalClearance}}</td>
+          <td>NESC 2023</td>
+        </tr>
+        <tr>
+          <td>Horizontal Clearance to Live Part</td>
+          <td>{{hvHorizontalClearance}}</td>
+          <td>NESC 2023</td>
+        </tr>
+        <tr>
+          <td>Horizontal Clearance from Fence to Live Part</td>
+          <td>{{hvFenceClearance}}</td>
+          <td>NESC 2023</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="table-caption"><b class="toc-table-caption">Table 3: 34.5 kV Clearance (200 kV BIL)</b></p>
+    <table class="doc-table">
+      <tbody>
+        <tr>
+          <td>Phase to Phase Distance</td>
+          <td>{{mvPhaseToPhase}}</td>
+          <td>IEEE C37.32</td>
+        </tr>
+        <tr>
+          <td>Metal to Metal</td>
+          <td>{{mvMetalToMetal}}</td>
+          <td>IEEE 1427</td>
+        </tr>
+        <tr>
+          <td>Phase to Ground</td>
+          <td>{{mvPhaseToGround}}</td>
+          <td>IEEE 1427</td>
+        </tr>
+        <tr>
+          <td>Vertical Clearance to Live Part</td>
+          <td>{{mvVerticalClearance}}</td>
+          <td>NESC 2023</td>
+        </tr>
+        <tr>
+          <td>Horizontal Clearance to Live Part</td>
+          <td>{{mvHorizontalClearance}}</td>
+          <td>NESC 2023</td>
+        </tr>
+        <tr>
+          <td>Horizontal Clearance from Fence to Live Part</td>
+          <td>{{mvFenceClearance}}</td>
+          <td>NESC 2023</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Fault Levels Considered for the Design</h2>
+    <p class="doc-p">The fault levels considered in the design are as given in the table below:</p>
+    <p class="table-caption"><b class="toc-table-caption">Table 4: Fault Levels Considered for Design Calculations</b>
+    </p>
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th>S.No</th>
+          <th>Voltage Level</th>
+          <th>Fault Level Assumed / Considered</th>
+          <th>Remarks</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>69 kV</td>
+          <td>{{faultLevel69kV}}</td>
+          <td>{{faultLevel69kVRemarks}}</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>34.5 kV</td>
+          <td>{{faultLevel34_5kV}}</td>
+          <td>{{faultLevel34_5kVRemarks}} ({{mptSizeForFaultCalc}} MPT Size)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ======================= 2. SELECTION OF EQUIPMENT/MATERIAL ======================= -->
+    <h1 class="toc-heading doc-h1" data-toc-level="1">Selection of Equipment/Material</h1>
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Major Apparatus Selected for the Project</h2>
+    <p class="table-caption"><b class="toc-table-caption">Table 5: Major Apparatus</b></p>
+    <div class="table-wrapper">{{majorApparatusTable}}</div>
+    <p class="doc-p"><i>Note: {{bomNote}}</i></p>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Flexible Conductors</h2>
+    <h3 class="toc-heading doc-h3" data-toc-level="3">Flexible Conductor</h3>
+    <p class="doc-p">
+      Selection of flexible conductors for high voltage applications is governed by two factors:
+      Continuous Current Rating and Short Circuit Rating. The flexible conductor sizing is designed in
+      accordance with procedures presented in ANSI/IEEE Standard 738-2012 and IEEE 605-2008. The Flexible
+      Conductor Sizing calculations provide the ampacity &amp; short circuit withstand capability of the
+      selected flexible conductor, so that it can be considered depending upon the substation requirements.
+    </p>
+    <p class="doc-p">
+      Flexible conductor sizing for continuous current rating is mainly based on the heat balance
+      equation, which states that the temperature of a conductor depends on the balance of heat input and
+      output. For balance, the heat input due to ohmic losses (I²R) and solar radiation equals the heat
+      output due to convection, radiation, and conduction.
+    </p>
+
+    <h3 class="toc-heading doc-h3" data-toc-level="3">Short Circuit Capability</h3>
+    <p class="doc-p">
+      The selected conductor will be evaluated if the short circuit capability exceeds {{faultLevel69kV}}
+      kA. Conductor will be selected after performing continuous current rating, short circuit capability,
+      and corona discharge calculations. Calculations are performed via software PLS-CADD developed by
+      Power Line Systems, USA, and the selected conductors for each voltage rating and application are as
+      tabulated below:
+    </p>
+    <p class="table-caption"><b class="toc-table-caption">Table 6: Flexible Conductors</b></p>
+    <table class="doc-table">
+      <tbody>
+        <tr>
+          <td>All 69 kV Jumpers</td>
+          <td>{{hvJumperConductor}}</td>
+        </tr>
+        <tr>
+          <td>T1 Main Bus Jumpers</td>
+          <td>{{mainBusJumperConductor}}</td>
+        </tr>
+        <tr>
+          <td>34.5 kV Main Bus Jumpers</td>
+          <td>{{mvMainBusJumperConductor}}</td>
+        </tr>
+        <tr>
+          <td>34.5 kV Feeder Breaker Jumpers</td>
+          <td>{{feederBreakerJumperConductor}}</td>
+        </tr>
+        <tr>
+          <td>34.5 kV Feeder Jumpers</td>
+          <td>{{feederJumperConductor}}</td>
+        </tr>
+        <tr>
+          <td>34.5 kV SST &amp; VT Jumpers</td>
+          <td>{{sstVtJumperConductor}}</td>
+        </tr>
+        <tr>
+          <td>Damping Conductors for 5" Pipe Bus</td>
+          <td>{{dampingConductor5in}}</td>
+        </tr>
+        <tr>
+          <td>Damping Conductors for 2.5" Pipe Bus</td>
+          <td>{{dampingConductor2_5in}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Aluminum Tube</h2>
+    <p class="doc-p">
+      Buses will be designed to carry the full load capacity. Bus calculations considering bus diameter,
+      span length, and short circuit forces will be provided in accordance with the methods given in IEEE
+      605. The design will incorporate Schedule 40, 6063-T6 seamless aluminum bus tube.
+    </p>
+    <p class="table-caption"><b class="toc-table-caption">Table 7: Pipe Bus</b></p>
+    <table class="doc-table">
+      <tbody>
+        <tr>
+          <td>All 69 kV Bus</td>
+          <td>{{hvBusPipeSize}}</td>
+        </tr>
+        <tr>
+          <td>34.5 kV Main Bus</td>
+          <td>{{mvMainBusPipeSize}}</td>
+        </tr>
+        <tr>
+          <td>34.5 kV Feeder Bus</td>
+          <td>{{mvFeederBusPipeSize}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Damping Cable and Selection</h2>
+    <p class="doc-p">
+      Damping cables are essential to prevent horizontal cable movement within the tubing, particularly in
+      buses where excessive vibration is anticipated. To ensure effective vibration control, damping
+      cables should extend the entire length of the bus and be made from the same material as the bus
+      conductor. This is critical to avoid galvanic corrosion, which can occur when dissimilar metals are
+      in contact. Consequently, all horizontal bus runs should have damping conductors installed to
+      maintain system integrity.
+    </p>
+    <p class="table-caption"><b class="toc-table-caption">Table 8: Damping Cables</b></p>
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th>S.No</th>
+          <th>Description</th>
+          <th>Selected Damping Cable</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>For 5" Al 6063 Tube</td>
+          <td>{{dampingCable5inTube}}</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>For 2.5" Al Tube</td>
+          <td>{{dampingCable2_5inTube}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Station Post Insulators</h2>
+    <p class="doc-p">
+      {{projectName}} substation post insulators will be selected considering bus calculations as per
+      IEEE 605-2008 and IEEE contamination level "{{insulatorContaminationLevel}}". Bus calculations will
+      be performed for selection of post insulators considering available fault current plus any future
+      assumption outlined in the short circuit study. {{faultLevel69kV}} kA is considered as fault level
+      at 69 kV level and {{faultLevel34_5kV}} kA at 34.5 kV level. Post insulators are selected for
+      cantilever strength not loaded above {{insulatorMaxCantileverPercent}}. Porcelain and/or polymer
+      insulators and bushings with standard creep will be used.
+    </p>
+    <p class="table-caption"><b class="toc-table-caption">Table 9: Station Post Insulators</b></p>
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th>S. No</th>
+          <th>Voltage Level</th>
+          <th>Post Insulator Selected</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>69 kV</td>
+          <td>{{hvPostInsulator}}</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>34.5 kV</td>
+          <td>{{mvPostInsulator}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Substation Control Enclosure Design</h2>
+    <p class="doc-p">
+      The substation control enclosure ({{controlEnclosureSize}}) will be designed to provide adequate
+      shelter and an environment for the main protective relaying and control equipment, AC and DC
+      systems, battery bank, etc. Structural calculations and HVAC sizing will be provided by the
+      enclosure manufacturer.
+    </p>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Bus Connectors and Fittings</h2>
+    <p class="doc-p">
+      Bus connectors and fittings will be welded or compression type for both aluminum tubing connections
+      and aluminum cable connections. Fittings will be capable of carrying the full current capacity of
+      the conductor. Bus support clamps for bus tubes shall be fixed, slip, or expansion type as shown on
+      accompanying drawings to firmly support the bus while allowing for temperature expansion and
+      contraction. Expansion joints are selected for all bus runs above {{busExpansionJointSpanLimit}} and
+      expansion/slip type fittings are selected at the end to facilitate the connections. All horizontal
+      buses run to have welded provisions for grounding the bus work.
+    </p>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Grounding</h2>
+    <p class="doc-p">
+      The substation will incorporate a subsurface ground grid comprised of {{groundGridConductor}}
+      conductors. Ground rods and ground wells will be used as applicable. {{groundGridConductor}} risers
+      will connect the subsurface ground grid to all above-grade metallic objects such as equipment, steel
+      structures, metallic fence, etc.
+    </p>
+    <p class="doc-p">
+      A grounding study will be performed in accordance with {{groundingStandard}} using the
+      {{groundingSoftware}} software package. The study will ensure that the ground grid is designed to
+      maintain safe touch and step voltages within IEEE tolerable limits. A safety margin of at least
+      {{groundingSafetyMarginPercent}}% will be maintained between the calculated step and touch voltages
+      and the IEEE 80 step and touch voltages.
+    </p>
+    <p class="doc-p">With respect to the above data input and the IEEE standard, the ground grid will be designed to
+      make sure that the calculated grid resistance will be less than {{groundGridResistanceLimit}}.</p>
+    <ul>
+      <li>Depth of surface layer resistivity shall be {{surfaceLayerDepth}} deep.</li>
+      <li>Surface rock resistivity shall be {{surfaceRockResistivity}}.</li>
+      <li>Grounding rod is {{groundRodSpec}}.</li>
+      <li>Ground grid using {{groundGridConductor}}.</li>
+      <li>Ground grid to be extended {{groundGridExtension}} beyond the limits of the substation.</li>
+    </ul>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Conduit</h2>
+    <p class="doc-p">
+      The design will facilitate relay protection, control, and low voltage power systems of the
+      substation. The conduit system will utilize PVC, RMC, LFMC conduits, fittings, and accessories as
+      required. Conduit fill will be selected as per NEC.
+    </p>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Illumination Design</h2>
+    <p class="doc-p">
+      The lighting will be designed in accordance with the Illuminating Engineering Society and NESC to
+      create acceptable and adequate foot candle dispersion throughout the yard to maintain safety for
+      operation and maintenance functionality. Illumination level calculations will be performed using
+      {{illuminationSoftware}} software.
+    </p>
+    <p class="table-caption"><b class="toc-table-caption">Table 10: Required Illumination Levels</b></p>
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th>S.No</th>
+          <th>Area</th>
+          <th>Illumination Requirement (FC)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>General exterior horizontal and equipment vertical</td>
+          <td>{{illumGeneralExteriorFc}}</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Remote areas</td>
+          <td>{{illumRemoteAreasFc}}</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Control building doors inside yard</td>
+          <td>{{illumControlBuildingDoorsFc}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Lightning Protection Design</h2>
+    <p class="doc-p">
+      The lightning protection will be designed in accordance with the rolling sphere method per
+      {{lightningStandard}}. A rolling sphere of {{rollingSphereStationRadius}}' is chosen for the 69 kV
+      &amp; 34.5 kV side of the station, and {{rollingSphereControlRadius}}' is chosen for the control
+      enclosure. The location of lightning masts will be selected for total coverage of the substation area.
+    </p>
+
+    <!-- ======================= 3. PROTECTION & CONTROL ======================= -->
+    <h1 class="toc-heading doc-h1" data-toc-level="1">Protection &amp; Control</h1>
+    <h2 class="toc-heading doc-h2" data-toc-level="2">AC System</h2>
+    <p class="doc-p">
+      A single bushing pole type station service transformer will be connected to the 34.5 kV bus. It will
+      be connected phase-to-ground and protected with a primary fused cutout. Both station service sources
+      will be connected to a two-way automatic transfer switch (ATS), with the 34.5kV station service
+      transformer as the primary source. The station service system will include an ATS and a
+      {{atsDistributionVoltage}} distribution panel. {{sstRatingKva}} kVA {{sstPhaseConfig}} Station
+      Service Transformer is selected for this substation design.
+    </p>
+    <p class="doc-p">
+      Fuse Selection: For station transformers as a primary protection over 1000 volts, it will be sized
+      {{fuseSizingPercent}}% of load current.
+    </p>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">DC System</h2>
+    <p class="doc-p">
+      The {{dcSystemVoltage}}V DC system will have one battery system and two fully rated, self-cooled
+      battery chargers at the collection substation. The battery system will supply power to all relaying,
+      SCADA, communications, metering, tripping, and closing loads. Both chargers shall have the capacity
+      to recharge the batteries in {{batteryRechargeHours}} hours following a discharge as per the IEEE
+      485 sizing scenario. Station battery load cycle shall be performed for a {{batteryLoadCycleHours}}-hour
+      load cycle including trip of all breakers at the end of the cycle for one minute.
+    </p>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Protection Schemes</h2>
+    <p class="doc-p">
+      The substation will have {{numOutgoingHvLines}} outgoing 69kV line for the POI, which will connect
+      to the 69kV Utility Substation. There will be one (1) 69kV breaker ({{hvBreakerTag}}), serving as a
+      high side breaker for the 69/34.5kV transformer T1. The transformer will connect to a 34.5kV feeder
+      bus with {{numMvFeederBreakers}} 34.5kV vacuum breakers, connected to {{numIncomingFeeders}}
+      incoming feeders from the collection system through these breakers. All protection zones must
+      overlap through the breaker contacts.
+    </p>
+
+    <h3 class="toc-heading doc-h3" data-toc-level="3">Line to the Utility Substation</h3>
+    <p class="doc-p">
+      This line will be protected by a line current differential scheme using a {{linePrimaryRelayModel}}
+      for primary protection (87L-M){{linePrimaryRelayPartNo}}. This line will be protected by a current
+      differential scheme using a {{lineBackupRelayModel}} for backup protection (87L-B). Main line
+      protection shall trip TC1, initiate breaker failure. Operation of backup line protection shall trip
+      TC2, initiate breaker failure. One Lockout Relay shall be installed and operated by Direct Transfer
+      Trip function.
+    </p>
+
+    <h3 class="toc-heading doc-h3" data-toc-level="3">69kV Breaker</h3>
+    <p class="doc-p">
+      69kV Breaker {{hvBreakerTagFull}} will have high side phase instantaneous overcurrent, phase and
+      ground time overcurrent, undervoltage, overvoltage, underfrequency, and breaker failure protection
+      provided by {{hvBreakerRelayModel}} relay ({{hvBreakerRelayPartNo}}). Protection shall trip TC1. Dedicated breaker
+      failure
+      lockout 86BF-HV will trip TC1 and block close adjacent circuit breakers.
+    </p>
+
+    <h3 class="toc-heading doc-h3" data-toc-level="3">69/34.5kV Transformer</h3>
+    <p class="doc-p">
+      Each transformer will be primarily protected by differential protection (ANSI device 87T) and
+      restricted earth/ground fault (REF), extending from the HV transformer bushing CTs down to the LV
+      transformer bushing CT. The main power transformers will have protection implemented in two of the
+      following relays: {{transformerMainRelayModel}} ({{transformerMainRelayPartNo}}) and
+      {{transformerBackupRelayModel}} ({{transformerBackupRelayPartNo}}). Main protection
+      lockout (86T-M) will trip TC1 and block closing of the HV/MV circuit breakers. Backup protection
+      lockout (86T-B) will trip TC2 and block closing of the HV/MV circuit breakers.
+    </p>
+
+    <h3 class="toc-heading doc-h3" data-toc-level="3">34.5kV Bus</h3>
+    <p class="doc-p">
+      34.5kV bus will be protected by a differential scheme using a {{busRelayModel}} ({{busRelayPartNo}}). MV bus
+      differential
+      protection shall use high impedance relays connected to feeder side CTs and transformer low side CTs
+      closest to the core. In the event of bus differential protection elements operating, a trip signal
+      shall be issued to the corresponding lockout relay (86B-MV), which trips TC1, TC2, and blocks closing
+      of the HV and MV circuit breakers.
+    </p>
+
+    <h3 class="toc-heading doc-h3" data-toc-level="3">34.5kV Feeders and Associated Breakers</h3>
+    <p class="doc-p">
+      Feeders will be protected by {{feederRelayModel}} ({{feederRelayPartNo}}) relays that will provide undervoltage,
+      overvoltage,
+      underfrequency, overfrequency, phase and ground instantaneous and time overcurrent protection.
+      Feeder backup protection shall reside in the transformer main protection relay(s). Breaker failure
+      protection (ANSI device 50BF) for the feeder circuit breakers will be programmed in each feeder
+      relay. Dedicated breaker failure lockout (86BF-MV) will trip TC1 &amp; TC2 and block close adjacent
+      circuit breakers.
+    </p>
+
+    <h3 class="toc-heading doc-h3" data-toc-level="3">Metering</h3>
+    <p class="doc-p">
+      Revenue grade {{meterModel1}} ({{meterModel1PartNo}}) meters will be installed on metering class instrument
+      transformers to
+      measure power flow on the line to the utility interconnect substation, PV and BESS 34.5 bus sections.
+      Revenue grade {{meterModel2}} meters will be installed for CAISO requirements.
+    </p>
+
+    <h3 class="toc-heading doc-h3" data-toc-level="3">Relay/Control Panels</h3>
+    <p class="doc-p">{{panelListText}}</p>
+
+    <h3 class="toc-heading doc-h3" data-toc-level="3">Fuses</h3>
+    <p class="doc-p">Fuses shall be mounted at the top of the panel on the left wings. Fuse ratings will be selected for
+      the application as per NEC.</p>
+
+    <h3 class="toc-heading doc-h3" data-toc-level="3">Terminal Blocks</h3>
+    <p class="doc-p">All terminal blocks to be {{terminalBlockModel}}.</p>
+
+    <h3 class="toc-heading doc-h3" data-toc-level="3">CT Shorting Blocks</h3>
+    <p class="doc-p">CT shorting blocks shall be {{ctShortingBlockModel}}. Shorting blocks shall be mounted on the top
+      left wings just below the fuses.</p>
+
+    <h3 class="toc-heading doc-h3" data-toc-level="3">Relay Panels Construction</h3>
+    <ul>
+      <li>Spacing between the devices at minimum two rack units vertically.</li>
+      <li>Relays shall be at face/eye height. No relays or control equipment shall be installed at the top section of a
+        panel above average eye level.</li>
+      <li>A minimum of 3 rack units at the bottom and top of the panel to allow for future components.</li>
+      <li>Power Distribution Unit (PDU) placed at the bottom of every other rack with front/rear facing receptacles
+        shall be used.</li>
+      <li>Ground bars shall be bare ¼ inch copper bar, drilled and tapped for 10-32 screws every 1.5 inches.</li>
+    </ul>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Protective Coordination Study</h2>
+    <p class="doc-p">
+      A coordination study will be performed to develop the necessary calculations to select protective
+      relay characteristics and settings, ratios, and characteristics of associated current transformers.
+      The coordination study will include time-current curves (TCC) to illustrate relay settings and their
+      relative time margins.
+    </p>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">SCADA Philosophy</h2>
+    <p class="doc-p">
+      The SCADA system will monitor and control both the solar facility, BESS facility, and substation.
+      The solar PV and BESS equipment will be managed through a {{scadaMasterController}}, while the
+      substation will be managed via a {{scadaSubstationController}}. Data from the PPC, PV, tracker
+      system, BESS equipment, and substation equipment will be collected and shown on an HMI on OT
+      servers. Relay event data needs to be transmitted to {{relayEventDataDestination}} after an event happens.
+    </p>
+
+    <!-- ======================= 4. ELECTRICAL CALCULATIONS ======================= -->
+    <h1 class="toc-heading doc-h1" data-toc-level="1">Electrical Calculations</h1>
+    <h2 class="toc-heading doc-h2" data-toc-level="2">AC Load Calculations</h2>
+    <p class="doc-p">
+      The purpose of this calculation is to adequately size the AC station service system capable of
+      supporting the proposed design load for the {{voltageClass}} {{projectName}} substation. This AC
+      load calculation has been done based on the reference of National Electric Code (NEC {{necEditionForAcLoad}}).
+    </p>
+    <p class="doc-p">
+      It was assumed that {{lightsOnPercent}}% of the lights would be on and that {{heatersOnPercent}}% of
+      the heaters would energize at any given period. The station service will comprise one (1)
+      {{sstRatingKva}} kVA, single phase, with single primary bushing, transformer (normal) from local
+      utility and backup service from station 34.5 kV bus or a backup generator that feeds a single phase
+      {{atsDistributionVoltage}}, {{atsRatingA}} Automatic Transfer Switch.
+    </p>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">DC Load Calculations</h2>
+    <p class="doc-p">
+      The purpose of this calculation is to adequately size battery banks &amp; DC charging system capable
+      of supporting the ultimate design load for the {{voltageClass}} {{projectName}} substation. Battery
+      bank size is designed/calculated for 100% capacity of the ultimate load, accounting for one (1) 69kV
+      bay, {{numMvFeederBreakers}} 34.5kV bays, along with the appropriate number of relaying panels. This
+      DC load calculation has been done based on the reference IEEE STD. 485-2010 Recommended Practice for
+      Sizing Lead-Acid Batteries for Stationary Applications.
+    </p>
+    <p class="table-caption"><b class="toc-table-caption">Table 11: Design Parameters</b></p>
+    <table class="doc-table">
+      <tbody>
+        <tr>
+          <td colspan="2" style="font-weight:bold;">Battery</td>
+        </tr>
+        <tr>
+          <td>Nominal Battery Voltage (V)</td>
+          <td>{{batteryNominalVoltage}}</td>
+        </tr>
+        <tr>
+          <td>Maximum System Voltage (V)</td>
+          <td>{{batteryMaxSystemVoltage}}</td>
+        </tr>
+        <tr>
+          <td>Minimum System Voltage (V)</td>
+          <td>{{batteryMinSystemVoltage}}</td>
+        </tr>
+        <tr>
+          <td>Number of Cells</td>
+          <td>{{batteryNumCells}}</td>
+        </tr>
+        <tr>
+          <td>Minimum Cell Voltage (V)</td>
+          <td>{{batteryMinCellVoltage}}</td>
+        </tr>
+        <tr>
+          <td>Lowest Electrolyte Temperature (°F)</td>
+          <td>{{batteryLowestElectrolyteTemp}}</td>
+        </tr>
+        <tr>
+          <td>Temperature Correction Factor</td>
+          <td>{{batteryTempCorrectionFactor}}</td>
+        </tr>
+        <tr>
+          <td>Design Margin</td>
+          <td>{{batteryDesignMargin}}</td>
+        </tr>
+        <tr>
+          <td>Aging Factor</td>
+          <td>{{batteryAgingFactor}}</td>
+        </tr>
+        <tr>
+          <td colspan="2" style="font-weight:bold;">Charger</td>
+        </tr>
+        <tr>
+          <td>Recharge Time (hr)</td>
+          <td>{{chargerRechargeTimeHr}}</td>
+        </tr>
+        <tr>
+          <td>Efficiency</td>
+          <td>{{chargerEfficiency}}</td>
+        </tr>
+        <tr>
+          <td>Altitude Correction Factor</td>
+          <td>{{chargerAltitudeCorrectionFactor}}</td>
+        </tr>
+        <tr>
+          <td>Temperature Correction Factor</td>
+          <td>{{chargerTempCorrectionFactor}}</td>
+        </tr>
+        <tr>
+          <td>Equalize Voltage (V/cell)</td>
+          <td>{{chargerEqualizeVoltage}}</td>
+        </tr>
+        <tr>
+          <td>Float Voltage (V/cell)</td>
+          <td>{{chargerFloatVoltage}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Aluminum Tube Sizing</h2>
+    <p class="doc-p">
+      The aluminum tube sizing is designed in accordance with procedures presented in ANSI/IEEE Standard
+      605-2008 "IEEE Guide for Bus Design in Air Insulated Substations." Conductivity and emissivity of
+      the conductor surface are considered as {{conductorConductivityPercent}}% and
+      {{emissivityCoefficient}} respectively. Skin effect coefficient is considered as
+      {{skinEffectCoefficient}} as per IEEE 605-2008. Max bus deflection shall be limited to
+      {{maxBusDeflectionIn}} inch.
+    </p>
+    <p class="table-caption"><b class="toc-table-caption">Table 12: Selected Aluminum Tube Ampacity and Short Circuit
+        Capability</b></p>
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th colspan="3">69 kV Voltage Level</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Continuous Current Rating</td>
+          <td>Required: {{hvBusRequiredContinuousA}} A</td>
+          <td>Selected: {{hvBusSelectedContinuousA}} A</td>
+        </tr>
+        <tr>
+          <td>Short Circuit Rating</td>
+          <td>Required: {{hvBusRequiredScA}} kA</td>
+          <td>Selected: {{hvBusSelectedScA}} kA</td>
+        </tr>
+      </tbody>
+      <thead>
+        <tr>
+          <th colspan="3">34.5 kV Busbar</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Continuous Current Rating</td>
+          <td>Required: {{mvBusRequiredContinuousA}} A</td>
+          <td>Selected: {{mvBusSelectedContinuousA}} A</td>
+        </tr>
+        <tr>
+          <td>Short Circuit Rating</td>
+          <td>Required: {{mvBusRequiredScA}} kA</td>
+          <td>Selected: {{mvBusSelectedScA}} kA</td>
+        </tr>
+      </tbody>
+      <thead>
+        <tr>
+          <th colspan="3">34.5 kV Equipment Bus</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Continuous Current Rating</td>
+          <td>Required: {{mvEquipBusRequiredContinuousA}} A</td>
+          <td>Selected: {{mvEquipBusSelectedContinuousA}} A</td>
+        </tr>
+        <tr>
+          <td>Short Circuit Rating</td>
+          <td>Required: {{mvEquipBusRequiredScA}} kA</td>
+          <td>Selected: {{mvEquipBusSelectedScA}} kA</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Flexible Conductor Ampacity Calculations</h2>
+    <p class="doc-p">
+      The flexible conductor sizing is designed in accordance with procedures presented in ANSI/IEEE
+      Standard 738-2012. PLS-CADD software is utilized for performing this calculation. Solar absorptivity
+      and emissivity are considered as {{emissivityCoefficient}} both, and the final wind-to-conductor
+      angle is considered as {{windConductorAngle}}°.
+    </p>
+    <p class="table-caption"><b class="toc-table-caption">Table 13: Selected Flexible Conductor Ampacity and Short
+        Circuit Capability</b></p>
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th colspan="4">69 kV Voltage Level</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Continuous Current Rating @ {{hvJumperMvaBase}} MVA</td>
+          <td>Required: {{hvJumperRequiredA}} A</td>
+          <td>125% of FLA: {{hvJumper125PctFlaA}} A</td>
+          <td>Selected: {{hvJumperSelectedA}} A ({{hvJumperConductor}})</td>
+        </tr>
+      </tbody>
+      <thead>
+        <tr>
+          <th colspan="4">34.5 kV Main Bus Jumpers</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Continuous Current Rating</td>
+          <td>Required: {{mvMainBusJumperRequiredA}} A</td>
+          <td>125% of FLA: {{mvMainBusJumper125PctFlaA}} A</td>
+          <td>Selected: {{mvMainBusJumperSelectedA}} A ({{mvMainBusJumperConductor}})</td>
+        </tr>
+      </tbody>
+      <thead>
+        <tr>
+          <th colspan="4">34.5 kV Feeder Jumpers</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Continuous Current Rating @ {{mvFeederJumperMvaBase}} MVA</td>
+          <td>Required: {{mvFeederJumperRequiredA}} A</td>
+          <td>125% of FLA: {{mvFeederJumper125PctFlaA}} A</td>
+          <td>Selected: {{mvFeederJumperSelectedA}} A ({{feederJumperConductor}})</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Lightning Protection Calculations</h2>
+    <p class="doc-p">
+      The shielding system is designed in accordance with procedures presented in ANSI/IEEE Standard
+      998-2012 "IEEE Guide for Direct Lightning Stroke Shielding of Substations." The methods used are the
+      Electro Geometric Model (EGM) utilizing the rolling sphere method, as well as flashover probability
+      calculations. All above-ground steel structures, including the control enclosure, shall be grounded
+      to the ground grid with {{groundGridConductor}}. All gate and corner posts shall be grounded. All
+      other fence posts shall be grounded.
+    </p>
+
+    <!-- ======================= 5. DOCUMENTATION ======================= -->
+    <h1 class="toc-heading doc-h1" data-toc-level="1">Documentation</h1>
+    <p class="doc-p">Drawings, studies, and calculations will be included in the {{mdlListName}}.</p>
+    <ul>
+      <li>Single Line Diagram: {{sldDrawing}}</li>
+      <li>Relay List &amp; Trip Matrix: {{relayListTripMatrix}}</li>
+      <li>Main Power Transformer Datasheet: {{transformerDatasheet}}</li>
+      <li>Circuit Breaker Datasheets: {{breakerDatasheets}}</li>
+    </ul>
+
+    <!-- ======================= 6. STUDIES ======================= -->
+    <h1 class="toc-heading doc-h1" data-toc-level="1">Studies</h1>
+    <p class="doc-p">{{studiesList}}</p>
+
+  </div>
+</div>

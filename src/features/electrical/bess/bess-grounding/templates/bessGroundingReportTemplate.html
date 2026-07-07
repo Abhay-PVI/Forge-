@@ -1,0 +1,417 @@
+<style>
+  .preview-panel {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    line-height: 1.5;
+    color: #1a1a1a;
+  }
+
+  .preview-panel .page {
+    max-width: 850px;
+    margin: 0 auto;
+  }
+
+  .report-title {
+    font-size: 16pt;
+    text-align: left;
+  }
+
+  .doc-h1 {
+    font-size: 16pt;
+    margin-top: 22px;
+  }
+
+  .doc-h2 {
+    font-size: 13.5pt;
+    margin-top: 16px;
+  }
+
+  .doc-h3 {
+    font-size: 12pt;
+    margin-top: 12px;
+  }
+
+  .doc-p {
+    text-align: justify;
+  }
+
+  .doc-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10.5pt;
+    margin-bottom: 14px;
+  }
+
+  .doc-table th,
+  .doc-table td {
+    border: 1px solid black;
+    padding: 5px;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .doc-table thead th {
+    background: #e6edf3;
+  }
+
+  .table-caption {
+    font-size: 13.5pt;
+    margin: 14px 0 6px;
+  }
+
+  .fig-wrap {
+    text-align: center;
+    margin: 14px 0;
+  }
+
+  .fig-wrap img {
+    max-width: 100%;
+  }
+
+  .fig-caption {
+    font-size: 10pt;
+    font-style: italic;
+    color: #444;
+  }
+
+  .abbr-block {
+    display: none;
+  }
+</style>
+
+<div class="preview-panel">
+  <div class="page">
+
+    <!-- ABBREVIATIONS (hidden — used to auto-build glossary) -->
+    <div class="abbr-block">
+      <span class="toc-abbreviation" data-term="A">Ampere</span>
+      <span class="toc-abbreviation" data-term="V">Volt</span>
+      <span class="toc-abbreviation" data-term="ACSR">Aluminum Conductor Steel Reinforced</span>
+      <span class="toc-abbreviation" data-term="AWG">American Wire Gauge</span>
+      <span class="toc-abbreviation" data-term="AC">Alternating Current</span>
+      <span class="toc-abbreviation" data-term="BESS">Battery Energy Storage System</span>
+      <span class="toc-abbreviation" data-term="FNE">Field Network Enclosure</span>
+      <span class="toc-abbreviation" data-term="GPR">Ground Potential Rise</span>
+      <span class="toc-abbreviation" data-term="IEEE">Institute of Electrical and Electronics Engineers</span>
+      <span class="toc-abbreviation" data-term="kV">kilovolt</span>
+      <span class="toc-abbreviation" data-term="kW">kilowatt</span>
+      <span class="toc-abbreviation" data-term="kWp">kilowatt-peak</span>
+      <span class="toc-abbreviation" data-term="kWh">kilowatt-hour</span>
+      <span class="toc-abbreviation" data-term="kVA">kilovolt-ampere</span>
+      <span class="toc-abbreviation" data-term="KNAN">K-class fluid Natural Air Natural</span>
+      <span class="toc-abbreviation" data-term="LV">Low voltage</span>
+      <span class="toc-abbreviation" data-term="MPC">Mini Power Center</span>
+      <span class="toc-abbreviation" data-term="MPT">Main Power Transformer</span>
+      <span class="toc-abbreviation" data-term="MW">Megawatt</span>
+      <span class="toc-abbreviation" data-term="MV">Medium Voltage</span>
+      <span class="toc-abbreviation" data-term="MVA">Megavolt-ampere</span>
+      <span class="toc-abbreviation" data-term="PCS">Power Conversion Station</span>
+      <span class="toc-abbreviation" data-term="NEC">National Electrical Code</span>
+      <span class="toc-abbreviation" data-term="NESC">National Electrical Safety Code</span>
+      <span class="toc-abbreviation" data-term="OHTL">Overhead transmission Line</span>
+      <span class="toc-abbreviation" data-term="PV">Photovoltaic</span>
+      <span class="toc-abbreviation" data-term="POI">Point of Interconnection</span>
+      <span class="toc-abbreviation" data-term="PPA">Power Purchase Agreement</span>
+      <span class="toc-abbreviation" data-term="SPD">Surge Protection Device</span>
+      <span class="toc-abbreviation" data-term="TR">Tree-retardant</span>
+      <span class="toc-abbreviation" data-term="XLPE">Cross-linked Polyethylene</span>
+    </div>
+
+    <!-- TITLE -->
+    <h1 class="report-title">{{reportTitle}}</h1>
+    <p class="doc-p">{{documentNo}} &nbsp;|&nbsp; Rev. {{revision}} &nbsp;|&nbsp; {{preparedDate}}</p>
+
+    <!-- ======================= 1. INTRODUCTION ======================= -->
+    <h1 class="toc-heading doc-h1" data-toc-level="1">Introduction</h1>
+    <p class="doc-p">
+      {{clientName}} is developing {{projectCapacityMW}} MW / {{projectCapacityMWh}} MWh of {{projectName}}
+      of Grid Connected Standalone BESS in {{county}}, in the state of {{state}}, {{country}}. The BESS
+      will be designed for {{projectDurationHours}} hours of continuous power output of {{projectCapacityMW}} MW
+      at {{powerFactor}} {{powerFactorLeadLag}} power factor at the point of interconnection, resulting in
+      {{projectCapacityMWh}} MWh of net usable battery capacity.
+    </p>
+    <p class="doc-p">
+      This report outlines and summarizes the design of the ground grid and ensures compliance with
+      permissible step and touch voltage for the {{projectName}} plant. A proper design of the grounding
+      system ensures safe and reliable operation of the BESS plant and the power system.
+    </p>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Plant Description</h2>
+    <p class="doc-p">
+      The project has a capacity of {{projectCapacityMW}} MW / {{projectCapacityMWh}} MWh. The DC system
+      operates at {{dcVoltage}}V, the MV collection system will operate at {{mvVoltage}}kV, and the main
+      power transformer will step up the voltage to {{poiVoltage}}kV for interconnection.
+    </p>
+    <p class="doc-p">
+      {{clientName}} has chosen {{bessManufacturer}} BESS Enclosure and {{pcsManufacturer}} as PCS Skid for this
+      project.
+    </p>
+    <p class="doc-p">
+      The battery rack minimum and maximum voltages are {{batteryMinVoltage}} Vdc and {{batteryMaxVoltage}}
+      Vdc, respectively. The {{bessManufacturer}} BESS enclosure uses a standard {{ipRating}}-rated
+      enclosure. The BESS enclosure includes all primary DC wiring, fusing, surge protection devices
+      (SPDs), disconnects, and power monitoring required to safely exchange power between the BESS
+      enclosure and the power conversion system (PCS).
+    </p>
+    <p class="doc-p">
+      The {{pcsManufacturer}} PCS Skid {{pcsModel}} has a rated capacity of {{pcsRating}} kVA and MVT
+      rating of {{mvtRating}} kVA. The maximum connection/looping of MVT considered for this project is
+      {{maxMvtLoop}} MVTs, and the final MVT is connected to the plant substation. At the plant
+      {{mvVoltage}} kV substation, {{noOfVCB}} VCB feeders are used for BESS interconnection and one fused
+      disconnect switch feeder is used for BESS Auxiliary transformer interconnection.
+    </p>
+
+    <!-- ======================= 2. STUDY BASIS ======================= -->
+    <h1 class="toc-heading doc-h1" data-toc-level="1">Study Basis</h1>
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Standard References</h2>
+    <p class="doc-p">
+      This grounding report describes the data used to model the grounding systems for the
+      {{projectName}} plant and provides an analysis of the performance of the ground grids to maintain
+      safe tolerable step and touch voltages under faulted conditions. The primary standards referenced
+      in this analysis are:
+    </p>
+    <ol>
+      <li>IEEE Std 80 — IEEE Guide for Safety in AC Substation Grounding.</li>
+      <li>IEEE Std 81 — IEEE Guide for Measuring Earth Resistivity, Ground Impedance, and Earth Surface Potentials of a
+        Grounding System.</li>
+      <li>ASTM G57 — Standard Test Method for Field Measurement of Soil Resistivity using the Wenner Four-Electrode
+        Method.</li>
+      <li>IEEE Std C2 (NESC) — National Electrical Safety Code.</li>
+    </ol>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Inputs and Assumptions</h2>
+    <ol>
+      <li>The plant substation is to be connected to the {{poiSubstationVoltage}} kV {{poiSubstationName}}.</li>
+      <li>
+        A {{poiSubstationVoltage}} kV Gen-Tie overhead transmission line is modeled between the Point of
+        Interconnection (POI) and the Main Power Transformer (MPT) using a {{ohtlConductorType}} conductor
+        with a line length of {{ohtlLengthMiles}} miles.
+      </li>
+      <li>The {{mptVoltageRatio}} Main Power Transformer (MPT) characteristics are calculated as per the following
+        assumptions:</li>
+    </ol>
+
+    <p class="table-caption"><b class="toc-table-caption">Table 1: MPT Impedance and X/R Ratios</b></p>
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th>{{mptRatingMva}}</th>
+          <th>%Z at 138 MVA</th>
+          <th>X/R</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>PS</td>
+          <td>{{mptPsPercentZ}}</td>
+          <td>{{mptPsXR}}</td>
+        </tr>
+        <tr>
+          <td>PT</td>
+          <td>{{mptPtPercentZ}}</td>
+          <td>{{mptPtXR}}</td>
+        </tr>
+        <tr>
+          <td>ST</td>
+          <td>{{mptStPercentZ}}</td>
+          <td>{{mptStXR}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ol start="4">
+      <li>The secondary side of the MPT is grounded through a Neutral Grounding Reactor with a rating of
+        {{neutralGroundingReactorOhm}} ohm.</li>
+      <li>The {{mvtVoltageRatio}} Medium Voltage Transformer (MVT) is rated at {{mvtRatingMva}} MVA, with an assumed
+        impedance of {{mvtImpedancePercent}}%. These inputs are based on the information provided in the document
+        attached as Appendix F.</li>
+      <li>MV cables are preliminarily specified as {{mvCableInsulationSpec}} rated cables (Appendix D) and are available
+        in the following sizes:
+        <ol type="a">
+          <li>{{mvCableSize1}}</li>
+          <li>{{mvCableSize2}}</li>
+        </ol>
+      </li>
+      <li>A bare copper conductor of size {{mvTrenchGroundConductor}} runs along with the MV AC cable trench.</li>
+      <li>The grounding mat is made using {{groundingMatConductor}} conductors.</li>
+      <li>The grounding conductors selected for different equipment in this project are listed below:</li>
+    </ol>
+    <ul>
+      <li>{{groundConductorBess}} is considered for grounding of the BESS Enclosure.</li>
+      <li>{{groundConductorPcs}} is considered for grounding of the PCS Skid.</li>
+      <li>{{groundConductorAuxXfmr}} is considered for grounding of the Auxiliary Transformer and Panel Board.</li>
+      <li>{{groundConductorGenerator}} is considered for grounding of the Generator.</li>
+      <li>{{groundConductorMisc}} is considered for grounding of the Light Poles, FNE, Master Fire Panel, MPC, Fuse Tap
+        Box, and E-Stop Junction Box.</li>
+    </ul>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">WinIGS Inputs</h2>
+    <p class="doc-p">
+      PVinsight created a BESS system grounding model based on components specified by the client to
+      meet design requirements. The grounding model and associated one-line networking model are created
+      and analyzed using WinIGS® Software, Version {{winigsSoftwareVersion}}, marketed by {{winigsSoftwareVendor}}.
+    </p>
+    <p class="doc-p">
+      All the inverters connected to a feeder are modeled as an equivalent AC source (Figure 1) connected
+      to step-up transformers. The transformers step the output voltage of the inverter from
+      {{inverterLvVoltage}} kV to {{mvVoltage}} kV and are configured {{stepUpTransformerConfig}} (Figure 2).
+      There is one main power transformer being served by the BESS, modeled at {{mptBaseMva}} MVA base,
+      {{mptWindingConfig}}, with the impedance values derived based on the inputs mentioned in (Figure 3).
+      Gen-tie OHTL of {{ohtlLengthMiles}} miles is modeled between MPT and POI (Figure 4). The electrical
+      grid is modeled as an equivalent source at POI (Figure 5).
+    </p>
+    <p class="doc-p">
+      The WinIGS soil model is developed by giving the Wenner 4-electrode method soil resistivity
+      measurements provided by {{soilResistivityVendor}}, report dated {{soilResistivityReportDate}}, as
+      input measured in accordance with {{soilTestMethod}}. Transecting resistivity measurement locations
+      were performed with 4 probe spacings ({{soilTestLocationCount}} measurements) with spacing starting
+      at {{soilProbeSpacingMin}} and increasing up to {{soilProbeSpacingMax}}. Selected pages from the
+      geotechnical report listing these measurements are in Appendix E.
+    </p>
+
+    <figure class="fig-wrap">
+      {{figInverterSource}}
+      <div class="fig-caption">Figure 1: Inverter Equivalent Source with 6 PCS in a Circuit</div>
+    </figure>
+    <figure class="fig-wrap">
+      {{figMvTransformer}}
+      <div class="fig-caption">Figure 2: MV Transformer (MVT)</div>
+    </figure>
+    <figure class="fig-wrap">
+      {{figMainPowerTransformer}}
+      <div class="fig-caption">Figure 3: Main Power Transformer (MPT)</div>
+    </figure>
+    <figure class="fig-wrap">
+      {{figGenTieOhtl}}
+      <div class="fig-caption">Figure 4: 138kV Gen-Tie Overhead Transmission Line</div>
+    </figure>
+    <figure class="fig-wrap">
+      {{figPoiSource}}
+      <div class="fig-caption">Figure 5: Point of Interconnection (POI) Equivalent Source</div>
+    </figure>
+
+    <!-- ======================= 3. GROUNDING SYSTEM ======================= -->
+    <h1 class="toc-heading doc-h1" data-toc-level="1">Grounding System</h1>
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Battery Container, PCS Skid Grounding</h2>
+    <p class="doc-p">
+      The {{groundConductorBess}} equipment grounding conductor from each BESS Enclosure is connected to
+      the {{groundingMatConductor}} grounding mat. The {{groundConductorPcs}} equipment grounding conductor
+      from each PCS Skid is also connected to the {{groundingMatConductor}} grounding mat. The MV primary
+      distribution cables, which consist of aluminum conductors and copper concentric neutral wires, are
+      buried underground. The concentric neutral wires are bonded at both ends of the cable and at each
+      transformer's grounding bus bar, which is buried at a depth of {{concentricNeutralBondingDepth}}.
+      Additionally, there are {{groundRodSpec}} copper-clad steel grounding rods installed at regular
+      intervals along the mat.
+    </p>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Earth Conductor Sizing</h2>
+    <p class="doc-p">
+      The protective earth conductor shall be a bare copper conductor, and the cross-sectional area (A)
+      is calculated based on {{earthConductorRefEquation}}, using the RMS fault current, ambient and
+      maximum allowable conductor temperatures, material thermal coefficients, and duration of fault
+      current as inputs.
+    </p>
+
+    <figure class="fig-wrap">
+      {{figGroundingLayout}}
+      <div class="fig-caption">Figure 6: Grounding Layout</div>
+    </figure>
+
+    <!-- ======================= 4. ANALYSIS ======================= -->
+    <h1 class="toc-heading doc-h1" data-toc-level="1">Analysis</h1>
+    <h2 class="toc-heading doc-h2" data-toc-level="2">System Network Model and Geometric Model</h2>
+    <p class="doc-p">
+      Using the WinIGS® software, the electrical system network model and grounding model of the project
+      are created, as illustrated in Figure 7 below.
+    </p>
+    <figure class="fig-wrap">
+      {{figNetworkModel}}
+      <div class="fig-caption">Figure 7: Electrical System Network Model</div>
+    </figure>
+    <figure class="fig-wrap">
+      {{figMvtSkidModel}}
+      <div class="fig-caption">Figure 8: Typical MVT Skid Network Model</div>
+    </figure>
+    <p class="doc-p">
+      It should be noted that the project substation grounding system is designed by PVinsight, and the
+      scope of the study does not include modeling or analyzing the project substation.
+      {{substationGroundingScopeNote}}
+    </p>
+    <p class="doc-p">
+      The geometric grounding model is created based on the {{projectName}} Preliminary Grounding Plan
+      (Appendix A), with the model including MV cable concentric neutrals, additional
+      {{mvTrenchGroundConductor}} bare copper conductor along MV AC cables, {{groundingMatConductor}}
+      ground mat, ground rods, as well as the project fence, with one ground reference node located at
+      {{groundReferenceNodeLocation}}. The geometric model is shown in Figure 9 below.
+    </p>
+    <figure class="fig-wrap">
+      {{figGeometricGroundModel}}
+      <div class="fig-caption">Figure 9: Geometric Ground Model</div>
+    </figure>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Soil Model</h2>
+    <p class="doc-p">
+      The WinIGS® soil model is developed using the soil electrical resistivity measurements provided by
+      {{soilResistivityVendor}}, dated {{soilResistivityReportDate}}. Those results are in Appendix E of
+      this study. The multiple measurements are entered into and processed in Wenner Method Field Data to
+      arrive at an equivalent 2-layer soil resistivity model. The soil dynamic model fit report is
+      illustrated below in Figure 10. The resulting 2-layer soil model is shown in Figure 11.
+    </p>
+    <figure class="fig-wrap">
+      {{figSoilModelFit}}
+      <div class="fig-caption">Figure 10: Soil Model and Soil Parameters</div>
+    </figure>
+    <figure class="fig-wrap">
+      {{figSoilModelParams}}
+      <div class="fig-caption">Figure 11: Soil Model and Soil Parameters</div>
+    </figure>
+
+    <!-- ======================= 5. RESULTS AND CONCLUSION ======================= -->
+    <h1 class="toc-heading doc-h1" data-toc-level="1">Results and Conclusion</h1>
+    <p class="doc-p">
+      The analysis for ground potential rise (GPR) was performed, and the results from the calculation
+      are shown in Figure 12 below. The safety criteria based upon IEEE Std 80 with a body weight of
+      {{safetyBodyWeightKg}}kg and touch/shock duration of {{safetyShockDurationSec}} sec is shown in
+      Figure 13 below. Using the native soil permissible levels, the area's touch and step voltage
+      contours illustrate that the maximum step and touch voltage levels are below the permissible
+      levels. Hence, the grounding arrangement is properly designed and the GPR remains within the safe
+      permissible limits. The touch voltage contours are shown in Figure 14, and the step voltage
+      contours are shown in Figure 16.
+    </p>
+    <p class="doc-p">{{conclusionText}}</p>
+
+    <figure class="fig-wrap">
+      {{figGpr}}
+      <div class="fig-caption">Figure 12: Ground Potential Rise (GPR)</div>
+    </figure>
+    <figure class="fig-wrap">
+      {{figSafetyCriteria}}
+      <div class="fig-caption">Figure 13: Safety Criteria</div>
+    </figure>
+    <figure class="fig-wrap">
+      {{figTouchVoltage2D}}
+      <div class="fig-caption">Figure 14: Touch Voltage Contours – 2D Plot</div>
+    </figure>
+    <figure class="fig-wrap">
+      {{figTouchVoltage3D}}
+      <div class="fig-caption">Figure 15: Touch Voltage Contours – 3D Plot</div>
+    </figure>
+    <figure class="fig-wrap">
+      {{figStepVoltage2D}}
+      <div class="fig-caption">Figure 16: Step Voltage Contours – 2D Plot</div>
+    </figure>
+    <figure class="fig-wrap">
+      {{figStepVoltage3D}}
+      <div class="fig-caption">Figure 17: Step Voltage Contours – 3D Plot</div>
+    </figure>
+
+    <!-- ======================= APPENDICES ======================= -->
+    <h1 class="toc-heading doc-h1" data-toc-level="1">Appendices</h1>
+    <p class="doc-p"><b>Appendix-A:</b> BESS Grounding Plan</p>
+    <p class="doc-p"><b>Appendix-B:</b> Substation One Line Diagram</p>
+    <p class="doc-p"><b>Appendix-C:</b> AC One Line Diagram</p>
+    <p class="doc-p"><b>Appendix-D:</b> MV AC Power Cable</p>
+    <p class="doc-p"><b>Appendix-E:</b> Field Electrical Resistivity Data</p>
+    <p class="doc-p"><b>Appendix-F:</b> MV Transformer Datasheet</p>
+
+  </div>
+</div>

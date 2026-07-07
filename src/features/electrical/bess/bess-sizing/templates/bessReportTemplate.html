@@ -1,2843 +1,1218 @@
-<!-- <body> -->
+<style>
+  .preview-panel {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    line-height: 1.5;
+    color: #1a1a1a;
+  }
+
+  .preview-panel .page {
+    max-width: 850px;
+    margin: 0 auto;
+  }
+
+  .report-title {
+    font-size: 16pt;
+    text-align: left;
+  }
+
+  .doc-h1 {
+    font-size: 16pt;
+    margin-top: 22px;
+  }
+
+  .doc-h2 {
+    font-size: 13.5pt;
+    margin-top: 16px;
+  }
+
+  .doc-h3 {
+    font-size: 12pt;
+    margin-top: 12px;
+  }
+
+  .doc-p {
+    text-align: justify;
+  }
+
+  .doc-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10.5pt;
+    margin-bottom: 14px;
+  }
+
+  .doc-table th,
+  .doc-table td {
+    border: 1px solid black;
+    padding: 5px;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .doc-table thead th {
+    background: #e6edf3;
+  }
+
+  .table-caption {
+    font-size: 13.5pt;
+    margin: 14px 0 6px;
+  }
+
+  .fig-wrap {
+    text-align: center;
+    margin: 14px 0;
+  }
+
+  .fig-wrap img {
+    max-width: 100%;
+  }
+
+  .fig-caption {
+    font-size: 10pt;
+    font-style: italic;
+    color: #444;
+  }
+
+  .abbr-block {
+    display: none;
+  }
+</style>
+
 <div class="preview-panel">
-
   <div class="page">
-    <div style="font-family: 'Segoe UI'; line-height: 1.5;">
-      <div style="display: none;">
-        <span class="toc-abbreviation" data-term="BESS">Battery Energy Storage System</span>
-        <span class="toc-abbreviation" data-term="PCS">Power Conversion System</span>
-        <span class="toc-abbreviation" data-term="MV">Medium Voltage</span>
-        <span class="toc-abbreviation" data-term="DC">Direct Current</span>
-        <span class="toc-abbreviation" data-term="AC">Alternating Current</span>
-        <span class="toc-abbreviation" data-term="NEC">National Electrical Code</span>
-        <span class="toc-abbreviation" data-term="NESC">National Electrical Safety Code</span>
-        <span class="toc-abbreviation" data-term="IBC">International Building Code</span>
-        <span class="toc-abbreviation" data-term="OSHA">Occupational Safety and Health Administration</span>
-      </div>
 
-      <!-- TITLE -->
-      <h1 style="font-size:16pt; text-align:left;">Design Basis Report</h1>
-
-
-
-      <div style="font-family: 'Segoe UI'; line-height: 1.5;">
-
-        <!-- TITLE -->
-        <h1 class="toc-heading" data-toc-level="1" style="font-size:16pt; text-align:left;">Introduction</h1>
-
-        <!-- INTRO PARAGRAPH -->
-        <p style="text-align:justify;">
-          <span id="CLIENT_NAME"></span> LLC, is developing
-          <span id="PROJECT_CAPACITY_MW"></span> MW /
-          <span id="PROJECT_CAPACITY_MWH"></span> MWh of BESS in
-          <span id="COUNTY"></span>, in the state of
-          <span id="STATE"></span>, <span id="COUNTRY"></span>.
-
-          The BESS will be designed for
-          <span id="PROJECT_DURATION_HOURS"></span> hours of continuous power output of
-          <span id="BESS_POWER_RATING"></span> MW
-          <span id="POWER_FACTOR"></span> power factor at the point of interconnection which is
-          <span id="BESS_ENERGY_RATING"></span> MWh of net usable battery capacity.
-
-          The BESS will be coupled to a shared project substation utilizing dedicated
-          <span id="MV_VOLTAGE"></span> kV breakers.
-        </p>
-
-        <!-- CONSULTANT -->
-        <p style="text-align:justify;">
-          PVinsight Inc. has been appointed by Clenera to carry out the turnkey detail engineering
-          and design for
-          the project.
-        </p>
-
-        <!-- PURPOSE -->
-        <h2 class="toc-heading" data-toc-level="2" style="font-size:13.5pt;">Purpose</h2>
-
-        <p style="text-align:justify;">
-          The purpose of this document is to establish the key design considerations and technical
-          specifications
-          for the BESS.
-          The DBR will focus on the following elements.
-        </p>
-
-        <ul>
-          <li>Applicable Design Standards and Codes</li>
-          <li>Project details</li>
-          <li>Project Electrical Scheme</li>
-          <li>Major equipment and system Design Data</li>
-        </ul>
-
-        <!-- STANDARDS -->
-        <h2 class="toc-heading" data-toc-level="2" style="font-size:13.5pt;">Applicable Design Standards and Codes
-        </h2>
-
-        <p style="text-align:justify;">
-          The Battery Energy Storage System (BESS) shall be designed and installed as per the
-          following applicable
-          codes and standards.
-        </p>
-
-        <ul>
-          <li>NEC - National Electrical Code 2017 (NFPA 70)</li>
-          <li>NESC - National Electrical Safety Code</li>
-          <li>NERC PRC-024 - Interconnection Standard</li>
-          <li>IEEE - Institute of Electrical and Electronics Engineers</li>
-          <li>ICEA - Insulated Cable Engineers Association</li>
-          <li>NECA - National Electrical Contractors Association</li>
-          <li>IBC - International Building Code, 2018</li>
-          <li>OSHA - Occupational Safety and Health Administration</li>
-          <li>UL1741 - Standard for Inverters, Converters & Controllers for independent power
-            systems</li>
-          <li>ANSI - American National Standards Institute</li>
-          <li>ASTM - American Society for Testing and Materials</li>
-          <li>NEMA - National Electrical Manufacturers Association</li>
-          <li>NFPA - National Fire Protection Association</li>
-          <li>UL 9450 - Energy Storage System Requirements</li>
-          <li>UL 9540A - Thermal Runaway Fire Propagation Test</li>
-          <li>IFC - International Fire Code</li>
-          <li>State, City, and County Ordinances</li>
-        </ul>
-        /* data Added in the above list should be added in the code as well */
-        <!-- ASHRAE WEATHER DATA -->
-        <h2 class="toc-heading" data-toc-level="2" style="font-size:13.5pt;">Weather Data (ASHRAE)</h2>
-
-        <p style="text-align:justify;">
-          The following table presents key weather parameters obtained from ASHRAE database.
-        </p>
-        <div style="width:100%; overflow-x:auto;">
-          {{ASHRAE_TABLE}}
-        </div>
-
-        <!-- <!-- /div> making Single div for all content to maintain the formatting and page breaks in
-                        preview and final docx
-
-                        <!div style="font-family:'Segoe UI'; line-height:1.5;"> -->
-
-        <!-- SECTION TITLE -->
-        <h1 class="toc-heading" data-toc-level="2" style="font-size:16pt;">Project Details</h1>
-
-        <p><b class="toc-table-caption">Table 1: Project Summary</b></p>
-
-        <!-- TABLE -->
-        <table style="width:100%; border-collapse:collapse; font-size:10.5pt;">
-
-          <thead>
-            <tr>
-              <th style="border:1px solid black; padding:5px;">Sr. No.</th>
-              <th style="border:1px solid black; padding:5px;">Particulars</th>
-              <th style="border:1px solid black; padding:5px;">Descriptions</th>
-              <th style="border:1px solid black; padding:5px;">Units</th>
-            </tr>
-          </thead>
-
-          <tbody>
-
-            <tr>
-              <td>1</td>
-              <td>Project site</td>
-              <td id="PROJECT_SITE"></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Name of the state</td>
-              <td id="STATE"></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td>Name of the County</td>
-              <td id="COUNTY"></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>4</td>
-              <td>Geographical coordinates</td>
-              <td id="COORDINATES"></td>
-              <td></td>
-            </tr>
-
-            <tr>
-              <td>5</td>
-              <td>POI Voltage</td>
-              <td id="POI_VOLTAGE"></td>
-              <td>kV</td>
-            </tr>
-            <tr>
-              <td>6</td>
-              <td>MV Collection Voltage</td>
-              <td id="MV_VOLTAGE"></td>
-              <td>kV</td>
-            </tr>
-            <tr>
-              <td>7</td>
-              <td>LV Collection Voltage</td>
-              <td id="LV_VOLTAGE"></td>
-              <td>V</td>
-            </tr>
-            <tr>
-              <td>8</td>
-              <td>DC Collection Voltage</td>
-              <td id="DC_VOLTAGE"></td>
-              <td>V</td>
-            </tr>
-
-            <tr>
-              <td>9</td>
-              <td>Distribution Company</td>
-              <td id="UTILITY_NAME"></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>10</td>
-              <td>Total Fence Area</td>
-              <td id="FENCE_AREA"></td>
-              <td>Acres</td>
-            </tr>
-
-            <tr>
-              <td>11</td>
-              <td>BESS capacity at POI</td>
-              <td>
-                <span id="PROJECT_CAPACITY_MW"></span>
-              </td>
-              <td>MW</td>
-            </tr>
-
-            <tr>
-              <td>12</td>
-              <td>BESS Duration</td>
-              <td id="PROJECT_DURATION_HOURS"></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>13</td>
-              <td>Max. cycles per day</td>
-              <td id="CYCLES_PER_DAY"></td>
-              <td></td>
-            </tr>
-
-            <tr>
-              <td>14</td>
-              <td>Ambient temperature</td>
-              <td>
-                Max: <span id="MAX_TEMP"></span><br>
-                Min: <span id="MIN_TEMP"></span><br>
-                Design Temp: <span id="TEMP_DESIGN"></span>
-              </td>
-              <td>°F</td>
-            </tr>
-
-            <tr>
-              <td>15</td>
-              <td>Altitude</td>
-              <td id="ALTITUDE"></td>
-              <td>Feet</td>
-            </tr>
-            <tr>
-              <td>16</td>
-              <td>Design wind speed</td>
-              <td id="WIND_SPEED"></td>
-              <td>mph</td>
-            </tr>
-            <tr>
-              <td>17</td>
-              <td>Snow load</td>
-              <td id="SNOW_LOAD"></td>
-              <td>psf</td>
-            </tr>
-            <tr>
-              <td>18</td>
-              <td>Snow depth (NOAA)</td>
-              <td id="SNOW_DEPTH"></td>
-              <td>Inch</td>
-            </tr>
-
-            <tr>
-              <td>19</td>
-              <td>BESS Enclosure Manufacturer</td>
-              <td id="BESS_MANUFACTURER"></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>20</td>
-              <td>BESS Enclosure dimension</td>
-              <td id="BESS_DIMENSION"></td>
-              <td>mm</td>
-            </tr>
-            <tr>
-              <td>21</td>
-              <td>BESS Enclosure Energy Capacity</td>
-              <td id="BESS_ENERGY_PER_ENCLOSURE"></td>
-              <td>kWh</td>
-            </tr>
-
-            <tr>
-              <td>22</td>
-              <td>PCS Manufacturer</td>
-              <td id="PCS_MANUFACTURER"></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>23</td>
-              <td>PCS Model</td>
-              <td id="PCS_MODEL"></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>24</td>
-              <td>PCS Rating</td>
-              <td id="PCS_RATING"></td>
-              <td>kVA</td>
-            </tr>
-            <tr>
-              <td>25</td>
-              <td>PCS Enclosure dimension</td>
-              <td id="PCS_DIMENSION"></td>
-              <td>mm</td>
-            </tr>
-
-            <tr>
-              <td>26</td>
-              <td>BESS Enclosure (at BOL)</td>
-              <td id="NO_OF_ENCLOSURES"></td>
-              <td>qty</td>
-            </tr>
-            <tr>
-              <td>27</td>
-              <td>PCS (at BOL)</td>
-              <td id="NO_OF_PCS"></td>
-              <td>qty</td>
-            </tr>
-
-            <tr>
-              <td>28</td>
-              <td>MVT Manufacturer</td>
-              <td id="MVT_MANUFACTURER"></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>29</td>
-              <td>MVT Rating</td>
-              <td id="MVT_RATING"></td>
-              <td>kVA</td>
-            </tr>
-
-            <tr>
-              <td>30</td>
-              <td>Clearance</td>
-              <td>As per OEM standards</td>
-              <td></td>
-            </tr>
-
-            <tr>
-              <td>31</td>
-              <td>Road width</td>
-              <td id="ROAD_WIDTH"></td>
-              <td>feet</td>
-            </tr>
-            <tr>
-              <td>32</td>
-              <td>Fence to Road clearance</td>
-              <td id="FENCE_CLEARANCE"></td>
-              <td>feet</td>
-            </tr>
-
-          </tbody>
-        </table>
-
-        <!-- <!-- /div>
-
-                                <!--div style="font-family:'Segoe UI'; line-height:1.5;"> -->
-
-        <!-- SECTION TITLE -->
-        <h1 class="toc-heading" data-toc-level="2" style="font-size:16pt;">Project Electrical Scheme</h1>
-
-        <p style="text-align:justify;">
-          The project has a capacity of
-          <span id="PROJECT_CAPACITY_MW"></span> MW /
-          <span id="PROJECT_CAPACITY_MWH"></span> MWh.
-          The DC system will operate at a maximum of
-          <span id="DC_VOLTAGE"></span> V.
-          The MV collection system will operate at
-          <span id="MV_VOLTAGE"></span> kV and the main power transformer will
-          step up the voltage to
-          <span id="POI_VOLTAGE"></span> kV for interconnection.
-        </p>
-
-        <p style="text-align:justify;">
-          <span id="CLIENT_NAME"></span> has chosen
-          <span id="BESS_MANUFACTURER"></span> and
-          <span id="PCS_MANUFACTURER"></span> PCS solution for this project.
-        </p>
-
-        <p style="text-align:justify;">
-          The battery rack minimum and maximum voltages are
-          <span id="BATTERY_MIN_VOLTAGE"></span> Vdc and
-          <span id="BATTERY_MAX_VOLTAGE"></span> Vdc respectively.
-          The <span id="BESS_MANUFACTURER_2"></span> Enclosure uses a standard
-          <span id="IP_RATING"></span> rated enclosure.
-
-          The liquid cooling system of the enclosure maintains the temperature
-          between
-          <span id="TEMP_MIN"></span> to
-          <span id="TEMP_MAX"></span> deg C.
-
-          The enclosure includes all primary DC wiring, fusing, SPD, disconnects
-          and monitoring
-          required
-          to safely exchange power between battery enclosure and PCS.
-        </p>
-
-        <p style="text-align:justify;">
-          The <span id="PCS_MANUFACTURER_2"></span> PCS System
-          <span id="PCS_MODEL"></span> is rated at
-          <span id="PCS_RATING"></span> kVA, while the MVT is rated at
-          <span id="MVT_RATING"></span> kVA.
-
-          The MVT includes looping provisions up to
-          <span id="MAX_MVT_LOOP"></span> units.
-
-          The final feeder connects to the plant substation. At
-          <span id="MV_VOLTAGE_2"></span> kV substation
-          <span id="NO_OF_VCB"></span> VCB feeders are used.
-
-          A fuse and disconnector switch is used for auxiliary connection.
-        </p>
-
-        <!-- SECTION 2 -->
-        <h1 class="toc-heading" data-toc-level="1" style="font-size:16pt;">Major Equipment and Systems Design Data
-        </h1>
-
-        <h2 class="toc-heading" data-toc-level="2" style="font-size:13.5pt;">Battery Energy Storage System (BESS)
-          Data
-        </h2>
-
-        <p style="text-align:justify;">
-          BESS shall include all DC-side, AC-side subsystems, BMS, EMS, and
-          associated
-          hardware/software.
-          These components will be electrically and mechanically interconnected
-          and operate in
-          coordination with
-          the electrical grid.
-        </p>
-
-        <p style="text-align:justify;">
-          The BESS shall be rated based on delivered power and energy at the
-          interconnection and
-          metering point.
-        </p>
-
-        <!-- </div> making Single div for all content to maintain the formatting and page breaks in -->
-        <!-- <!--div style="font-family:'Segoe UI'; line-height:1.5;"> -->
-        <!-- PAGE 4 -->
-        <!-- SECTION -->
-        <h2 style="font-size:13.5pt;"><b class="toc-table-caption">Table 2: Technical Parameters of Battery Energy Storage System</b></h2>
-
-        <table style="width:100%; border-collapse:collapse; font-size:10.5pt;">
-          <thead>
-            <tr>
-              <th style="border:1px solid black; padding:5px;">Sr. No.
-              </th>
-              <th style="border:1px solid black; padding:5px;">
-                Particulars</th>
-              <th style="border:1px solid black; padding:5px;">
-                Descriptions</th>
-              <th style="border:1px solid black; padding:5px;">Units
-              </th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr>
-              <td style="border:1px solid black;">1</td>
-              <td style="border:1px solid black;">BESS Technology</td>
-              <td>Li-Ion-LFP</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">2</td>
-              <td style="border:1px solid black;">BESS Design Life
-              </td>
-              <td>25</td>
-              <td>Years</td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">3</td>
-              <td style="border:1px solid black;">BESS AC Power Rating
-              </td>
-              <td><span id="PROJECT_CAPACITY_MW"></span> (POI)</td>
-              <td>MW</td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">4</td>
-              <td style="border:1px solid black;">BESS AC Energy
-                Rating</td>
-              <td><span id="PROJECT_CAPACITY_MWH"></span> (POI)</td>
-              <td>MWh</td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">5</td>
-              <td style="border:1px solid black;">BESS Duration</td>
-              <td><span id="PROJECT_DURATION_HOURS"></span></td>
-              <td>Hours</td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">6</td>
-              <td style="border:1px solid black;">Total PCS Power
-                Rating</td>
-              <td>237.45</td>
-              <td>MVA</td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">7</td>
-              <td style="border:1px solid black;">Total BESS Energy
-                Rating</td>
-              <td>1023.26</td>
-              <td>MWh</td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">8</td>
-              <td style="border:1px solid black;">Power Factor</td>
-              <td>0.95 lead / lag</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">9</td>
-              <td style="border:1px solid black;">Annual Cycles</td>
-              <td>365</td>
-              <td>Nos.</td>
-            </tr>
-
-            <!-- CONFIGURATION HEADER -->
-            <tr>
-              <td colspan="4" style="border:1px solid black; font-weight:bold; text-align:center;">
-                BESS Configuration
-              </td>
-            </tr>
-
-            <tr>
-              <td style="border:1px solid black;">10</td>
-              <td style="border:1px solid black;">PCS Manufacturer &
-                Model</td>
-              <td><span id="PCS_MANUFACTURER"></span> / <span id="PCS_MODEL"></span></td>
-              <td></td>
-            </tr>
-
-            <tr>
-              <td style="border:1px solid black;">11</td>
-              <td style="border:1px solid black;">PCS Rating</td>
-              <td><span id="PCS_RATING"></span></td>
-              <td>kVA</td>
-            </tr>
-
-            <tr>
-              <td style="border:1px solid black;">12</td>
-              <td style="border:1px solid black;">BESS Manufacturer
-              </td>
-              <td><span id="BESS_MANUFACTURER"></span></td>
-              <td></td>
-            </tr>
-
-            <tr>
-              <td style="border:1px solid black;">13</td>
-              <td style="border:1px solid black;">Enclosure Dimensions
-              </td>
-              <td><span id="BESS_DIMENSION"></span></td>
-              <td>mm</td>
-            </tr>
-
-            <tr>
-              <td style="border:1px solid black;">14</td>
-              <td style="border:1px solid black;">No. of Enclosures
-              </td>
-              <td><span id="NO_OF_ENCLOSURES"></span></td>
-              <td>Nos.</td>
-            </tr>
-
-            <tr>
-              <td style="border:1px solid black;">15</td>
-              <td style="border:1px solid black;">Battery Energy</td>
-              <td><span id="BESS_ENERGY_PER_ENCLOSURE"></span></td>
-              <td>kWh</td>
-            </tr>
-
-            <tr>
-              <td style="border:1px solid black;">16</td>
-              <td style="border:1px solid black;">No. of PCS</td>
-              <td><span id="NO_OF_PCS"></span></td>
-              <td>Nos.</td>
-            </tr>
-
-          </tbody>
-        </table>
-
-        <!-- BATTERY DATA -->
-        <h2 class="toc-heading" data-toc-level="3" style="font-size:13.5pt;">Battery Data</h2>
-
-        <p style="text-align:justify;">
-          Batteries shall be shipped as per DOT regulations and UN 38.3
-          requirements and
-          stored as per
-          manufacturer guidelines.
-        </p>
-
-        <h2 style="font-size:13.5pt;"><b class="toc-table-caption">Table 3: Technical Parameters of Battery</b></h2>
-
-        <table style="width:100%; border-collapse:collapse; font-size:10.5pt;">
-          <thead>
-            <tr>
-              <th style="border:1px solid black;">Sr. No.</th>
-              <th style="border:1px solid black;">Particulars</th>
-              <th style="border:1px solid black;">Descriptions</th>
-              <th style="border:1px solid black;">Units</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style="border:1px solid black;">1</td>
-              <td>Battery Manufacturer</td>
-              <td><span id="BESS_MANUFACTURER"></span></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">2</td>
-              <td>Voltage Range</td>
-              <td><span id="BATTERY_MIN_VOLTAGE"></span> – <span id="BATTERY_MAX_VOLTAGE"></span></td>
-              <td>Vdc</td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">3</td>
-              <td>Charging Rate</td>
-              <td>0.25C</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">4</td>
-              <td>Discharging Rate</td>
-              <td>0.25C</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">5</td>
-              <td>Rated Voltage</td>
-              <td>1331.2</td>
-              <td>V</td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">6</td>
-              <td>Rated Current</td>
-              <td>1205.6</td>
-              <td>A</td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">7</td>
-              <td>Cooling Method</td>
-              <td>Liquid Cooling</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">8</td>
-              <td>Ingress Protection</td>
-              <td><span id="IP_RATING"></span></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">9</td>
-              <td>Certification</td>
-              <td>UL1973, UL9540A, NFPA 855 & UN38.3</td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>
-
-        <!-- PCS SECTION -->
-        <h2 class="toc-heading" data-toc-level="3" style="font-size:13.5pt;">Power Conversion System</h2>
-
-        <p style="text-align:justify;">
-          PCS shall operate in all four quadrants and provide voltage
-          regulation within ±5% of
-          nominal.
-        </p>
-
-        <h2 style="font-size:13.5pt;"><b class="toc-table-caption">Table 4: Technical Parameters of PCS</b></h2>
-
-        <table style="width:100%; border-collapse:collapse; font-size:10.5pt;">
-          <thead>
-            <tr>
-              <th style="border:1px solid black;">Sr.</th>
-              <th style="border:1px solid black;">Particulars</th>
-              <th style="border:1px solid black;">Descriptions</th>
-              <th style="border:1px solid black;">Units</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr>
-              <td style="border:1px solid black;">1</td>
-              <td>Model</td>
-              <td><span id="PCS_MODEL"></span></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">2</td>
-              <td>Rating</td>
-              <td><span id="PCS_RATING"></span></td>
-              <td>kVA</td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">3</td>
-              <td>AC Voltage</td>
-              <td>600</td>
-              <td>Vac</td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">4</td>
-              <td>DC Voltage Range</td>
-              <td>920 – 1500</td>
-              <td>Vdc</td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">5</td>
-              <td>Frequency</td>
-              <td>60</td>
-              <td>Hz</td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">6</td>
-              <td>Efficiency</td>
-              <td>99</td>
-              <td>%</td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">7</td>
-              <td>THD</td>
-              <td>3</td>
-              <td>%</td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">8</td>
-              <td>Protection</td>
-              <td>NEMA 3R / IP55</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">9</td>
-              <td>Dimensions</td>
-              <td>3183 x 2110 x 1800</td>
-              <td>mm</td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">10</td>
-              <td>Altitude</td>
-              <td>4000</td>
-              <td>m</td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">11</td>
-              <td>Cooling</td>
-              <td>Forced Air</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">12</td>
-              <td>Output Protection</td>
-              <td>Fuse + Switch</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">13</td>
-              <td>Overvoltage</td>
-              <td>Surge Arrestor</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">14</td>
-              <td>Communication</td>
-              <td>Ethernet / Modbus TCP</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">15</td>
-              <td>Certification</td>
-              <td>UL1741, IEEE 1547</td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>
-
-        <!-- <!-- /div>
-          <!--div style="font-family:'Segoe UI'; line-height:1.5;"> -->
-
-        <!-- 2.1.3 -->
-        <h2 class="toc-heading" data-toc-level="3" style="font-size:13.5pt;">Medium Voltage Transformer Data</h2>
-
-        <p style="text-align:justify;">
-          Transformers LV voltage rating shall be chosen to
-          interface effectively with
-          inverters and
-          the HV voltage will be <span id="MV_VOLTAGE"></span> kV.
-        </p>
-
-        <!-- TABLE 5 -->
-        <h2 style="font-size:13.5pt;"><b class="toc-table-caption">Table 5: Technical Parameters of Medium Voltage Transformer</b></h2>
-
-        <table style="width:100%; border-collapse:collapse; font-size:10.5pt;">
-
-          <thead>
-            <tr>
-              <th style="border:1px solid black;">Sr. No.</th>
-              <th style="border:1px solid black;">Particulars
-              </th>
-              <th style="border:1px solid black;">Descriptions
-              </th>
-              <th style="border:1px solid black;">Units</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr>
-              <td style="border:1px solid black;">1</td>
-              <td>Rating</td>
-              <td><span id="MVT_RATING"></span></td>
-              <td>kVA</td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">2</td>
-              <td>Voltage ratings</td>
-              <td><span id="MV_VOLTAGE"></span> / 0.6</td>
-              <td>kV</td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">3</td>
-              <td>Winding configuration</td>
-              <td>HV – Wye, LV – Delta</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">4</td>
-              <td>Cooling</td>
-              <td>KNAN</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">5</td>
-              <td>No. of PCS / Transformer</td>
-              <td>1</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">6</td>
-              <td>Impedance</td>
-              <td>5.75</td>
-              <td>%</td>
-            </tr>
-            <tr>
-              <td style="border:1px solid black;">7</td>
-              <td>Winding material</td>
-              <td>Aluminum</td>
-              <td></td>
-            </tr>
-          </tbody>
-
-        </table>
-
-        <!-- 2.1.4 -->
-        <h2 class="toc-heading" data-toc-level="3" style="font-size:13.5pt;">Auxiliary Power</h2>
-
-        <p style="text-align:justify;">
-          Each <span id="BESS_MANUFACTURER"></span> enclosure
-          requires
-          <span id="AUX_VOLTAGE"></span> V auxiliary supply of
-          approx.
-          <span id="AUX_POWER_KVA"></span> kVA for cooling,
-          controls, communication
-          and fire systems.
-
-          Auxiliary loads shall be fed from <span id="MV_VOLTAGE"></span>
-          kV /
-          <span id="AUX_VOLTAGE2"></span> V transformer boards.
-
-          <span id="PCS_MODEL"></span> has inbuilt auxiliary
-          transformer, hence
-          external supply is not required.
-        </p>
-
-        <p style="text-align:justify;">
-          EMS is located in substation control enclosure and
-          powered from SST.
-          <span id="BESS_MANUFACTURER2"></span> enclosure has
-          internal battery backup
-          for control systems.
-        </p>
-
-        <p style="text-align:justify;">
-          FNE and IR cameras are powered via
-          <span id="FNE_AUX_POWER_KVA"></span> kVA transformer
-          tapped from
-          <span id="AUX_VOLTAGE3"></span> V board.
-
-          UPS units (<span id="UPS_POWER_KVA"></span> kVA each)
-          supply power to
-          multiple FNEs (max <span id="MAX_FNE_LOOP"></span>
-          units).
-
-          Each FNE provides <span id="DC_CONTROL_VOLTAGE"></span>
-          V DC supply.
-        </p>
-
-        <!-- 2.1.5 -->
-        <h2 class="toc-heading" data-toc-level="3" style="font-size:13.5pt;">Wiring Color Codes</h2>
-
-        <h2 style="font-size:13.5pt;"><b class="toc-table-caption">Table 6: Wiring Color Code</b></h2>
-
-        <table style="width:100%; border-collapse:collapse; font-size:10.5pt;">
-
-          <thead>
-            <tr>
-              <th style="border:1px solid black;">Voltage
-                Class</th>
-              <th style="border:1px solid black;">Wire & Cable
-              </th>
-              <th style="border:1px solid black;">Color</th>
-            </tr>
-          </thead>
-
-          <tbody>
-
-            <!-- 120V -->
-            <tr>
-              <td style="border:1px solid black;" rowspan="4">
-                120 / 208V</td>
-              <td>Line A</td>
-              <td>Black</td>
-            </tr>
-            <tr>
-              <td>Line B</td>
-              <td>Red</td>
-            </tr>
-            <tr>
-              <td>Line C</td>
-              <td>Blue</td>
-            </tr>
-            <tr>
-              <td>Neutral</td>
-              <td>White</td>
-            </tr>
-
-            <!-- 480 -->
-            <tr>
-              <td style="border:1px solid black;" rowspan="4">
-                480 / 800V</td>
-              <td>Line A</td>
-              <td>Brown</td>
-            </tr>
-            <tr>
-              <td>Line B</td>
-              <td>Orange</td>
-            </tr>
-            <tr>
-              <td>Line C</td>
-              <td>Yellow</td>
-            </tr>
-            <tr>
-              <td>Neutral</td>
-              <td>Grey</td>
-            </tr>
-
-            <!-- MV -->
-            <tr>
-              <td style="border:1px solid black;" rowspan="3">
-                35kV</td>
-              <td>Line A</td>
-              <td rowspan="3">A / B / C phase labeling</td>
-            </tr>
-            <tr>
-              <td>Line B</td>
-            </tr>
-            <tr>
-              <td>Line C</td>
-            </tr>
-
-            <!-- DC -->
-            <tr>
-              <td rowspan="2">DC Conductors</td>
-              <td>Positive</td>
-              <td>Red</td>
-            </tr>
-            <tr>
-              <td>Negative</td>
-              <td>Black</td>
-            </tr>
-
-            <!-- GROUND -->
-            <tr>
-              <td colspan="2">Ground Conductor</td>
-              <td>Green / Bare</td>
-            </tr>
-
-          </tbody>
-
-        </table>
-
-        <!-- <!-- /div>
-              <!--div style="font-family:'Segoe UI'; line-height:1.6;"> -->
-
-        <!-- SECTION TITLE -->
-        <h1 class="toc-heading" data-toc-level="1" style="font-size:16pt;">Cable Ampacity Calculations</h1>
-
-        <!-- 3.1 -->
-        <h2 class="toc-heading" data-toc-level="2" style="font-size:13.5pt;">DC Cables (Cable Tray)</h2>
-        <h3 class="toc-heading" data-toc-level="3" style="font-size:12pt;">Notes and Assumptions</h3>
-
-        <ul>
-          <li>Voltage and current values are based on
-            battery enclosure
-            specifications.</li>
-
-          <li>
-            Soil thermal resistivity is based on
-            geotechnical report for
-            <span id="PROJECT_NAME"></span> project
-            prepared by
-            <span id="GEOTECH_REPORT_COMPANY"></span>
-            (Project No:
-            <span id="GEOTECH_REPORT_NO"></span>, dated
-            <span id="GEOTECH_REPORT_DATE"></span>).
-          </li>
-
-          <li>DC cables are installed in above-ground
-            trays between PCS and
-            battery enclosure.</li>
-
-          <li>
-            For this design, <span id="NO_OF_DC_RUNS"></span>
-            runs of
-            <span id="DC_CABLE_SIZE"></span> are used
-            between battery
-            enclosure and PCS.
-          </li>
-
-          <li>
-            <span id="CABLE_TRAY_WIDTH"></span> ft width
-            cable tray proposed
-            between enclosure and PCS.
-          </li>
-
-          <li>PCS DC combiners shall support side cable
-            entry.</li>
-        </ul>
-
-
-        <!-- 3.2 -->
-        <h2 class="toc-heading" data-toc-level="2" style="font-size:13.5pt;">MVAC CABLES</h2>
-        <h3 class="toc-heading" data-toc-level="3" style="font-size:12pt;">Notes and Assumptions</h3>
-
-        <ul>
-
-          <li>
-            MV cable sizing verified using CYMCAP
-            ensuring temperature does
-            not exceed
-            <span id="MV_CABLE_MAX_TEMP"></span>°C.
-          </li>
-
-          <li>
-            MV cables are buried at depth of
-            <span id="MV_CABLE_BURIAL_DEPTH"></span>
-            feet.
-          </li>
-
-          <li>Voltage and current based on transformer
-            specifications.</li>
-
-          <li>
-            Load factor of <span id="LOAD_FACTOR_PERCENT"></span>% used
-            for
-            analysis.
-          </li>
-
-          <li>
-            Soil resistivity based on report for <span id="PROJECT_NAME_2"></span> project
-            prepared by
-            <span id="GEOTECH_REPORT_COMPANY_2"></span>
-            (Project No: <span id="GEOTECH_REPORT_NO_2"></span>).
-          </li>
-
-          <li>
-            Soil temperature data from <span id="SOIL_TEMP_STATION"></span>,
-            <span id="SOIL_TEMP_LOCATION"></span>. Max
-            temp:
-            <span id="SOIL_TEMP_MAX"></span>, selected:
-            <span id="SOIL_TEMP_SELECTED"></span>.
-          </li>
-
-          <li>
-            Soil resistivity: <span id="SOIL_THERMAL_RESISTIVITY_NATIVE"></span>
-            at
-            <span id="SOIL_MOISTURE_CONTENT"></span>%
-            moisture. Parcel
-            <span id="PARCEL_NO"></span> used as
-            backfill if required.
-          </li>
-
-          <li>
-            Refer drawing <span id="REFERENCE_DRAWING_NO"></span> for
-            routing details.
-          </li>
-
-        </ul>
-
-        <p><b>Cable Sizes:</b></p>
-
-        <ul>
-          <li><span id="MV_CABLE_SIZE_1"></span></li>
-          <li><span id="MV_CABLE_SIZE_2"></span></li>
-          <li><span id="MV_CABLE_SIZE_3"></span></li>
-          <li><span id="MV_CABLE_SIZE_4"></span></li>
-        </ul>
-
-
-        <!-- 3.3 -->
-        <h2 class="toc-heading" data-toc-level="2" style="font-size:13.5pt;">AUXILIARY CABLES</h2>
-        <h3 class="toc-heading" data-toc-level="3" style="font-size:12pt;">Notes and Assumptions</h3>
-
-        <ul>
-          <li>Cable sizing verified using Cymcap & AmpCalc
-            (90°C rating).</li>
-          <li>Minimum burial depth = 18”.</li>
-          <li>Load factor considered = 100%.</li>
-          <li>Soil resistivity based on geotechnical
-            report (Western
-            Technologies).</li>
-          <li>4 runs of 1C 750 KCMIL AL cables used for
-            main distribution.
-          </li>
-          <li>2 AWG CU cables used for enclosure
-            connections (as per OEM).
-          </li>
-        </ul>
-
-      </div>
-
+    <!-- ABBREVIATIONS (hidden — used to auto-build glossary) -->
+    <div class="abbr-block">
+      <span class="toc-abbreviation" data-term="BESS">Battery Energy Storage System</span>
+      <span class="toc-abbreviation" data-term="PCS">Power Conversion System</span>
+      <span class="toc-abbreviation" data-term="MV">Medium Voltage</span>
+      <span class="toc-abbreviation" data-term="MVT">Medium Voltage Transformer</span>
+      <span class="toc-abbreviation" data-term="LV">Low Voltage</span>
+      <span class="toc-abbreviation" data-term="DC">Direct Current</span>
+      <span class="toc-abbreviation" data-term="AC">Alternating Current</span>
+      <span class="toc-abbreviation" data-term="POI">Point of Interconnection</span>
+      <span class="toc-abbreviation" data-term="BMS">Battery Management System</span>
+      <span class="toc-abbreviation" data-term="EMS">Energy Management System</span>
+      <span class="toc-abbreviation" data-term="FNE">Field Network Enclosure</span>
+      <span class="toc-abbreviation" data-term="FACP">Fire Alarm Communication Panel</span>
+      <span class="toc-abbreviation" data-term="FO">Fiber Optic</span>
+      <span class="toc-abbreviation" data-term="EGC">Equipment Grounding Conductor</span>
+      <span class="toc-abbreviation" data-term="NEC">National Electrical Code</span>
+      <span class="toc-abbreviation" data-term="NESC">National Electrical Safety Code</span>
+      <span class="toc-abbreviation" data-term="IBC">International Building Code</span>
+      <span class="toc-abbreviation" data-term="OSHA">Occupational Safety and Health Administration</span>
+      <span class="toc-abbreviation" data-term="UL">Underwriters Laboratories</span>
+      <span class="toc-abbreviation" data-term="NFPA">National Fire Protection Association</span>
+      <span class="toc-abbreviation" data-term="KCMIL">Thousands of Circular Mils</span>
+      <span class="toc-abbreviation" data-term="AWG">American Wire Gauge</span>
     </div>
 
-  </div>
-</div>
-</body>
-
-
-<!-- <div 
-      id="pdf-content"  
-      className="report-doc"
-      style={{
-        width: 640,
-        flex: 1,
-         overflowY: 'auto',
-        display: "grid",
-        gap: 22,
-      }}
-    >
-      {/* =======================================================
-          PAGE 1 - COVER
-      ======================================================= */}
-      <DocPage n={1}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            paddingBottom: 14,
-            borderBottom: "2px solid var(--accent)",
-          }}
-        >
-          <Logo size={26} />
-
-          <div>
-            <div
-              style={{
-                fontWeight: 700,
-                fontSize: 14,
-                letterSpacing: "-0.01em",
-              }}
-            >
-              PVinsight Inc.
-            </div>
-
-            <div
-              style={{
-                fontSize: 9.5,
-                color: "var(--text-3)",
-                letterSpacing: "0.04em",
-              }}
-            >
-              ENGINEERING DESIGN BASIS
-            </div>
-          </div>
-
-          <div
-            className="mono"
-            style={{
-              marginLeft: "auto",
-              fontSize: 9.5,
-              color: "var(--text-3)",
-              textAlign: "right",
-            }}
-          >
-            BESS-DBR
-            <br />
-            Rev. 0
-          </div>
-        </div>
-
-        <div
-          style={{
-            padding: "80px 0 70px",
-            textAlign: "center",
-          }}
-        >
-          <div
-            className="mono"
-            style={{
-              fontSize: 11,
-              color: "var(--accent-text)",
-              letterSpacing: "0.14em",
-            }}
-          >
-            BATTERY ENERGY STORAGE SYSTEM
-          </div>
-
-          <h1
-            style={{
-              fontSize: 28,
-              fontWeight: 600,
-              margin: "14px 0 10px",
-              lineHeight: 1.2,
-            }}
-          >
-            Design Basis Report
-          </h1>
-
-          <div
-            style={{
-              fontSize: 16,
-              color: "var(--text-2)",
-            }}
-          >
-            {V(values.projectName, "Project Name")}
-          </div>
-
-          <div
-            style={{
-              marginTop: 10,
-              color: "var(--text-3)",
-            }}
-          >
-            {V(values.projectSite, "Project Site")}
-          </div>
-
-          <div
-            style={{
-              display: "inline-flex",
-              gap: 18,
-              marginTop: 24,
-              padding: "8px 18px",
-              background: "var(--surface-2)",
-              borderRadius: 6,
-            }}
-          >
-            <CoverStat
-              label="POWER"
-              value={`${V(values.projectCapacityMW)} MW`}
-            />
-
-            <div
-              style={{
-                width: 1,
-                background: "var(--border)",
-              }}
-            />
-
-            <CoverStat
-              label="ENERGY"
-              value={`${V(values.projectCapacityMWh)} MWh`}
-            />
-
-            <div
-              style={{
-                width: 1,
-                background: "var(--border)",
-              }}
-            />
-
-            <CoverStat
-              label="DURATION"
-              value={`${V(values.projectDurationHours)} hrs`}
-            />
-          </div>
-        </div>
-
-        <table className="doc-table">
-          <tbody>
-            <DocRow
-              k="Client"
-              v={V(values.clientName, "Client")}
-            />
-
-            <DocRow
-              k="Consultant"
-              v={V(values.consultant, "PVinsight")}
-            />
-
-            <DocRow
-              k="Project"
-              v={V(values.projectName)}
-            />
-
-            <DocRow
-              k="Location"
-              v={`${V(values.county)}, ${V(
-                values.state
-              )}`}
-            />
-
-            <DocRow
-              k="Issue Date"
-              v={TODAY}
-            />
-          </tbody>
-        </table>
-      </DocPage>
-
-      {/* =======================================================
-          PAGE 2 - INTRODUCTION
-      ======================================================= */}
-      <DocPage n={2}>
-        <DocH
-          n="1"
-          t="Introduction"
-        />
-
-        <p className="doc-p">
-          {V(values.clientName, "Client")} LLC is
-          developing a Battery Energy Storage System (BESS)
-          project with a capacity of{" "}
-          {V(values.projectCapacityMW)} MW /
-          {" "}
-          {V(values.projectCapacityMWh)} MWh
-          located in{" "}
-          {V(values.county)},{" "}
-          {V(values.state)}.
-        </p>
-
-        <p className="doc-p">
-          The BESS is designed for{" "}
-          {V(values.projectDurationHours)} hours
-          of continuous discharge and will provide
-          reliable energy storage and grid support
-          services at the project point of
-          interconnection.
-        </p>
-
-        <p className="doc-p">
-          PVinsight Inc. has been appointed to
-          perform detailed engineering and design
-          activities for the project.
-        </p>
-
-        <DocH
-          n="1.1"
-          t="Purpose"
-        />
-
-        <p className="doc-p">
-          The purpose of this Design Basis Report
-          (DBR) is to establish the technical
-          design criteria, assumptions, and
-          engineering requirements governing the
-          Battery Energy Storage System project.
-        </p>
-
-        <p className="doc-p">
-          This report defines the design basis
-          used for equipment selection,
-          electrical integration, environmental
-          considerations, and system performance
-          requirements.
-        </p>
-
-        <ul className="doc-ul">
-          <li>Applicable Design Standards and Codes</li>
-          <li>Project Details</li>
-          <li>Project Electrical Scheme</li>
-          <li>Major Equipment Design Data</li>
-          <li>Cable Design Criteria</li>
-        </ul>
-
-        <DocH
-          n="1.2"
-          t="Applicable Design Standards and Codes"
-        />
-
-        <p className="doc-p">
-          The Battery Energy Storage System shall
-          be designed and installed in accordance
-          with applicable industry standards,
-          utility requirements, and local
-          regulations.
-        </p>
-
-        <ul className="doc-ul">
-          <li>NEC (NFPA 70)</li>
-          <li>NESC</li>
-          <li>NERC PRC-024</li>
-          <li>IEEE Standards</li>
-          <li>ICEA Standards</li>
-          <li>NECA Standards</li>
-          <li>IBC 2018</li>
-          <li>OSHA Requirements</li>
-          <li>UL 1741</li>
-          <li>ANSI Standards</li>
-          <li>ASTM Standards</li>
-          <li>NEMA Standards</li>
-          <li>NFPA Standards</li>
-          <li>UL 9540</li>
-          <li>UL 9540A</li>
-          <li>International Fire Code (IFC)</li>
-          <li>Applicable State, County and City Codes</li>
-        </ul>
-      </DocPage>
-
-      <DocPage n={3}>
-  <DocH
-    n="1.3"
-    t="Project Details"
-  />
-
-  <div
-    style={{
-      fontSize: 11,
-      fontWeight: 600,
-      marginBottom: 8,
-      color: "var(--text-2)",
-    }}
-  >
-    Table 1: Project Summary
-  </div>
-
-  <table className="doc-table">
-    <thead>
-      <tr>
-        <th style={{ width: 50 }}>Sr.</th>
-        <th>Particulars</th>
-        <th>Description</th>
-        <th style={{ width: 90 }}>Units</th>
-      </tr>
-    </thead>
-
-    <tbody>
-
-      <tr>
-        <td>1</td>
-        <td>Project Site</td>
-        <td>{V(values.projectSite)}</td>
-        <td></td>
-      </tr>
-
-      <tr>
-        <td>2</td>
-        <td>State</td>
-        <td>{V(values.state)}</td>
-        <td></td>
-      </tr>
-
-      <tr>
-        <td>3</td>
-        <td>County</td>
-        <td>{V(values.county)}</td>
-        <td></td>
-      </tr>
-
-      <tr>
-        <td>4</td>
-        <td>Geographical Coordinates</td>
-        <td>{V(values.coordinates)}</td>
-        <td></td>
-      </tr>
-
-      <tr>
-        <td>5</td>
-        <td>POI Voltage</td>
-        <td>{V(values.poiVoltage)}</td>
-        <td>kV</td>
-      </tr>
-
-      <tr>
-        <td>6</td>
-        <td>MV Collection Voltage</td>
-        <td>{V(values.mvVoltage)}</td>
-        <td>kV</td>
-      </tr>
-
-      <tr>
-        <td>7</td>
-        <td>LV Collection Voltage</td>
-        <td>{V(values.lvVoltage)}</td>
-        <td>V</td>
-      </tr>
-
-      <tr>
-        <td>8</td>
-        <td>DC Collection Voltage</td>
-        <td>{V(values.dcVoltage)}</td>
-        <td>V</td>
-      </tr>
-
-      <tr>
-        <td>9</td>
-        <td>Distribution Company</td>
-        <td>{V(values.utilityName)}</td>
-        <td></td>
-      </tr>
-
-      <tr>
-        <td>10</td>
-        <td>Total Fence Area</td>
-        <td>{V(values.fenceArea)}</td>
-        <td>Acres</td>
-      </tr>
-
-      <tr>
-        <td>11</td>
-        <td>BESS Capacity at POI</td>
-        <td>{V(values.projectCapacityMW)}</td>
-        <td>MW</td>
-      </tr>
-
-      <tr>
-        <td>12</td>
-        <td>BESS Duration</td>
-        <td>{V(values.projectDurationHours)}</td>
-        <td>Hours</td>
-      </tr>
-
-      <tr>
-        <td>13</td>
-        <td>Max Cycles Per Day</td>
-        <td>{V(values.cyclesPerDay)}</td>
-        <td></td>
-      </tr>
-
-      <tr>
-        <td>14</td>
-        <td>Ambient Temperature</td>
-        <td>
-          Max: {V(values.maxTemp)}
-          <br />
-          Min: {V(values.minTemp)}
-          <br />
-          Design: {V(values.tempDesign)}
-        </td>
-        <td>°F</td>
-      </tr>
-
-      <tr>
-        <td>15</td>
-        <td>Altitude</td>
-        <td>{V(values.altitude)}</td>
-        <td>ft</td>
-      </tr>
-
-      <tr>
-        <td>16</td>
-        <td>Design Wind Speed</td>
-        <td>{V(values.windSpeed)}</td>
-        <td>mph</td>
-      </tr>
-
-      <tr>
-        <td>17</td>
-        <td>Snow Load</td>
-        <td>{V(values.snowLoad)}</td>
-        <td>psf</td>
-      </tr>
-
-      <tr>
-        <td>18</td>
-        <td>Snow Depth</td>
-        <td>{V(values.snowDepth)}</td>
-        <td>inch</td>
-      </tr>
-
-      <tr>
-        <td>19</td>
-        <td>BESS Manufacturer</td>
-        <td>{V(values.bessManufacturer)}</td>
-        <td></td>
-      </tr>
-
-      <tr>
-        <td>20</td>
-        <td>BESS Enclosure Dimensions</td>
-        <td>{V(values.bessDimension)}</td>
-        <td>mm</td>
-      </tr>
-
-      <tr>
-        <td>21</td>
-        <td>BESS Energy per Enclosure</td>
-        <td>{V(values.bessEnergyPerEnclosure)}</td>
-        <td>kWh</td>
-      </tr>
-
-      <tr>
-        <td>22</td>
-        <td>PCS Manufacturer</td>
-        <td>{V(values.pcsManufacturer)}</td>
-        <td></td>
-      </tr>
-
-      <tr>
-        <td>23</td>
-        <td>PCS Model</td>
-        <td>{V(values.pcsModel)}</td>
-        <td></td>
-      </tr>
-
-      <tr>
-        <td>24</td>
-        <td>PCS Rating</td>
-        <td>{V(values.pcsRating)}</td>
-        <td>kVA</td>
-      </tr>
-
-      <tr>
-        <td>25</td>
-        <td>PCS Dimensions</td>
-        <td>{V(values.pcsDimension)}</td>
-        <td>mm</td>
-      </tr>
-
-      <tr>
-        <td>26</td>
-        <td>Number of BESS Enclosures</td>
-        <td>{V(values.noOfEnclosures)}</td>
-        <td>Qty</td>
-      </tr>
-
-      <tr>
-        <td>27</td>
-        <td>Number of PCS</td>
-        <td>{V(values.noOfPCS)}</td>
-        <td>Qty</td>
-      </tr>
-
-      <tr>
-        <td>28</td>
-        <td>MVT Manufacturer</td>
-        <td>{V(values.mvtManufacturer)}</td>
-        <td></td>
-      </tr>
-
-      <tr>
-        <td>29</td>
-        <td>MVT Rating</td>
-        <td>{V(values.mvtRating)}</td>
-        <td>kVA</td>
-      </tr>
-
-      <tr>
-        <td>30</td>
-        <td>Clearance</td>
-        <td>As per OEM standards</td>
-        <td></td>
-      </tr>
-
-      <tr>
-        <td>31</td>
-        <td>Road Width</td>
-        <td>{V(values.roadWidth)}</td>
-        <td>ft</td>
-      </tr>
-
-      <tr>
-        <td>32</td>
-        <td>Fence to Road Clearance</td>
-        <td>{V(values.fenceClearance)}</td>
-        <td>ft</td>
-      </tr>
-
-    </tbody>
-  </table>
-</DocPage>
-
-{/* =======================================================
-    PAGE 4 - ELECTRICAL SCHEME
-======================================================= */}
-<DocPage n={4}>
-  <DocH
-    n="1.4"
-    t="Project Electrical Scheme"
-  />
-
-  <p className="doc-p">
-    The project has a capacity of{" "}
-    <b>{V(values.projectCapacityMW)}</b> MW /
-    <b>{V(values.projectCapacityMWh)}</b> MWh.
-    The DC system operates at a maximum voltage of{" "}
-    <b>{V(values.dcVoltage)}</b> V.
-    The medium-voltage collection system operates at{" "}
-    <b>{V(values.mvVoltage)}</b> kV and the main power
-    transformer steps up the voltage to{" "}
-    <b>{V(values.poiVoltage)}</b> kV for
-    interconnection with the utility grid.
-  </p>
-
-  <p className="doc-p">
-    {V(values.clientName, "The Client")} has selected{" "}
-    <b>{V(values.bessManufacturer)}</b> Battery
-    Energy Storage System equipment together with{" "}
-    <b>{V(values.pcsManufacturer)}</b> Power
-    Conversion Systems for this project.
-  </p>
-
-  <p className="doc-p">
-    The battery system voltage range is{" "}
-    <b>{V(values.batteryMinVoltage)}</b> Vdc to{" "}
-    <b>{V(values.batteryMaxVoltage)}</b> Vdc.
-    The enclosure is designed with an ingress protection
-    rating of <b>{V(values.ipRating)}</b>.
-  </p>
-
-  <p className="doc-p">
-    The enclosure cooling system maintains the internal
-    operating temperature between{" "}
-    <b>{V(values.tempMin)}</b> °C and{" "}
-    <b>{V(values.tempMax)}</b> °C while ensuring
-    reliable operation of battery modules, control
-    systems, fire protection systems and auxiliary loads.
-  </p>
-
-  <p className="doc-p">
-    The battery enclosure includes all primary DC wiring,
-    disconnect devices, surge protection devices,
-    monitoring equipment and battery management
-    functionality required for safe operation and power
-    transfer between the battery system and PCS.
-  </p>
-
-  <p className="doc-p">
-    The selected PCS model{" "}
-    <b>{V(values.pcsModel)}</b> is rated at{" "}
-    <b>{V(values.pcsRating)}</b> kVA and interfaces
-    with a medium-voltage transformer rated at{" "}
-    <b>{V(values.mvtRating)}</b> kVA.
-  </p>
-
-  <p className="doc-p">
-    The medium-voltage collection system includes looping
-    provisions for up to{" "}
-    <b>{V(values.maxMvtLoop)}</b> transformer units.
-    The collection feeders terminate at the project
-    substation utilizing{" "}
-    <b>{V(values.noOfVCB)}</b> vacuum circuit breaker
-    feeders.
-  </p>
-
-  <p className="doc-p">
-    Auxiliary systems including controls, communication,
-    fire alarm systems, network equipment and security
-    systems are powered through dedicated auxiliary
-    transformers and distribution boards.
-  </p>
-
-  <DocH
-    n="2"
-    t="Major Equipment and Systems Design Data"
-  />
-
-  <p className="doc-p">
-    This section defines the major equipment and system
-    design parameters used for engineering and design of
-    the Battery Energy Storage System project.
-  </p>
-
-  <p className="doc-p">
-    The equipment ratings, environmental requirements,
-    electrical characteristics and interface criteria
-    described herein form the basis for detailed design,
-    procurement and construction activities.
-  </p>
-
-  <DocH
-    n="2.1"
-    t="Battery Energy Storage System (BESS) Data"
-  />
-
-  <p className="doc-p">
-    The Battery Energy Storage System includes battery
-    enclosures, power conversion systems, medium-voltage
-    transformers, auxiliary power systems, battery
-    management systems (BMS), energy management systems
-    (EMS), fire protection systems and associated
-    communication infrastructure.
-  </p>
-
-  <p className="doc-p">
-    The complete system shall be electrically and
-    mechanically integrated to provide safe and reliable
-    energy storage services while maintaining compliance
-    with utility interconnection requirements and
-    applicable industry standards.
-  </p>
-
-  <p className="doc-p">
-    System ratings presented in this report are based on
-    delivered power and energy at the project point of
-    interconnection.
-  </p>
-</DocPage>
-
-
-<DocPage n={5}>
-<div
-  style={{
-     fontSize: 11,
-      fontWeight: 600,
-      marginBottom: 8,
-      color: "var(--text-2)",
-  }}
->
-  Table 2: Technical Parameters of Battery Energy Storage System
-</div>
-
-<table className="doc-table">
-  <thead>
-    <tr>
-       <th style={{ width: 50 }}>Sr.</th>
-        <th>Particulars</th>
-        <th>Description</th>
-        <th style={{ width: 90 }}>Units</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <tr>
-      <td>1</td>
-      <td>BESS Technology</td>
-      <td>{V(values.batteryTechnology, "Li-Ion LFP")}</td>
-      <td></td>
-    </tr>
-
-    <tr>
-      <td>2</td>
-      <td>BESS Design Life</td>
-      <td>{V(values.bessDesignLife, "25")}</td>
-      <td>Years</td>
-    </tr>
-
-    <tr>
-      <td>3</td>
-      <td>BESS AC Power Rating</td>
-      <td>{V(values.projectCapacityMW)}</td>
-      <td>MW</td>
-    </tr>
-
-    <tr>
-      <td>4</td>
-      <td>BESS AC Energy Rating</td>
-      <td>{V(values.projectCapacityMWh)}</td>
-      <td>MWh</td>
-    </tr>
-
-    <tr>
-      <td>5</td>
-      <td>BESS Duration</td>
-      <td>{V(values.projectDurationHours)}</td>
-      <td>Hours</td>
-    </tr>
-
-    <tr>
-      <td>6</td>
-      <td>Total PCS Power Rating</td>
-      <td>{V(values.totalPCSPowerRating)}</td>
-      <td>MVA</td>
-    </tr>
-
-    <tr>
-      <td>7</td>
-      <td>Total BESS Energy Rating</td>
-      <td>{V(values.totalBessEnergyRating)}</td>
-      <td>MWh</td>
-    </tr>
-
-    <tr>
-      <td>8</td>
-      <td>Power Factor</td>
-      <td>{V(values.powerFactorLeadLag)}</td>
-      <td></td>
-    </tr>
-
-    <tr>
-      <td>9</td>
-      <td>Annual Cycles</td>
-      <td>{V(values.annualCycles, "365")}</td>
-      <td>Nos.</td>
-    </tr>
-
-    {/* CONFIGURATION HEADER */}
-    <tr
-      style={{
-        background: "var(--surface-2)",
-      }}
-    >
-      <td
-        colSpan={4}
-        style={{
-          textAlign: "center",
-          fontWeight: 700,
-        }}
-      >
-        BESS Configuration
-      </td>
-    </tr>
-
-    <tr>
-      <td>10</td>
-      <td>PCS Manufacturer & Model</td>
-      <td>
-        {V(values.pcsManufacturer)}
-        {" / "}
-        {V(values.pcsModel)}
-      </td>
-      <td></td>
-    </tr>
-
-    <tr>
-      <td>11</td>
-      <td>PCS Rating</td>
-      <td>{V(values.pcsRating)}</td>
-      <td>kVA</td>
-    </tr>
-
-    <tr>
-      <td>12</td>
-      <td>BESS Manufacturer</td>
-      <td>{V(values.bessManufacturer)}</td>
-      <td></td>
-    </tr>
-
-    <tr>
-      <td>13</td>
-      <td>Enclosure Dimensions</td>
-      <td>{V(values.bessDimension)}</td>
-      <td>mm</td>
-    </tr>
-
-    <tr>
-      <td>14</td>
-      <td>No. of Enclosures</td>
-      <td>{V(values.noOfEnclosures)}</td>
-      <td>Nos.</td>
-    </tr>
-
-    <tr>
-      <td>15</td>
-      <td>Battery Energy per Enclosure</td>
-      <td>{V(values.bessEnergyPerEnclosure)}</td>
-      <td>kWh</td>
-    </tr>
-
-    <tr>
-      <td>16</td>
-      <td>No. of PCS</td>
-      <td>{V(values.noOfPCS)}</td>
-      <td>Nos.</td>
-    </tr>
-  </tbody>
-</table>
-
-<DocH
-  n="2.1.1"
-  t="Battery Data"
-/>
-
-<p className="doc-p">
-  Batteries shall be shipped, stored, handled and
-  commissioned in accordance with manufacturer
-  recommendations and applicable transportation
-  regulations including UN38.3 requirements.
-</p>
-
-<p className="doc-p">
-  Battery systems shall include integrated Battery
-  Management Systems (BMS), thermal management,
-  protection systems and monitoring capabilities to
-  ensure safe and reliable operation throughout the
-  project life cycle.
-</p>
-
-
-{/* =======================================================
-    2.1.1 BATTERY DATA
-======================================================= */}
-
-<DocH
-  n="2.1.1"
-  t="Battery Data"
-/>
-
-<p className="doc-p">
-  Batteries shall be transported, stored and commissioned
-  in accordance with manufacturer recommendations and
-  applicable transportation regulations including UN38.3
-  requirements.
-</p>
-</DocPage>
-
-
-<DocPage n={6}>
-<div
-  style={{
-    fontSize: 11,
-    fontWeight: 600,
-    margin: "12px 0 8px",
-    color: "var(--text-2)",
-  }}
->
-  Table 3: Technical Parameters of Battery
-</div>
-
-<table className="doc-table">
-  <thead>
-    <tr>
-      <th style={{ width: 50 }}>Sr.</th>
-      <th>Particulars</th>
-      <th>Description</th>
-      <th style={{ width: 90 }}>Units</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <tr>
-      <td>1</td>
-      <td>Battery Manufacturer</td>
-      <td>{V(values.bessManufacturer)}</td>
-      <td></td>
-    </tr>
-
-    <tr>
-      <td>2</td>
-      <td>Voltage Range</td>
-      <td>
-        {V(values.batteryMinVoltage)}
-        {" – "}
-        {V(values.batteryMaxVoltage)}
-      </td>
-      <td>Vdc</td>
-    </tr>
-
-    <tr>
-      <td>3</td>
-      <td>Charging Rate</td>
-      <td>0.25C</td>
-      <td></td>
-    </tr>
-
-    <tr>
-      <td>4</td>
-      <td>Discharging Rate</td>
-      <td>0.25C</td>
-      <td></td>
-    </tr>
-
-    <tr>
-      <td>5</td>
-      <td>Rated Voltage</td>
-      <td>{V(values.batteryRatedVoltage)}</td>
-      <td>V</td>
-    </tr>
-
-    <tr>
-      <td>6</td>
-      <td>Rated Current</td>
-      <td>{V(values.batteryRatedCurrent)}</td>
-      <td>A</td>
-    </tr>
-
-    <tr>
-      <td>7</td>
-      <td>Cooling Method</td>
-      <td>{V(values.coolingMethod, "Liquid Cooling")}</td>
-      <td></td>
-    </tr>
-
-    <tr>
-      <td>8</td>
-      <td>Ingress Protection</td>
-      <td>{V(values.ipRating)}</td>
-      <td></td>
-    </tr>
-
-    <tr>
-      <td>9</td>
-      <td>Certification</td>
-      <td>
-        {V(
-          values.batteryCertification,
-          "UL1973, UL9540A, NFPA855 & UN38.3"
-        )}
-      </td>
-      <td></td>
-    </tr>
-  </tbody>
-</table>
-
-{/* =======================================================
-    2.1.2 PCS DATA
-======================================================= */}
-
-<DocH
-  n="2.1.2"
-  t="Power Conversion System"
-/>
-
-<p className="doc-p">
-  The Power Conversion System (PCS) shall provide
-  bidirectional conversion between AC and DC systems and
-  operate in all four quadrants while supporting voltage
-  regulation, reactive power control and grid support
-  functionality.
-</p>
-
-<p className="doc-p">
-  The PCS shall comply with applicable utility
-  interconnection requirements and provide protection,
-  monitoring and communication capabilities required for
-  plant operation.
-</p>
-
-<div
-  style={{
-    fontSize: 11,
-    fontWeight: 600,
-    margin: "12px 0 8px",
-    color: "var(--text-2)",
-  }}
->
-  Table 4: Technical Parameters of PCS
-</div>
-
-<table className="doc-table">
-  <thead>
-    <tr>
-      <th style={{ width: 50 }}>Sr.</th>
-      <th>Particulars</th>
-      <th>Description</th>
-      <th style={{ width: 90 }}>Units</th>
-    </tr>
-  </thead>
-
-  <tbody>
-
-    <tr>
-      <td>1</td>
-      <td>Model</td>
-      <td>{V(values.pcsModel)}</td>
-      <td></td>
-    </tr>
-
-    <tr>
-      <td>2</td>
-      <td>Rating</td>
-      <td>{V(values.pcsRating)}</td>
-      <td>kVA</td>
-    </tr>
-
-    <tr>
-      <td>3</td>
-      <td>AC Voltage</td>
-      <td>{V(values.pcsAcVoltage)}</td>
-      <td>Vac</td>
-    </tr>
-
-    <tr>
-      <td>4</td>
-      <td>DC Voltage Range</td>
-      <td>{V(values.pcsDcVoltageRange)}</td>
-      <td>Vdc</td>
-    </tr>
-
-    <tr>
-      <td>5</td>
-      <td>Frequency</td>
-      <td>{V(values.pcsFrequency)}</td>
-      <td>Hz</td>
-    </tr>
-
-    <tr>
-      <td>6</td>
-      <td>Efficiency</td>
-      <td>{V(values.pcsEfficiency)}</td>
-      <td>%</td>
-    </tr>
-
-    <tr>
-      <td>7</td>
-      <td>Total Harmonic Distortion (THD)</td>
-      <td>{V(values.pcsThd)}</td>
-      <td>%</td>
-    </tr>
-
-    <tr>
-      <td>8</td>
-      <td>Protection Rating</td>
-      <td>{V(values.pcsProtection)}</td>
-      <td></td>
-    </tr>
-
-    <tr>
-      <td>9</td>
-      <td>Dimensions</td>
-      <td>{V(values.pcsDimension)}</td>
-      <td>mm</td>
-    </tr>
-
-    <tr>
-      <td>10</td>
-      <td>Maximum Altitude</td>
-      <td>{V(values.pcsAltitude)}</td>
-      <td>m</td>
-    </tr>
-
-    <tr>
-      <td>11</td>
-      <td>Cooling Method</td>
-      <td>{V(values.pcsCooling)}</td>
-      <td></td>
-    </tr>
-
-    <tr>
-      <td>12</td>
-      <td>Output Protection</td>
-      <td>{V(values.pcsOutputProtection)}</td>
-      <td></td>
-    </tr>
-
-    <tr>
-      <td>13</td>
-      <td>Overvoltage Protection</td>
-      <td>{V(values.pcsOvervoltageProtection)}</td>
-      <td></td>
-    </tr>
-
-    <tr>
-      <td>14</td>
-      <td>Communication</td>
-      <td>{V(values.pcsCommunication)}</td>
-      <td></td>
-    </tr>
-
-    <tr>
-      <td>15</td>
-      <td>Certification</td>
-      <td>UL1741, IEEE 1547</td>
-      <td></td>
-    </tr>
-
-  </tbody>
-</table>
-
-</DocPage>
-{/* =======================================================
-    2.1.3 MEDIUM VOLTAGE TRANSFORMER DATA
-======================================================= */}
-<DocPage n={7}> 
-<DocH
-  n="2.1.3"
-  t="Medium Voltage Transformer Data"
-/>
-
-<p className="doc-p">
-  Medium Voltage Transformers (MVT) shall interface the
-  Power Conversion Systems with the medium-voltage
-  collection network. Transformer ratings and voltage
-  classes shall be selected to ensure reliable operation
-  under all operating conditions.
-</p>
-
-<div
-  style={{
-    fontSize: 11,
-    fontWeight: 600,
-    margin: "12px 0 8px",
-    color: "var(--text-2)",
-  }}
->
-  Table 5: Technical Parameters of Medium Voltage Transformer
-</div>
-
-<table className="doc-table">
-  <thead>
-    <tr>
-      <th style={{ width: 50 }}>Sr.</th>
-      <th>Particulars</th>
-      <th>Description</th>
-      <th style={{ width: 90 }}>Units</th>
-    </tr>
-  </thead>
-
-  <tbody>
-
-    <tr>
-      <td>1</td>
-      <td>Rating</td>
-      <td>{V(values.mvtRating)}</td>
-      <td>kVA</td>
-    </tr>
-
-    <tr>
-      <td>2</td>
-      <td>Voltage Ratings</td>
-      <td>{V(values.transformerVoltageRating)}</td>
-      <td>kV</td>
-    </tr>
-
-    <tr>
-      <td>3</td>
-      <td>Winding Configuration</td>
-      <td>HV – Wye, LV – Delta</td>
-      <td></td>
-    </tr>
-
-    <tr>
-      <td>4</td>
-      <td>Cooling</td>
-      <td>{V(values.transformerCooling, "KNAN")}</td>
-      <td></td>
-    </tr>
-
-    <tr>
-      <td>5</td>
-      <td>No. of PCS per Transformer</td>
-      <td>1</td>
-      <td></td>
-    </tr>
-
-    <tr>
-      <td>6</td>
-      <td>Impedance</td>
-      <td>{V(values.transformerImpedance)}</td>
-      <td>%</td>
-    </tr>
-
-    <tr>
-      <td>7</td>
-      <td>Winding Material</td>
-      <td>{V(values.transformerWindingMaterial)}</td>
-      <td></td>
-    </tr>
-
-  </tbody>
-</table>
-
-{/* =======================================================
-    2.1.4 AUXILIARY POWER
-======================================================= */}
-
-<DocH
-  n="2.1.4"
-  t="Auxiliary Power"
-/>
-
-<p className="doc-p">
-  Each battery enclosure requires an auxiliary supply of
-  <b> {V(values.auxVoltage)} V </b>
-  with an estimated connected load of
-  <b> {V(values.auxPowerKVA)} kVA </b>
-  to support HVAC systems, controls, communication
-  equipment, battery management systems and fire
-  protection equipment.
-</p>
-
-<p className="doc-p">
-  Auxiliary loads shall be supplied from dedicated
-  auxiliary transformers connected to the
-  <b> {V(values.mvVoltage)} kV </b>
-  collection system and distributed through
-  <b> {V(values.auxVoltage2)} V </b>
-  auxiliary distribution boards.
-</p>
-
-<p className="doc-p">
-  The PCS incorporates internal auxiliary power systems
-  and therefore does not require a separate external
-  auxiliary supply under normal operating conditions.
-</p>
-
-<p className="doc-p">
-  The Energy Management System (EMS) and plant control
-  equipment shall be located within the substation
-  control enclosure and supplied through the station
-  service transformer.
-</p>
-
-<p className="doc-p">
-  Fire Network Equipment (FNE), monitoring systems and
-  thermal imaging equipment shall be supplied through a
-  dedicated
-  <b> {V(values.fneAuxPowerKVA)} kVA </b>
-  auxiliary transformer connected to the
-  <b> {V(values.auxVoltage3)} V </b>
-  distribution board.
-</p>
-
-<p className="doc-p">
-  UPS systems rated at
-  <b> {V(values.upsPowerKVA)} kVA </b>
-  shall provide backup power to critical monitoring,
-  communication and protection systems. A maximum of
-  <b> {V(values.maxFneLoop)} </b>
-  FNE units may be connected to a single UPS loop.
-</p>
-
-<p className="doc-p">
-  Each FNE shall provide a dedicated
-  <b> {V(values.dcControlVoltage)} VDC </b>
-  control power supply for instrumentation and control
-  systems.
-</p>
-</DocPage>
-
-<DocPage n={8}>
-{/* =======================================================
-    2.1.5 WIRING COLOR CODES
-======================================================= */}
-
-<DocH
-  n="2.1.5"
-  t="Wiring Color Codes"
-/>
-
-<div
-  style={{
-    fontSize: 11,
-    fontWeight: 600,
-    margin: "12px 0 8px",
-    color: "var(--text-2)",
-  }}
->
-  Table 6: Wiring Color Codes
-</div>
-
-<table className="doc-table">
-  <thead>
-    <tr>
-      <th>Voltage Class</th>
-      <th>Wire / Cable</th>
-      <th>Color</th>
-    </tr>
-  </thead>
-
-  <tbody>
-
-    <tr>
-      <td>120 / 208V</td>
-      <td>Line A</td>
-      <td>Black</td>
-    </tr>
-
-    <tr>
-      <td></td>
-      <td>Line B</td>
-      <td>Red</td>
-    </tr>
-
-    <tr>
-      <td></td>
-      <td>Line C</td>
-      <td>Blue</td>
-    </tr>
-
-    <tr>
-      <td></td>
-      <td>Neutral</td>
-      <td>White</td>
-    </tr>
-
-    <tr>
-      <td>480 / 800V</td>
-      <td>Line A</td>
-      <td>Brown</td>
-    </tr>
-
-    <tr>
-      <td></td>
-      <td>Line B</td>
-      <td>Orange</td>
-    </tr>
-
-    <tr>
-      <td></td>
-      <td>Line C</td>
-      <td>Yellow</td>
-    </tr>
-
-    <tr>
-      <td></td>
-      <td>Neutral</td>
-      <td>Grey</td>
-    </tr>
-
-    <tr>
-      <td>35 kV</td>
-      <td>Line A</td>
-      <td>A / B / C Phase Identification</td>
-    </tr>
-
-    <tr>
-      <td></td>
-      <td>Line B</td>
-      <td></td>
-    </tr>
-
-    <tr>
-      <td></td>
-      <td>Line C</td>
-      <td></td>
-    </tr>
-
-    <tr>
-      <td>DC Conductors</td>
-      <td>Positive</td>
-      <td>Red</td>
-    </tr>
-
-    <tr>
-      <td></td>
-      <td>Negative</td>
-      <td>Black</td>
-    </tr>
-
-    <tr>
-      <td>Ground Conductor</td>
-      <td>Protective Earth</td>
-      <td>Green / Bare</td>
-    </tr>
-
-  </tbody>
-</table>
-
-{/* =======================================================
-    SECTION 3 - CABLE AMPACITY CALCULATIONS
-======================================================= */}
-</DocPage>
-<DocPage n={8}>
-  <DocH
-    n="3"
-    t="Cable Ampacity Calculations"
-  />
-
-  {/* =======================================================
-      3.1 DC CABLES
-  ======================================================= */}
-
-  <DocH
-    n="3.1"
-    t="DC Cables (Cable Tray)"
-  />
-
-  <DocH
-    n="3.1.1"
-    t="Notes and Assumptions"
-  />
-
-  <ul className="doc-ul">
-    <li>
-      Voltage and current values are based on the selected
-      battery enclosure manufacturer's technical
-      specifications.
-    </li>
-
-    <li>
-      Soil thermal resistivity values are based on the
-      geotechnical report prepared by{" "}
-      <b>{V(values.geotechReportCompany)}</b>,
-      Report No.{" "}
-      <b>{V(values.geotechReportNo)}</b>,
-      dated{" "}
-      <b>{V(values.geotechReportDate)}</b>.
-    </li>
-
-    <li>
-      DC cables are installed in above-ground cable trays
-      between battery enclosures and PCS equipment.
-    </li>
-
-    <li>
-      A total of{" "}
-      <b>{V(values.noOfDcRuns)}</b>
-      {" "}runs of{" "}
-      <b>{V(values.dcCableSize)}</b>
-      {" "}cable are provided between the battery enclosure
-      and PCS.
-    </li>
-
-    <li>
-      Cable trays with a width of{" "}
-      <b>{V(values.cableTrayWidth)}</b>
-      {" "}ft are utilized for DC cable routing.
-    </li>
-
-    <li>
-      PCS DC combiners shall support side-entry cable
-      termination arrangements.
-    </li>
-  </ul>
-
-  {/* =======================================================
-      3.2 MV CABLES
-  ======================================================= */}
-
-  <DocH
-    n="3.2"
-    t="MVAC Cables"
-  />
-
-  <DocH
-    n="3.2.1"
-    t="Notes and Assumptions"
-  />
-
-  <ul className="doc-ul">
-
-    <li>
-      MV cable sizing has been verified using CYMCAP
-      analysis ensuring conductor temperatures do not
-      exceed{" "}
-      <b>{V(values.mvCableMaxTemp)}</b>
-      °C.
-    </li>
-
-    <li>
-      MV cables are buried at a minimum depth of{" "}
-      <b>{V(values.mvCableBurialDepth)}</b>
-      feet.
-    </li>
-
-    <li>
-      Voltage and current ratings are based on the
-      selected transformer configuration.
-    </li>
-
-    <li>
-      A load factor of{" "}
-      <b>{V(values.loadFactorPercent)}</b>
-      % has been used for cable ampacity calculations.
-    </li>
-
-    <li>
-      Soil thermal characteristics are based on the
-      geotechnical report prepared by{" "}
-      <b>{V(values.geotechReportCompany)}</b>.
-    </li>
-
-    <li>
-      Soil temperature data has been obtained from{" "}
-      <b>{V(values.soilTempStation)}</b>,
-      {" "}
-      <b>{V(values.soilTempLocation)}</b>.
-      Maximum recorded temperature:
-      {" "}
-      <b>{V(values.soilTempMax)}</b>.
-      Selected design temperature:
-      {" "}
-      <b>{V(values.soilTempSelected)}</b>.
-    </li>
-
-    <li>
-      Native soil thermal resistivity:
-      {" "}
-      <b>{V(values.soilThermalResistivityNative)}</b>
-      {" "}at moisture content of{" "}
-      <b>{V(values.soilMoistureContent)}</b>%.
-    </li>
-
-    <li>
-      Parcel{" "}
-      <b>{V(values.parcelNo)}</b>
-      {" "}may be used as thermal backfill where required.
-    </li>
-
-    <li>
-      Refer drawing number{" "}
-      <b>{V(values.referenceDrawingNo)}</b>
-      {" "}for routing and installation details.
-    </li>
-
-  </ul>
-
-  <p className="doc-p">
-    <b>Selected MV Cable Sizes</b>
-  </p>
-
-  <ul className="doc-ul">
-    <li>{V(values.mvCableSize1)}</li>
-    <li>{V(values.mvCableSize2)}</li>
-    <li>{V(values.mvCableSize3)}</li>
-    <li>{V(values.mvCableSize4)}</li>
-  </ul>
-
-  {/* =======================================================
-      3.3 AUXILIARY CABLES
-  ======================================================= */}
-</DocPage>
-
-<DocPage n={9}>
-  <DocH
-    n="3.3"
-    t="Auxiliary Cables"
-  />
-
-  <DocH
-    n="3.3.1"
-    t="Notes and Assumptions"
-  />
-
-  <ul className="doc-ul">
-    <li>
-      Auxiliary cable sizing has been verified using
-      CYMCAP and AmpCalc software based on 90°C conductor
-      ratings.
-    </li>
-
-    <li>
-      Minimum burial depth for auxiliary circuits is
-      18 inches unless otherwise specified.
-    </li>
-
-    <li>
-      A load factor of 100% has been considered for
-      auxiliary system cable sizing.
-    </li>
-
-    <li>
-      Soil thermal properties are based on the project
-      geotechnical report.
-    </li>
-
-    <li>
-      Multiple parallel runs are utilized for main
-      auxiliary distribution feeders where required.
-    </li>
-
-    <li>
-      Auxiliary enclosure connections shall utilize cable
-      sizes recommended by the equipment manufacturer.
-    </li>
-  </ul>
-
-  {/* =======================================================
-      CONCLUSION
-  ======================================================= */}
-
-  <DocH
-    n="4"
-    t="Conclusion"
-  />
-
-  <p className="doc-p">
-    This Design Basis Report establishes the technical
-    design criteria, assumptions, standards and equipment
-    requirements governing the Battery Energy Storage
-    System project.
-  </p>
-
-  <p className="doc-p">
-    The information contained herein shall be used as the
-    basis for detailed engineering, procurement,
-    construction and commissioning activities.
-  </p>
-
-  <p className="doc-p">
-    Any deviations from the criteria defined in this
-    report shall be reviewed and approved through the
-    project's engineering change management process.
-  </p>
-</DocPage>
-
-<DocPage n={10}>
-  {/* =======================================================
-      APPENDIX A
-  ======================================================= */}
-
-  <DocH
-    n="Appendix A"
-    t="Referenced Datasheets"
-  />
-
-  <div
-    style={{
-      marginTop: 10,
-      padding: 12,
-      border: "1px solid var(--border)",
-      borderRadius: 6,
-      background: "var(--surface-2)",
-      fontSize: 10.5,
-    }}
-  >
-    <b>Attached Datasheets</b>
-
-    <ul
-      style={{
-        marginTop: 8,
-        marginBottom: 0,
-      }}
-    >
-      <li>
-        Battery Datasheet:
-        {" "}
-        {safeFiles?.batteryDs?.name || "Not Attached"}
-      </li>
-
-      <li>
-        PCS Datasheet:
-        {" "}
-        {safeFiles?.pcsDs?.name || "Not Attached"}
-      </li>
-
-      <li>
-        Transformer Datasheet:
-        {" "}
-        {safeFiles?.transformerDs?.name || "Not Attached"}
-      </li>
+    <!-- TITLE -->
+    <h1 class="report-title">{{reportTitle}}</h1>
+    <p class="doc-p">{{documentNo}} &nbsp;|&nbsp; Rev. {{revision}} &nbsp;|&nbsp; {{preparedDate}}</p>
+
+    <!-- ======================= 1. INTRODUCTION ======================= -->
+    <h1 class="toc-heading doc-h1" data-toc-level="1">Introduction</h1>
+
+    <p class="doc-p">
+      {{clientName}} is developing {{projectCapacityMW}} MW / {{projectCapacityMWh}} MWh of BESS
+      in {{county}}, in the state of {{state}}, {{country}}.
+      The BESS will be designed for {{projectDurationHours}} hours of continuous power output of
+      {{bessPowerRating}} MW at {{powerFactor}} {{powerFactorLeadLag}} power factor at the point of
+      interconnection, which is {{bessEnergyRating}} MWh of net usable battery capacity.
+      The BESS will be coupled to a shared project substation utilizing dedicated {{mvVoltage}} kV breakers.
+    </p>
+
+    <p class="doc-p">
+      {{consultant}} has been appointed by {{clientName}} to carry out the turnkey detail
+      engineering and design for the project.
+    </p>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Purpose</h2>
+    <p class="doc-p">
+      The purpose of this document is to establish the key design considerations and technical
+      specifications for the BESS. The DBR will focus on the following elements.
+    </p>
+    <ul>
+      <li>Applicable Design Standards and Codes</li>
+      <li>Project Details</li>
+      <li>Project Electrical Scheme</li>
+      <li>Major Equipment and System Design Data</li>
     </ul>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Applicable Design Standards and Codes</h2>
+    <p class="doc-p">
+      The Battery Energy Storage System (BESS) shall be designed and installed as per the following
+      applicable codes and standards.
+    </p>
+    <ul>
+      <li>NEC - National Electrical Code {{necEditionYear}} (NFPA 70)</li>
+      <li>NESC - National Electrical Safety Code</li>
+      <li>IEEE - Institute of Electrical and Electronics Engineers</li>
+      <li>ICEA - Insulated Cable Engineers Association</li>
+      <li>NECA - National Electrical Contractors Association</li>
+      <li>IBC - International Building Code ({{ibcEditionYear}})</li>
+      <li>OSHA - Occupational Safety and Health Administration</li>
+      <li>UL1741 - Standard for Inverters, Converters &amp; Controllers for use in independent Power Systems</li>
+      <li>ANSI - American National Standards Institute</li>
+      <li>ASTM - American Society for Testing and Materials</li>
+      <li>NEMA - National Electrical Manufacturers Association</li>
+      <li>NFPA 855_{{nfpa855EditionYear}} - National Fire Protection Association</li>
+      <li>UL 9450 - Energy Storage System Requirements</li>
+      <li>UL 9540A - Test Method for evaluating Thermal Runaway Fire Propagation in Battery Energy Storage Systems</li>
+      <li>IFC - International Fire Code</li>
+      <li>{{state}}, {{county}}, and City Ordinances</li>
+    </ul>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Weather Data (ASHRAE)</h2>
+    <p class="doc-p">The following table presents key weather parameters obtained from the ASHRAE database.</p>
+    <p class="table-caption"><b class="toc-table-caption">ASHRAE Weather Data</b></p>
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th>Parameter</th>
+          <th>Value</th>
+          <th>Units</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Maximum Dry Bulb Temperature</td>
+          <td>{{ashraeMaxDryBulb}}</td>
+          <td>°F</td>
+        </tr>
+        <tr>
+          <td>Minimum Dry Bulb Temperature</td>
+          <td>{{ashraeMinDryBulb}}</td>
+          <td>°F</td>
+        </tr>
+        <tr>
+          <td>Design Wind Speed</td>
+          <td>{{ashraeWindSpeed}}</td>
+          <td>mph</td>
+        </tr>
+        <tr>
+          <td>Ground Snow Load</td>
+          <td>{{ashraeSnowLoad}}</td>
+          <td>psf</td>
+        </tr>
+        <tr>
+          <td>Elevation</td>
+          <td>{{ashraeElevation}}</td>
+          <td>ft</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ======================= PROJECT DETAILS ======================= -->
+    <h1 class="toc-heading doc-h1" data-toc-level="1">Project Details</h1>
+    <p class="table-caption"><b class="toc-table-caption">Table 1: Project Summary</b></p>
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th>Sr. No.</th>
+          <th>Particulars</th>
+          <th>Description</th>
+          <th>Units</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Project site</td>
+          <td>{{projectSite}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Name of the state</td>
+          <td>{{state}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Name of the county</td>
+          <td>{{county}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Geographical coordinates</td>
+          <td>{{coordinates}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>POI Voltage</td>
+          <td>{{poiVoltage}}</td>
+          <td>kV</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>MV Collection Voltage</td>
+          <td>{{mvVoltage}}</td>
+          <td>kV</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>LV Collection Voltage</td>
+          <td>{{lvVoltage}}</td>
+          <td>V</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>DC Collection Voltage</td>
+          <td>{{dcVoltage}}</td>
+          <td>V</td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td>Distribution Company</td>
+          <td>{{utilityName}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td>Total Fence Area</td>
+          <td>{{fenceArea}}</td>
+          <td>Acres</td>
+        </tr>
+        <tr>
+          <td>11</td>
+          <td>BESS Capacity at POI</td>
+          <td>{{projectCapacityMW}}</td>
+          <td>MW</td>
+        </tr>
+        <tr>
+          <td>12</td>
+          <td>BESS Duration</td>
+          <td>{{projectDurationHours}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>13</td>
+          <td>Max. cycles per day</td>
+          <td>{{cyclesPerDay}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>14</td>
+          <td>Ambient temperature</td>
+          <td>Max: {{maxTemp}}<br>Min: {{minTemp}}<br>Design: {{tempDesign}}</td>
+          <td>°F</td>
+        </tr>
+        <tr>
+          <td>15</td>
+          <td>Altitude (ASCE 7-22)</td>
+          <td>{{altitude}}</td>
+          <td>Feet</td>
+        </tr>
+        <tr>
+          <td>16</td>
+          <td>Design wind speed</td>
+          <td>{{windSpeed}}</td>
+          <td>mph</td>
+        </tr>
+        <tr>
+          <td>17</td>
+          <td>Risk category</td>
+          <td>{{riskCategory}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>18</td>
+          <td>Snow load</td>
+          <td>{{snowLoad}}</td>
+          <td>psf</td>
+        </tr>
+        <tr>
+          <td>19</td>
+          <td>Snow depth (NOAA)</td>
+          <td>{{snowDepth}}</td>
+          <td>Inch</td>
+        </tr>
+        <tr>
+          <td>20</td>
+          <td>BESS Enclosure Manufacturer</td>
+          <td>{{bessManufacturer}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>21</td>
+          <td>BESS Enclosure dimension</td>
+          <td>{{bessDimension}}</td>
+          <td>mm</td>
+        </tr>
+        <tr>
+          <td>22</td>
+          <td>BESS Enclosure Energy Capacity</td>
+          <td>{{bessEnergyPerEnclosure}}</td>
+          <td>kWh</td>
+        </tr>
+        <tr>
+          <td>23</td>
+          <td>Total No. of BESS Enclosures</td>
+          <td>{{noOfEnclosures}}</td>
+          <td>qty</td>
+        </tr>
+        <tr>
+          <td>24</td>
+          <td>Total BESS Energy Rating</td>
+          <td>{{totalBessEnergyRating}}</td>
+          <td>MWh</td>
+        </tr>
+        <tr>
+          <td>25</td>
+          <td>PCS Manufacturer</td>
+          <td>{{pcsManufacturer}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>26</td>
+          <td>PCS Model</td>
+          <td>{{pcsModel}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>27</td>
+          <td>No. of PCS</td>
+          <td>{{noOfPCS}}</td>
+          <td>qty</td>
+        </tr>
+        <tr>
+          <td>28</td>
+          <td>Total PCS Rating</td>
+          <td>{{totalPCSPowerRating}}</td>
+          <td>MVA</td>
+        </tr>
+        <tr>
+          <td>29</td>
+          <td>MVT Manufacturer</td>
+          <td>{{mvtManufacturer}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>30</td>
+          <td>MVT Rating</td>
+          <td>{{mvtRating}}</td>
+          <td>kVA</td>
+        </tr>
+        <tr>
+          <td>31</td>
+          <td>Clearance</td>
+          <td>As per OEM standards</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>32</td>
+          <td>Road width</td>
+          <td>{{roadWidth}}</td>
+          <td>feet</td>
+        </tr>
+        <tr>
+          <td>33</td>
+          <td>Fence to Road clearance</td>
+          <td>{{fenceClearance}}</td>
+          <td>feet</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ======================= ELECTRICAL SCHEME ======================= -->
+    <h1 class="toc-heading doc-h1" data-toc-level="1">Project Electrical Scheme</h1>
+    <p class="doc-p">
+      The project has a capacity of {{projectCapacityMW}} MW / {{projectCapacityMWh}} MWh.
+      The DC system will operate at a maximum of {{dcVoltage}} V. The MV collection system will
+      operate at {{mvVoltage}} kV, and the main power transformer will step up the voltage to
+      {{poiVoltage}} kV for interconnection.
+    </p>
+    <p class="doc-p">
+      {{clientName}} has chosen {{bessManufacturer}} and {{pcsManufacturer}} PCS solution for this project.
+    </p>
+    <p class="doc-p">
+      The battery rack minimum and maximum voltages are {{batteryMinVoltage}} Vdc and
+      {{batteryMaxVoltage}} Vdc respectively. The {{bessManufacturer}} Enclosure uses a standard
+      {{ipRating}} rated enclosure. The liquid cooling system of the enclosure maintains the
+      temperature between {{tempMin}} to {{tempMax}} deg C. The enclosure includes all primary DC
+      wiring, fusing, SPD, disconnects and monitoring required to safely exchange power between
+      battery enclosure and PCS.
+    </p>
+    <p class="doc-p">
+      The {{pcsManufacturer}} PCS System {{pcsModel}} is rated at {{pcsRating}} kVA, while the MVT
+      is rated at {{mvtRating}} kVA. The MVT includes looping provisions up to {{maxMvtLoop}} units.
+      The final feeder connects to the plant substation. At {{mvVoltage}} kV substation
+      {{noOfVCB}} VCB feeders are used. A fuse and disconnector switch is used for auxiliary connection.
+    </p>
+
+    <figure class="fig-wrap">
+      {{singleLineDiagram}}
+      <div class="fig-caption">Single Line Diagram</div>
+    </figure>
+
+    <!-- ======================= 2. MAJOR EQUIPMENT ======================= -->
+    <h1 class="toc-heading doc-h1" data-toc-level="1">Major Equipment and Systems Design Data</h1>
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Battery Energy Storage System (BESS) Data</h2>
+    <p class="doc-p">
+      BESS shall include all DC-side, AC-side subsystems, BMS, EMS, and associated hardware/software.
+      These components will be electrically and mechanically interconnected and operate in
+      coordination with the electrical grid.
+    </p>
+    <p class="doc-p">
+      The BESS shall be rated based on delivered power and energy at the interconnection and
+      metering point.
+    </p>
+
+    <p class="table-caption"><b class="toc-table-caption">Table 2: Technical Parameters of Battery Energy Storage
+        System</b></p>
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th>Sr. No.</th>
+          <th>Particulars</th>
+          <th>Descriptions</th>
+          <th>Units</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>BESS Technology</td>
+          <td>{{batteryTechnology}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>BESS Design Life</td>
+          <td>{{bessDesignLife}}</td>
+          <td>Years</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>BESS AC Power Rating</td>
+          <td>{{projectCapacityMW}} (POI)</td>
+          <td>MW</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>BESS AC Energy Rating</td>
+          <td>{{projectCapacityMWh}} (POI)</td>
+          <td>MWh</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>BESS Duration</td>
+          <td>{{projectDurationHours}}</td>
+          <td>Hours</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>Total PCS Power Rating</td>
+          <td>{{totalPCSPowerRating}}</td>
+          <td>MVA</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>Total BESS Energy Rating</td>
+          <td>{{totalBessEnergyRating}}</td>
+          <td>MWh</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>Power Factor</td>
+          <td>{{powerFactor}} {{powerFactorLeadLag}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td>Annual Cycles</td>
+          <td>{{annualCycles}}</td>
+          <td>Nos.</td>
+        </tr>
+        <tr>
+          <td colspan="4" style="font-weight:bold; text-align:center;">BESS Configuration</td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td>PCS Manufacturer &amp; Model</td>
+          <td>{{pcsManufacturer}} / {{pcsModel}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>11</td>
+          <td>PCS Rating</td>
+          <td>{{pcsRating}}</td>
+          <td>kVA</td>
+        </tr>
+        <tr>
+          <td>12</td>
+          <td>BESS Manufacturer</td>
+          <td>{{bessManufacturer}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>13</td>
+          <td>Enclosure Dimensions</td>
+          <td>{{bessDimension}}</td>
+          <td>mm</td>
+        </tr>
+        <tr>
+          <td>14</td>
+          <td>No. of Enclosures</td>
+          <td>{{noOfEnclosures}}</td>
+          <td>Nos.</td>
+        </tr>
+        <tr>
+          <td>15</td>
+          <td>Battery Energy</td>
+          <td>{{bessEnergyPerEnclosure}}</td>
+          <td>kWh</td>
+        </tr>
+        <tr>
+          <td>16</td>
+          <td>No. of PCS</td>
+          <td>{{noOfPCS}}</td>
+          <td>Nos.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="toc-heading doc-h3" data-toc-level="3">Battery Data</h3>
+    <p class="doc-p">
+      Batteries shall be shipped as per DOT regulations and UN 38.3 requirements and stored as per
+      manufacturer guidelines.
+    </p>
+    <p class="table-caption"><b class="toc-table-caption">Table 3: Technical Parameters of Battery</b></p>
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th>Sr. No.</th>
+          <th>Particulars</th>
+          <th>Descriptions</th>
+          <th>Units</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Battery Manufacturer</td>
+          <td>{{bessManufacturer}} / {{bessModel}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Voltage Range</td>
+          <td>{{batteryMinVoltage}} – {{batteryMaxVoltage}}</td>
+          <td>Vdc</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Maximum Power</td>
+          <td>{{batteryMaxPower}}</td>
+          <td>MW</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Charging Rate</td>
+          <td>{{batteryChargeRate}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Discharging Rate</td>
+          <td>{{batteryDischargeRate}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>Rated Voltage</td>
+          <td>{{batteryRatedVoltage}}</td>
+          <td>V</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>Rated Current</td>
+          <td>{{batteryRatedCurrent}}</td>
+          <td>A</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>Cooling Method</td>
+          <td>{{coolingMethod}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td>Ingress Protection</td>
+          <td>{{ipRating}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td>Certification</td>
+          <td>{{batteryCertification}}</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="toc-heading doc-h3" data-toc-level="3">Power Conversion System</h3>
+    <p class="doc-p">
+      PCS shall operate in all four quadrants and provide voltage regulation within ±5% of nominal.
+    </p>
+    <p class="table-caption"><b class="toc-table-caption">Table 4: Technical Parameters of PCS</b></p>
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th>Sr.</th>
+          <th>Particulars</th>
+          <th>Descriptions</th>
+          <th>Units</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Model</td>
+          <td>{{pcsModel}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Rating</td>
+          <td>{{pcsRating}}</td>
+          <td>kVA</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>AC Voltage</td>
+          <td>{{pcsAcVoltage}}</td>
+          <td>Vac</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>DC Voltage Range</td>
+          <td>{{pcsDcVoltageRange}}</td>
+          <td>Vdc</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Frequency</td>
+          <td>{{pcsFrequency}}</td>
+          <td>Hz</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>Efficiency</td>
+          <td>{{pcsEfficiency}}</td>
+          <td>%</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>THD</td>
+          <td>{{pcsThd}}</td>
+          <td>%</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>Protection</td>
+          <td>{{pcsProtection}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td>Dimensions</td>
+          <td>{{pcsDimension}}</td>
+          <td>mm</td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td>Altitude</td>
+          <td>{{pcsAltitude}}</td>
+          <td>m</td>
+        </tr>
+        <tr>
+          <td>11</td>
+          <td>Cooling</td>
+          <td>{{pcsCooling}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>12</td>
+          <td>Output Protection</td>
+          <td>{{pcsOutputProtection}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>13</td>
+          <td>Overvoltage</td>
+          <td>{{pcsOvervoltageProtection}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>14</td>
+          <td>Communication</td>
+          <td>{{pcsCommunication}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>15</td>
+          <td>Certification</td>
+          <td>{{pcsCertification}}</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="toc-heading doc-h3" data-toc-level="3">Medium Voltage Transformer Data</h3>
+    <p class="doc-p">
+      Transformers LV voltage rating shall be chosen to interface effectively with inverters and the
+      HV voltage will be {{mvVoltage}} kV.
+    </p>
+    <p class="table-caption"><b class="toc-table-caption">Table 5: Technical Parameters of Medium Voltage
+        Transformer</b></p>
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th>Sr. No.</th>
+          <th>Particulars</th>
+          <th>Descriptions</th>
+          <th>Units</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Manufacturer</td>
+          <td>{{mvtManufacturer}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Rating</td>
+          <td>{{mvtRating}}</td>
+          <td>kVA</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Voltage ratings</td>
+          <td>{{transformerVoltageRating}}</td>
+          <td>kV</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Winding configuration</td>
+          <td>{{transformerWindingConfig}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Vector group</td>
+          <td>{{transformerVectorGroup}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>Cooling</td>
+          <td>{{transformerCooling}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>No. of PCS / Transformer</td>
+          <td>1</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>Impedance</td>
+          <td>{{transformerImpedance}}</td>
+          <td>%</td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td>Efficiency at Full load</td>
+          <td>{{transformerEfficiency}}</td>
+          <td>%</td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td>Winding material</td>
+          <td>{{transformerWindingMaterial}}</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="toc-heading doc-h3" data-toc-level="3">Auxiliary Power</h3>
+    <p class="doc-p">
+      Each {{bessManufacturer}} enclosure requires {{auxVoltage}} V auxiliary supply of approx.
+      {{auxPowerKVA}} kVA for cooling, controls, communication and fire systems. Auxiliary loads
+      shall be fed from {{mvVoltage}} kV / {{auxVoltage2}} V transformer boards. {{pcsModel}} has an
+      inbuilt auxiliary transformer, hence external supply is not required.
+    </p>
+    <p class="doc-p">
+      EMS is located in the substation control enclosure and powered from SST. {{bessManufacturer}}
+      enclosure has internal battery backup ({{upsPowerKVA}} kVA UPS) for control systems.
+    </p>
+    <p class="doc-p">
+      FNE and IR cameras are powered via a {{fneAuxPowerKVA}} kVA transformer tapped from
+      {{auxVoltage3}} V board. UPS units supply power to multiple FNEs (max {{maxFneLoop}} units).
+      Each FNE provides {{dcControlVoltage}} V DC supply.
+    </p>
+
+    <h3 class="toc-heading doc-h3" data-toc-level="3">Wiring Color Codes</h3>
+    <p class="table-caption"><b class="toc-table-caption">Table 6: Wiring Color Code</b></p>
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th>Voltage Class</th>
+          <th>Wire &amp; Cable</th>
+          <th>Color</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td rowspan="4">{{wiringLvVoltageClass}}</td>
+          <td>Line A</td>
+          <td>{{wiringLvLineAColor}}</td>
+        </tr>
+        <tr>
+          <td>Line B</td>
+          <td>{{wiringLvLineBColor}}</td>
+        </tr>
+        <tr>
+          <td>Line C</td>
+          <td>{{wiringLvLineCColor}}</td>
+        </tr>
+        <tr>
+          <td>Neutral</td>
+          <td>{{wiringLvNeutralColor}}</td>
+        </tr>
+        <tr>
+          <td rowspan="3">{{wiringMvVoltageClass}}</td>
+          <td>Line A</td>
+          <td rowspan="3">{{wiringMvPhaseLabeling}}</td>
+        </tr>
+        <tr>
+          <td>Line B</td>
+        </tr>
+        <tr>
+          <td>Line C</td>
+        </tr>
+        <tr>
+          <td rowspan="2">DC Conductors</td>
+          <td>Positive</td>
+          <td>{{wiringDcPositiveColor}}</td>
+        </tr>
+        <tr>
+          <td>Negative</td>
+          <td>{{wiringDcNegativeColor}}</td>
+        </tr>
+        <tr>
+          <td colspan="2">Ground Conductor</td>
+          <td>{{wiringGroundColor}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ======================= 3. CABLE AMPACITY ======================= -->
+    <h1 class="toc-heading doc-h1" data-toc-level="1">Cable Ampacity Calculations</h1>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">DC Cables (Cable Tray)</h2>
+    <h3 class="toc-heading doc-h3" data-toc-level="3">Notes and Assumptions</h3>
+    <ul>
+      <li>Voltage and current values are based on battery enclosure specifications.</li>
+      <li>
+        Soil thermal resistivity is based on geotechnical report for {{projectName}} project
+        prepared by {{geotechReportCompany}} (Project No: {{geotechReportNo}}, dated {{geotechReportDate}}).
+      </li>
+      <li>DC cables are installed in above-ground trays between PCS and battery enclosure.</li>
+      <li>For this design, {{noOfDcRuns}} runs of {{dcCableSize}} are used between battery enclosure and PCS.</li>
+      <li>{{cableTrayWidth}} ft width cable tray proposed between enclosure and PCS.</li>
+      <li>PCS DC combiners shall support side cable entry.</li>
+      <li>Refer DC &amp; AC Ampacity Report ({{ampacityReportNo}}) for more details.</li>
+    </ul>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">MVAC Cables</h2>
+    <h3 class="toc-heading doc-h3" data-toc-level="3">Notes and Assumptions</h3>
+    <ul>
+      <li>MV cable sizing verified using CYMCAP ensuring temperature does not exceed {{mvCableMaxTemp}}°C.</li>
+      <li>MV cables are buried at depth of {{mvCableBurialDepth}} feet.</li>
+      <li>Voltage and current based on transformer specifications.</li>
+      <li>Load factor of {{loadFactorPercent}}% used for analysis, considering a {{dischargePeriodHours}}-hour discharge
+        period, {{restPeriodHours}}-hour rest period, and {{chargePeriodHours}}-hour charging period.</li>
+      <li>Soil resistivity based on report for {{projectName}} project prepared by {{geotechReportCompany}} (Project No:
+        {{geotechReportNo}}).</li>
+      <li>Soil temperature data from {{soilTempStation}}, {{soilTempLocation}}. Max temp: {{soilTempMax}}, selected:
+        {{soilTempSelected}}.</li>
+      <li>Soil resistivity: {{soilThermalResistivityNative}} at {{soilMoistureContent}}% moisture. Parcel {{parcelNo}}
+        used as backfill if required.</li>
+      <li>Refer drawing {{referenceDrawingNo}} for routing details.</li>
+    </ul>
+
+    <figure class="fig-wrap">
+      {{loadProfileChart}}
+      <div class="fig-caption">Figure 1: Load profile of BESS plant for one day</div>
+    </figure>
+
+    <p><b>Cable Sizes:</b></p>
+    <ul>
+      <li>{{mvCableSize1}}</li>
+      <li>{{mvCableSize2}}</li>
+      <li>{{mvCableSize3}}</li>
+      <li>{{mvCableSize4}}</li>
+    </ul>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Auxiliary Cables</h2>
+    <h3 class="toc-heading doc-h3" data-toc-level="3">Notes and Assumptions</h3>
+    <ul>
+      <li>Cable sizing verified using CYMCAP &amp; AmpCalc (90°C rating).</li>
+      <li>Minimum burial depth = {{auxCableBurialDepth}}.</li>
+      <li>Soil resistivity based on geotechnical report ({{geotechReportCompany}}).</li>
+    </ul>
+    <p class="table-caption"><b class="toc-table-caption">Table 7: Auxiliary Cables</b></p>
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th>Sr. No.</th>
+          <th>From</th>
+          <th>To</th>
+          <th>Cable Size</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Auxiliary Transformer</td>
+          <td>Auxiliary Panel Board</td>
+          <td>{{auxCable1}}</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Auxiliary Panel Board</td>
+          <td>BESS Enclosure</td>
+          <td>{{auxCable2}}</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Auxiliary Panel Board</td>
+          <td>PCS Skid</td>
+          <td>{{auxCable3}}</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Auxiliary Panel Board</td>
+          <td>Light Poles</td>
+          <td>{{auxCable4}}</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Auxiliary Panel Board</td>
+          <td>Mini Power Center</td>
+          <td>{{auxCable5}}</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>Mini Power Center</td>
+          <td>Receptacle</td>
+          <td>{{auxCable6}}</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>Mini Power Center</td>
+          <td>FNE</td>
+          <td>{{auxCable7}}</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>Generator</td>
+          <td>Tap Box</td>
+          <td>{{auxCable8}}</td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td>Tap Box</td>
+          <td>Auxiliary Panel Boards</td>
+          <td>{{auxCable9}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ======================= 4. COMMUNICATION ======================= -->
+    <h1 class="toc-heading doc-h1" data-toc-level="1">Communication and Control</h1>
+    <h2 class="toc-heading doc-h2" data-toc-level="2">EMS Communication</h2>
+
+    <h3 class="toc-heading doc-h3" data-toc-level="3">FO and CAT6 Communication</h3>
+    <ul>
+      <li>Fiber-optic (FO) communication cables are utilized for communication from FNE to EMS and inter-looping of
+        FNEs.</li>
+      <li>Maximum of {{fneLoopCount}} FNEs are looped per MV circuit, and a total of {{totalFneCount}} FNEs are
+        available on the BESS Site.</li>
+      <li>Shielded CAT6 cables facilitate interconnection between the BESS Enclosure and PCS Skid to FNEs.</li>
+      <li>Refer {{commBlockDiagramNo}} for the communication block diagram and {{cableScheduleNo}} for the FO and CAT-6A
+        Cable Schedules.</li>
+    </ul>
+
+    <h3 class="toc-heading doc-h3" data-toc-level="3">E-Stop Control</h3>
+    <ul>
+      <li>{{estopCableSpec}} cable is used for the BESS enclosure E-Stop control. A maximum of {{estopEnclosuresPerJb}}
+        BESS enclosures are looped to a control junction box (JB).</li>
+      <li>{{estopJbToEmsCableSpec}} cables are utilized per JB for connection between the JB and the EMS.</li>
+    </ul>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">FACP Communication</h2>
+    <h3 class="toc-heading doc-h3" data-toc-level="3">FO Communication</h3>
+    <ul>
+      <li>All BESS Enclosures are connected in a ring loop, and the Fiber Optic connection from the BESS Enclosures
+        {{facpRingStartEnclosure}} and {{facpRingEndEnclosure}} are brought into the Host/Master Fire Panel.</li>
+    </ul>
+
+    <!-- ======================= 5. GROUNDING ======================= -->
+    <h1 class="toc-heading doc-h1" data-toc-level="1">Grounding Details</h1>
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Purpose &amp; Standard References</h2>
+    <p class="doc-p">
+      The grounding report describes the data used to model the grounding systems for the BESS plant
+      and provides an analysis of the performance of the ground grids to maintain safe, tolerable
+      step and touch voltages under fault conditions. {{groundingSoftware}} is used for the grounding
+      system analysis.
+    </p>
+    <ol>
+      <li>{{groundConductorBess}} is considered for grounding of BESS Enclosures.</li>
+      <li>{{groundConductorPcs}} is considered for grounding of PCS Skid.</li>
+      <li>{{groundConductorAux}} is considered for grounding of the Auxiliary Transformer, Auxiliary Panel Board,
+        Generator, Cable Tray, and ground grid.</li>
+      <li>{{groundConductorMisc}} is considered for grounding of Host/Master Fire Panel, Light Poles, FNEs, MPC, E-Stop
+        Junction Box, Fence, Gate, and Fuse Tap Box.</li>
+      <li>Drawing {{groundingLayoutDrawingNo}} shall be referred to for the preliminary grounding layout plan.</li>
+      <li>Report {{groundingAnalysisReportNo}} shall be referred to for the grounding analysis and results.</li>
+    </ol>
+    <p class="doc-p">The primary standards referenced in this analysis are as follows:</p>
+    <ol>
+      <li>IEEE Std 80 — IEEE Guide for Safety in AC Substation Grounding.</li>
+      <li>ASTM G57 — Standard Test Method for Field Measurement of Soil Resistivity Using the Wenner Four-Electrode
+        Method.</li>
+    </ol>
+
+    <!-- ======================= 6. EGC ======================= -->
+    <h1 class="toc-heading doc-h1" data-toc-level="1">Equipment Grounding Conductors</h1>
+    <p class="doc-p">The Equipment Grounding Conductor (EGC) is sized as per NEC Clause 250.122. Refer to the table
+      below for the details of EGC sizes used in the BESS power plant:</p>
+    <p class="table-caption"><b class="toc-table-caption">Table 8: Equipment Grounding Conductor (EGC) Sizes</b></p>
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th>Sr. No.</th>
+          <th>From</th>
+          <th>To</th>
+          <th>OCPD Rating</th>
+          <th>Power Cable</th>
+          <th>EGC</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Auxiliary Transformer</td>
+          <td>Auxiliary Panel Board</td>
+          <td>{{egc1Ocpd}}</td>
+          <td>{{egc1PowerCable}}</td>
+          <td>{{egc1Egc}}</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>BESS Enclosure</td>
+          <td>PCS Skid</td>
+          <td>{{egc2Ocpd}}</td>
+          <td>{{egc2PowerCable}}</td>
+          <td>{{egc2Egc}}</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Generator</td>
+          <td>Tap Box</td>
+          <td>{{egc3Ocpd}}</td>
+          <td>{{egc3PowerCable}}</td>
+          <td>{{egc3Egc}}</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Auxiliary Panel Board</td>
+          <td>BESS Enclosure</td>
+          <td>{{egc4Ocpd}}</td>
+          <td>{{egc4PowerCable}}</td>
+          <td>{{egc4Egc}}</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Auxiliary Panel Board</td>
+          <td>Mini Power Center</td>
+          <td>{{egc5Ocpd}}</td>
+          <td>{{egc5PowerCable}}</td>
+          <td>{{egc5Egc}}</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>Tap Box</td>
+          <td>Auxiliary Panel Board</td>
+          <td>{{egc6Ocpd}}</td>
+          <td>{{egc6PowerCable}}</td>
+          <td>{{egc6Egc}}</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>Auxiliary Panel Board</td>
+          <td>PCS Skid</td>
+          <td>{{egc7Ocpd}}</td>
+          <td>{{egc7PowerCable}}</td>
+          <td>{{egc7Egc}}</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>Auxiliary Panel Board</td>
+          <td>Light Poles</td>
+          <td>{{egc8Ocpd}}</td>
+          <td>{{egc8PowerCable}}</td>
+          <td>{{egc8Egc}}</td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td>Mini Power Center</td>
+          <td>Receptacle</td>
+          <td>{{egc9Ocpd}}</td>
+          <td>{{egc9PowerCable}}</td>
+          <td>{{egc9Egc}}</td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td>Mini Power Center</td>
+          <td>FNE</td>
+          <td>{{egc10Ocpd}}</td>
+          <td>{{egc10PowerCable}}</td>
+          <td>{{egc10Egc}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="doc-p"><i>Note: As per short-circuit studies, EGCs are not recommended for MVAC cables.</i></p>
+
+    <!-- ======================= 7. BESS LAYOUT ======================= -->
+    <h1 class="toc-heading doc-h1" data-toc-level="1">BESS Layout Design</h1>
+    <p class="doc-p">
+      The BESS layout has been developed in compliance with {{bessManufacturer}} BESS Enclosure and
+      {{pcsManufacturer}} PCS Skid clearance requirements. A minimum of {{bessClearance}} ft is
+      maintained between BESS enclosures, and {{bessPcsClearance}} ft clearance is maintained
+      between BESS enclosure and PCS Skid. Internal access roads are maintained at {{roadWidth}} feet.
+      The layout has been prepared considering existing site constraints within the project boundary.
+    </p>
+
+    <figure class="fig-wrap">
+      {{sitePhoto}}
+      <div class="fig-caption">Site Layout / Aerial View</div>
+    </figure>
+
+    <figure class="fig-wrap">
+      {{siteMap}}
+      <div class="fig-caption">Site Location Map</div>
+    </figure>
+
   </div>
-
-
-<DocH
-  n="Appendix A"
-  t="Datasheets"
-/>
-
-<table className="doc-table">
-  <tbody>
-    <DocRow
-      k="Battery Datasheet"
-      v={safeFiles?.batteryDs?.name || "Not Uploaded"}
-    />
-
-    <DocRow
-      k="PCS Datasheet"
-      v={safeFiles?.pcsDs?.name || "Not Uploaded"}
-    />
-
-    <DocRow
-      k="Transformer Datasheet"
-      v={safeFiles?.transformerDs?.name || "Not Uploaded"}
-    />
-  </tbody>
-</table>
-</DocPage>
-    </div> -->
+</div>

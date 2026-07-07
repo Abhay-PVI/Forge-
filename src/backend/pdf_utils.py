@@ -91,47 +91,64 @@ def extract_toc_entries(pdf_bytes: bytes, headings: list):
         for h in headings
     ]
     
-    # First, find where the first heading/table lands (start of the report body)
-    body_start_page = 1
-    if cleaned_headings:
-        first_heading = cleaned_headings[0]
-        # Search backward to find where the first heading appears in the body
-        for page_num in range(len(doc) - 1, -1, -1):
-            page_text = clean_text(doc[page_num].get_text())
-            if first_heading["title"] in page_text:
-                body_start_page = page_num + 1
-                break
+    # Build a map of all page texts (clean) for efficient lookup
+    page_texts = [clean_text(doc[i].get_text()) for i in range(len(doc))]
     
-    # Force body start page to be at least 4 (pages 1-3 are Cover, Doc Control, TOC)
-    body_start_page = max(4, body_start_page)
-    print(f"[DEBUG] Identified body_start_page as {body_start_page}")
+    # Dynamically detect where the body starts:
+    # The TOC/pre-amble pages contain heading TITLES as plain text (in toc-row spans).
+    # The body pages contain those same titles as actual headings.
+    # Strategy: find the FIRST page (from page 0) where the first heading appears,
+    # then find the SECOND occurrence of that heading — the body page.
+    # Simpler approach: find how many pages appear BEFORE any heading appears for the
+    # second time (body), using the first heading as a sentinel.
+    body_start_page = 1  # 1-indexed, default fallback
+    
+    if cleaned_headings:
+        first_title = cleaned_headings[0]["title"]
+        occurrences = [
+            i for i, pt in enumerate(page_texts) if first_title in pt
+        ]
+        if len(occurrences) >= 2:
+            # Second occurrence is the body (first is the TOC row)
+            body_start_page = occurrences[1] + 1  # convert to 1-indexed
+        elif len(occurrences) == 1:
+            # Only one occurrence — must be the body
+            body_start_page = occurrences[0] + 1
+    
+    # Safety floor: body can't start before page 3 (cover + doc-control minimum)
+    body_start_page = max(3, body_start_page)
+    print(f"[DEBUG] Dynamically detected body_start_page as {body_start_page}")
 
     for h in cleaned_headings:
-        # Search from the last page to the body start page to avoid matching in TOC/LOT/LOF/LOA
         matched = False
         start_search_idx = max(0, body_start_page - 1)
-        for page_num in range(len(doc) - 1, start_search_idx - 1, -1):
-            page_text = clean_text(doc[page_num].get_text())
-            if h["title"] in page_text:
+        
+        # Search FORWARD from body start to get first occurrence in body
+        # (avoids picking TOC/pre-amble repeated text)
+        for page_num in range(start_search_idx, len(doc)):
+            if h["title"] in page_texts[page_num]:
                 entries.append({
                     "title": h["original_title"],
                     "level": h["level"],
-                    "page": page_num + 1,  # 1-indexed for human-readable TOC
+                    "page": page_num + 1,  # 1-indexed
                 })
                 matched = True
                 break
         
-        # Fallback: if not matched case-sensitively, try case-insensitive
+        # Fallback: case-insensitive forward search
         if not matched:
-            for page_num in range(len(doc) - 1, start_search_idx - 1, -1):
-                page_text = clean_text(doc[page_num].get_text()).lower()
-                if h["title"].lower() in page_text:
+            for page_num in range(start_search_idx, len(doc)):
+                if h["title"].lower() in page_texts[page_num].lower():
                     entries.append({
                         "title": h["original_title"],
                         "level": h["level"],
                         "page": page_num + 1,
                     })
+                    matched = True
                     break
+        
+        if not matched:
+            print(f"[DEBUG] Could not find heading on any page: {h['title']!r}")
                     
     doc.close()
     return entries

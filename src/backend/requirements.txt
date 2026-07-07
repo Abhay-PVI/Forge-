@@ -16,3 +16,6 @@ llmwhisperer-client==2.7.0
 playwright
 PyMuPDF
 beautifulsoup4
+sqlalchemy
+psycopg2-binary
+supabase

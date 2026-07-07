@@ -24,6 +24,8 @@ export const NAV = [
         icon: 'battery',
         reports: [
           { id: 'bess-sizing', name: 'BESS Sizing Design Basis', code: 'BSZ', status: 'coded', reportTitle: 'BESS Sizing Design Basis Report' },
+          { id: 'bess-ampacity', name: 'BESS Cable Ampacity', code: 'AMP', status: 'coded', reportTitle: 'BESS Cable Ampacity Report' },
+          { id: 'bess-grounding', name: 'BESS Grounding Design Basis', code: 'GRN', status: 'coded', reportTitle: 'BESS Grounding Design Basis Report' },
           { id: 'pcs-sizing', name: 'PCS Sizing Design Basis', code: 'PCS', status: 'soon', reportTitle: 'PCS Sizing Design Basis Report' }
         ]
       },
@@ -32,6 +34,7 @@ export const NAV = [
         name: 'HV & Substation',
         icon: 'tower',
         reports: [
+          { id: 'hv-dbr', name: 'HV Design Basis', code: 'HVD', status: 'coded', reportTitle: 'HV Design Basis Report' },
           { id: 'xfmr', name: 'Transformer Sizing Design Basis', code: 'XFR', status: 'soon', reportTitle: 'Transformer Sizing Design Basis Report' },
           { id: 'sld', name: 'SLD Basis Report', code: 'SLD', status: 'soon', reportTitle: 'SLD Basis Report' }
         ]

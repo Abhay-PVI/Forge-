@@ -1,16 +1,61 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import Icon from "../../../shared/components/Icon";
+import ReportRow from "./ReportRow";
+import { fetchReportsApi, fetchReportDetailApi } from "../../electrical/pv/pv-design/api/reportsApi";
 
-// export default function Welcome() {
-//   return <div>Welcome</div>;
-// }
+const DRAFT_STATUSES = ['draft', 'generating'];
 
-export default function Welcome({ user }) {
-  const recents = [
-    { name: 'String Size Design Basis', path: 'Electrical · PV', code: 'STR', when: '2 days ago' },
-    { name: 'Energy Yield Design Basis', path: 'Electrical · PV', code: 'EYD', when: '1 week ago' },
-    { name: 'BESS Sizing Design Basis', path: 'Electrical · BESS', code: 'BSZ', when: '3 weeks ago' },
-  ];
+export default function Welcome({ user, onSelectRecent, onCloneReport }) {
+  const [reports, setReports] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [cloningId, setCloningId] = useState(null);
+
+  useEffect(() => {
+    async function loadReports() {
+      setLoading(true);
+      try {
+        const res = await fetchReportsApi();
+        setReports(res.success && res.reports ? res.reports : []);
+      } catch (err) {
+        console.error("Error loading reports:", err);
+        setReports([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadReports();
+  }, []);
+
+  const submitted = reports.filter(r => r.status === 'completed');
+  const drafts = reports.filter(r => DRAFT_STATUSES.includes(r.status));
+
+  const handleResume = async (report) => {
+    if (!report.id || !onSelectRecent) return;
+    try {
+      const detailRes = await fetchReportDetailApi(report.id);
+      if (detailRes.success && detailRes.data) {
+        onSelectRecent({ report_id: report.id, report_type: report.report_type }, detailRes.data);
+      }
+    } catch (err) {
+      console.error("Error loading report detail:", err);
+    }
+  };
+
+  const handleClone = async (report) => {
+    if (!report.id || !onCloneReport) return;
+    setCloningId(report.id);
+    try {
+      const detailRes = await fetchReportDetailApi(report.id);
+      if (detailRes.success && detailRes.data) {
+        onCloneReport({ report_id: report.id, report_type: report.report_type }, detailRes.data);
+      }
+    } catch (err) {
+      console.error("Error cloning report:", err);
+    } finally {
+      setCloningId(null);
+    }
+  };
+
   return (
     <div style={{ flex: 1, overflowY: 'auto' }}>
       <div style={{ maxWidth: 880, margin: '0 auto', padding: '52px 40px 60px' }} className="fade-up">
@@ -19,23 +64,43 @@ export default function Welcome({ user }) {
           {user.name.split(' ')[0]}, let's build a report.
         </h1>
         <p style={{ fontSize: 15, color: 'var(--text-2)', margin: 0, maxWidth: 560 }}>
-          Pick a vertical and sub-vertical from the left to browse coded report templates, or jump back into a recent one.
+          Pick a vertical and sub-vertical from the left to browse coded report templates, or jump back into one of yours below.
         </p>
 
-        <div className="label-eyebrow" style={{ marginTop: 40, marginBottom: 12 }}>Recent reports</div>
+        <div className="label-eyebrow" style={{ marginTop: 40, marginBottom: 12 }}>Submitted reports</div>
         <div style={{ display: 'grid', gap: 10 }}>
-          {recents.map(r => (
-            <div key={r.name} className="card" style={{ padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer' }}>
-              <div style={{ width: 38, height: 38, borderRadius: 9, background: 'var(--accent-soft)', color: 'var(--accent-text)', display: 'grid', placeItems: 'center', flex: 'none' }}>
-                <Icon name="fileText" size={18} />
-              </div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 14, fontWeight: 600 }}>{r.name}</div>
-                <div style={{ fontSize: 12, color: 'var(--text-3)' }}>{r.path}</div>
-              </div>
-              <span className="mono" style={{ fontSize: 11.5, color: 'var(--text-4)' }}>{r.when}</span>
-              <Icon name="chevronR" size={16} style={{ color: 'var(--text-4)' }} />
+          {submitted.length === 0 && !loading && (
+            <div className="card" style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-3)' }}>
+              No submitted reports yet.
             </div>
+          )}
+          {submitted.map((r) => (
+            <ReportRow
+              key={r.id}
+              report={r}
+              action={
+                <button
+                  className="btn btn-soft btn-sm"
+                  disabled={cloningId === r.id}
+                  onClick={(e) => { e.stopPropagation(); handleClone(r); }}
+                >
+                  <Icon name="copy" size={13} />
+                  {cloningId === r.id ? 'Cloning...' : 'Clone'}
+                </button>
+              }
+            />
+          ))}
+        </div>
+
+        <div className="label-eyebrow" style={{ marginTop: 32, marginBottom: 12 }}>Draft reports</div>
+        <div style={{ display: 'grid', gap: 10 }}>
+          {drafts.length === 0 && !loading && (
+            <div className="card" style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-3)' }}>
+              No draft reports in progress.
+            </div>
+          )}
+          {drafts.map((r) => (
+            <ReportRow key={r.id} report={r} onClick={() => handleResume(r)} />
           ))}
         </div>
 

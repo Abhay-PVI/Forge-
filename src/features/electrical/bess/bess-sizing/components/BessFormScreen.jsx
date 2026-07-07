@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Icon from "../../../../../shared/components/Icon";
 import Field from "../../../../../shared/components/Field";
 import { BESS_TABS } from "../forms/bessTabs";
+import { fetchLastReportApi } from "../../../pv/pv-design/api/reportsApi";
 // import CalcPanel from "./CalcPanel";
 import BessStepper from "./BessStepper";
 import UploadZone from "../../../pv/pv-design/components/UploadZone.jsx";
@@ -121,36 +122,9 @@ function TabBody({ tab, values, setValue, files, setFile, showErrors }) {
     return hasValue ? null : 'Required';
   };
 
-  if (tab.uploads) {
-    return (
-      <div style={{ display: 'grid', gap: 12 }}>
-        {tab.uploads.map((upload) => (
-          <div key={upload.key}>
-            <UploadZone
-              spec={upload}
-              file={files[upload.key]}
-              onSet={(value) => setFile(upload.key, value)}
-              onClear={() => setFile(upload.key, null)}
-            />
-            {errFor(upload, true) && (
-              <div className="field-hint" style={{ color: 'var(--red-text)', marginLeft: 4 }}>
-                This datasheet is required.
-              </div>
-            )}
-          </div>
-        ))}
-        <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', padding: '12px 14px', background: 'var(--blue-soft)', borderRadius: 'var(--r-md)', marginTop: 4 }}>
-          <Icon name="info" size={15} style={{ color: 'var(--blue-text)', marginTop: 1, flex: 'none' }} />
-          <div style={{ fontSize: 12, color: 'var(--blue-text)', lineHeight: 1.5 }}>
-           Uploaded battery, PCS and transformer datasheets are embedded in the report appendix and referenced throughout the sizing calculations.
-          </div>
-        </div>
-      </div>
-    );
-  }
-
+  let fieldsContent = null;
   if (tab.groups) {
-    return (
+    fieldsContent = (
       <div style={{ display: 'grid', gap: 26 }}>
         {tab.groups.map((group) => (
           <div key={group.title}>
@@ -169,20 +143,66 @@ function TabBody({ tab, values, setValue, files, setFile, showErrors }) {
         ))}
       </div>
     );
+  } else if (tab.fields) {
+    fieldsContent = (
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px 20px' }}>
+        {tab.fields.map((field) => (
+          <div key={field.key} style={{ gridColumn: field.type === 'textarea' ? '1 / -1' : 'auto' }}>
+            <Field field={field} value={values[field.key]} onChange={(value) => setValue(field.key, value)} error={errFor(field)} />
+          </div>
+        ))}
+      </div>
+    );
   }
 
-  return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px 20px' }}>
-      {tab.fields.map((field) => (
-        <div key={field.key} style={{ gridColumn: field.type === 'textarea' ? '1 / -1' : 'auto' }}>
-          <Field field={field} value={values[field.key]} onChange={(value) => setValue(field.key, value)} error={errFor(field)} />
+  let uploadsContent = null;
+  if (tab.uploads) {
+    uploadsContent = (
+      <div style={{ display: 'grid', gap: 12 }}>
+        {tab.uploads.map((upload) => (
+          <div key={upload.key}>
+            <UploadZone
+              spec={upload}
+              file={files[upload.key]}
+              onSet={(value) => setFile(upload.key, value)}
+              onClear={() => setFile(upload.key, null)}
+            />
+            {errFor(upload, true) && (
+              <div className="field-hint" style={{ color: 'var(--red-text)', marginLeft: 4 }}>
+                This file is required.
+              </div>
+            )}
+          </div>
+        ))}
+        {tab.id === 'uploads' && (
+          <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', padding: '12px 14px', background: 'var(--blue-soft)', borderRadius: 'var(--r-md)', marginTop: 4 }}>
+            <Icon name="info" size={15} style={{ color: 'var(--blue-text)', marginTop: 1, flex: 'none' }} />
+            <div style={{ fontSize: 12, color: 'var(--blue-text)', lineHeight: 1.5 }}>
+             Uploaded battery, PCS and transformer datasheets are embedded in the report appendix and referenced throughout the sizing calculations.
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  if (fieldsContent && uploadsContent) {
+    return (
+      <div style={{ display: 'grid', gap: 24 }}>
+        {fieldsContent}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 4 }}>
+          <h3 style={{ fontSize: 12.5, fontWeight: 600, margin: 0, fontFamily: 'var(--mono)', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-2)' }}>Layout Media</h3>
+          <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
         </div>
-      ))}
-    </div>
-  );
+        {uploadsContent}
+      </div>
+    );
+  }
+
+  return fieldsContent || uploadsContent || null;
 }
 
-function FormHeader({ report, vertical, values, status, onGenerate }) {
+function FormHeader({ report, vertical, values, status, onGenerate, onSaveDraft, onLoadLastEntry, onClearAll }) {
   return (
     <div style={{ padding: '22px 32px 18px', borderBottom: '1px solid var(--border)', background: 'var(--surface)' }}>
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
@@ -199,12 +219,32 @@ function FormHeader({ report, vertical, values, status, onGenerate }) {
           </div>
         </div>
         <div style={{ display: 'flex', gap: 8, flex: 'none' }}>
-          <button className="btn btn-ghost btn-sm"><Icon name="copy" size={14} />Save draft</button>
+          {onLoadLastEntry && (
+            <button className="btn btn-ghost btn-sm" onClick={onLoadLastEntry}>
+              <Icon name="download" size={14} />Start from last entry
+            </button>
+          )}
+          {onClearAll && (
+            <button className="btn btn-ghost btn-sm" onClick={onClearAll}>
+              <Icon name="trash" size={14} />Clear all fields
+            </button>
+          )}
+          <button className="btn btn-ghost btn-sm" onClick={() => onSaveDraft && onSaveDraft(values)}><Icon name="copy" size={14} />Save draft</button>
           <button className="btn btn-primary btn-sm" disabled={!status.complete} onClick={onGenerate}>
             <Icon name="zap" size={14} />Generate report
           </button>
         </div>
       </div>
+    </div>
+  );
+}
+
+function Banner({ banner, onClose }) {
+  return (
+    <div style={{ padding: '10px 32px', background: banner.type === 'success' ? 'var(--green-soft)' : banner.type === 'warning' ? 'var(--yellow-soft)' : 'var(--red-soft)', color: banner.type === 'success' ? 'var(--green-text)' : banner.type === 'warning' ? 'var(--yellow-text)' : 'var(--red-text)', fontSize: 13, borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: 8 }}>
+      <Icon name={banner.type === 'success' ? 'check' : 'info'} size={15} />
+      <span>{banner.text}</span>
+      <button onClick={onClose} style={{ marginLeft: 'auto', background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center' }}><Icon name="x" size={14} /></button>
     </div>
   );
 }
@@ -247,13 +287,44 @@ function FormFooter({ step, isLast, status, onBack, onNext, onGenerate }) {
   );
 }
 
-export default function BessFormScreen({ report, vertical, sub, values, setValue, files, setFile, calc, layout, showCalc, onGenerate }) {
+export default function BessFormScreen({ report, vertical, sub, values, setValue, files, setFile, calc, layout, showCalc, onGenerate, onSaveDraft, onClearAll }) {
   const [step, setStep] = useState(0);
   const [showErrors, setShowErrors] = useState(false);
+  const [banner, setBanner] = useState(null);
   const status = overallStatus(values, files);
   const scrollRef = useRef(null);
 
-  useEffect(() => { setStep(0); setShowErrors(false); }, [report.id]);
+  useEffect(() => { setStep(0); setShowErrors(false); setBanner(null); }, [report.id]);
+
+  const loadLastEntry = async () => {
+    try {
+      setBanner(null);
+      const res = await fetchLastReportApi("battery");
+      if (res.success && res.data) {
+        const reportData = res.data;
+        const metadata = reportData.metadata || {};
+        const metadata_json = metadata.metadata_json || {};
+        
+        setValue(metadata_json);
+        
+        setBanner({
+          type: "success",
+          text: `Loaded details from last BESS entry (Source ID: ${metadata.id}).`
+        });
+      } else {
+        setBanner({
+          type: "warning",
+          text: "No previous entry found."
+        });
+      }
+    } catch (err) {
+      console.error("Error loading last BESS entry:", err);
+      setBanner({
+        type: "error",
+        text: `Failed to load last entry: ${err.message}`
+      });
+    }
+  };
 
   const tab = BESS_TABS[step];
   const isLast = step === BESS_TABS.length - 1;
@@ -269,7 +340,8 @@ export default function BessFormScreen({ report, vertical, sub, values, setValue
   if (layout === 'scroll') {
     return (
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-        <FormHeader report={report} vertical={vertical} values={values} status={status} onGenerate={onGenerate} />
+        <FormHeader report={report} vertical={vertical} values={values} status={status} onGenerate={onGenerate} onSaveDraft={onSaveDraft} onLoadLastEntry={loadLastEntry} onClearAll={onClearAll} />
+        {banner && <Banner banner={banner} onClose={() => setBanner(null)} />}
         <div style={{ flex: 1, overflowY: 'auto' }} ref={scrollRef}>
           <div style={{ maxWidth: 1080, margin: '0 auto', padding: '26px 32px 80px', display: 'grid', gridTemplateColumns: showCalc ? '186px 1fr 250px' : '186px 1fr', gap: 28, alignItems: 'start' }}>
             {/* section nav */}
@@ -316,7 +388,8 @@ export default function BessFormScreen({ report, vertical, sub, values, setValue
   if (layout === 'split') {
     return (
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-        <FormHeader report={report} vertical={vertical} values={values} status={status} onGenerate={onGenerate} />
+        <FormHeader report={report} vertical={vertical} values={values} status={status} onGenerate={onGenerate} onSaveDraft={onSaveDraft} onLoadLastEntry={loadLastEntry} onClearAll={onClearAll} />
+        {banner && <Banner banner={banner} onClose={() => setBanner(null)} />}
         <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1.05fr 1fr', minHeight: 0 }}>
           {/* form */}
           <div style={{ display: 'flex', flexDirection: 'column', minHeight: 0, borderRight: '1px solid var(--border)' }}>
@@ -348,7 +421,8 @@ export default function BessFormScreen({ report, vertical, sub, values, setValue
   // ---------- TABBED layout (default) ----------
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-      <FormHeader report={report} vertical={vertical} values={values} status={status} onGenerate={onGenerate} />
+      <FormHeader report={report} vertical={vertical} values={values} status={status} onGenerate={onGenerate} onSaveDraft={onSaveDraft} onLoadLastEntry={loadLastEntry} onClearAll={onClearAll} />
+      {banner && <Banner banner={banner} onClose={() => setBanner(null)} />}
       <BessStepper step={step} setStep={setStep} values={values} files={files} />
       <div style={{ flex: 1, overflowY: 'auto' }} ref={scrollRef}>
         <div style={{ maxWidth: 980, margin: '0 auto', padding: '24px 32px 40px', display: 'grid', gridTemplateColumns: '1fr 256px', gap: 28, alignItems: 'start' }}>

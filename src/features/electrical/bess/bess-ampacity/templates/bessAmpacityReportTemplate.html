@@ -1,0 +1,652 @@
+<style>
+  .preview-panel {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    line-height: 1.5;
+    color: #1a1a1a;
+  }
+
+  .preview-panel .page {
+    max-width: 850px;
+    margin: 0 auto;
+  }
+
+  .report-title {
+    font-size: 16pt;
+    text-align: left;
+  }
+
+  .doc-h1 {
+    font-size: 16pt;
+    margin-top: 22px;
+  }
+
+  .doc-h2 {
+    font-size: 13.5pt;
+    margin-top: 16px;
+  }
+
+  .doc-h3 {
+    font-size: 12pt;
+    margin-top: 12px;
+  }
+
+  .doc-p {
+    text-align: justify;
+  }
+
+  .doc-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10.5pt;
+    margin-bottom: 14px;
+  }
+
+  .doc-table th,
+  .doc-table td {
+    border: 1px solid black;
+    padding: 5px;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .doc-table thead th {
+    background: #e6edf3;
+  }
+
+  .table-caption {
+    font-size: 13.5pt;
+    margin: 14px 0 6px;
+  }
+
+  .fig-wrap {
+    text-align: center;
+    margin: 14px 0;
+  }
+
+  .fig-wrap img {
+    max-width: 100%;
+  }
+
+  .fig-caption {
+    font-size: 10pt;
+    font-style: italic;
+    color: #444;
+  }
+
+  .abbr-block {
+    display: none;
+  }
+
+  .formula-block {
+    text-align: center;
+    font-style: italic;
+    margin: 10px 0;
+  }
+</style>
+
+<div class="preview-panel">
+  <div class="page">
+
+    <!-- ABBREVIATIONS (hidden — used to auto-build glossary) -->
+    <div class="abbr-block">
+      <span class="toc-abbreviation" data-term="A">Ampere</span>
+      <span class="toc-abbreviation" data-term="AC">Alternating Current</span>
+      <span class="toc-abbreviation" data-term="AWG">American Wire Gauge</span>
+      <span class="toc-abbreviation" data-term="BESS">Battery Energy Storage System</span>
+      <span class="toc-abbreviation" data-term="COD">Date of Commissioning</span>
+      <span class="toc-abbreviation" data-term="DC">Direct Current</span>
+      <span class="toc-abbreviation" data-term="FNE">Field Network Enclosure</span>
+      <span class="toc-abbreviation" data-term="KCMIL">Kilo Circular Mils</span>
+      <span class="toc-abbreviation" data-term="kV">kilovolt</span>
+      <span class="toc-abbreviation" data-term="kW">kilowatt</span>
+      <span class="toc-abbreviation" data-term="kWh">kilowatt-hour</span>
+      <span class="toc-abbreviation" data-term="kVA">kilovolt-ampere</span>
+      <span class="toc-abbreviation" data-term="KNAN">K-class fluid Natural Air Natural</span>
+      <span class="toc-abbreviation" data-term="LF">Load Factor</span>
+      <span class="toc-abbreviation" data-term="LV">Low Voltage</span>
+      <span class="toc-abbreviation" data-term="MV">Medium Voltage</span>
+      <span class="toc-abbreviation" data-term="MVA">Mega volt ampere</span>
+      <span class="toc-abbreviation" data-term="MVS">Medium Voltage Skid</span>
+      <span class="toc-abbreviation" data-term="MVT">Medium Voltage Transformer</span>
+      <span class="toc-abbreviation" data-term="MW">Megawatt</span>
+      <span class="toc-abbreviation" data-term="MWh">Megawatt Hour</span>
+      <span class="toc-abbreviation" data-term="NEC">National Electric Code</span>
+      <span class="toc-abbreviation" data-term="OHL">Overhead Line</span>
+      <span class="toc-abbreviation" data-term="PCS">Power Conversion System</span>
+      <span class="toc-abbreviation" data-term="POI">Point of Interconnection</span>
+      <span class="toc-abbreviation" data-term="PPA">Power Purchase Agreement</span>
+      <span class="toc-abbreviation" data-term="XLPE">Cross-linked Polyethylene</span>
+    </div>
+
+    <!-- TITLE -->
+    <h1 class="report-title">{{reportTitle}}</h1>
+    <p class="doc-p">{{documentNo}} &nbsp;|&nbsp; Rev. {{revision}} &nbsp;|&nbsp; {{preparedDate}}</p>
+
+    <!-- ======================= 1. INTRODUCTION ======================= -->
+    <h1 class="toc-heading doc-h1" data-toc-level="1">Introduction</h1>
+    <p class="doc-p">
+      {{clientName}} is developing {{projectCapacityMW}} MW / {{projectCapacityMWh}} MWh of {{projectName}}
+      of Grid Connected Standalone BESS in {{county}}, in the state of {{state}}, {{country}}. The BESS
+      will be designed for {{projectDurationHours}} hours of continuous power output of {{projectCapacityMW}} MW
+      at {{powerFactor}} {{powerFactorLeadLag}} power factor at the point of interconnection, resulting in
+      {{projectCapacityMWh}} MWh of net usable battery capacity.
+    </p>
+    <p class="doc-p">
+      This report provides details on the considerations and the calculation methodology adopted for
+      estimating and verifying the DC and AC cable sizing.
+    </p>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Soil Thermal Resistivity</h2>
+    <ol>
+      <li>
+        The soil thermal resistivity value is selected based on the information provided in the
+        geotechnical evaluation report for the {{projectName}} project prepared by {{geotechReportCompany}}
+        with Project Number {{geotechReportNo}}, dated {{geotechReportDate}}. A thermal resistivity of
+        {{soilThermalResistivityNative}}°C-cm/W at {{soilMoistureContent}}% moisture content has been
+        selected and is chosen as the worst-case scenario for evaluating the site thermal resistivity value.
+      </li>
+      <li>The results from the thermal resistivity dry-out tests were considered in the analysis with varying moisture
+        content.</li>
+    </ol>
+
+    <p class="table-caption"><b class="toc-table-caption">Table 1: Soil Thermal Resistivity Values (Refer
+        Appendix-B)</b></p>
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th>Moisture Content (%)</th>
+          <th>Thermal Resistivity Results (°C-cm/W) – {{dryoutTestBoreholeId}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>{{dryoutMoisture1Pct}}</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>{{dryoutMoisture2Pct}}</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>{{dryoutMoisture3Pct}}</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>{{dryoutMoisture4Pct}}</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>{{dryoutMoisture5Pct}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="doc-p">
+      <i>Note: We have evaluated the impact of temperature rise using selective fill (thermal resistivity of
+        {{soilThermalResistivitySelectiveFill}}°C-cm/W at {{soilMoistureContent}}% moisture up to a depth of
+        {{selectiveFillDepth}}ft) for MV cables, and the temperature variation is minor. On a conservative
+        basis, MV and auxiliary cable sizing has been done considering the Native soil.</i>
+    </p>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Ambient Temperature</h2>
+    <p class="doc-p">
+      The ambient temperature data for the project has been referenced from ASHRAE climatic records.
+      The nearest weather monitoring station to the project site is {{weatherStationName}}
+      (WMO: {{weatherStationWmo}}). According to the ASHRAE dataset, the recorded extreme annual dry-bulb
+      temperatures at this station are:
+    </p>
+    <ul>
+      <li>Minimum temperature: {{ashraeMinTemp}} °C</li>
+      <li>Maximum temperature: {{ashraeMaxTemp}} °C</li>
+    </ul>
+    <p class="doc-p">
+      With reference to the substation, more conservative ambient temperature limits have been adopted.
+      The ambient temperatures considered for this project are:
+    </p>
+    <ul>
+      <li>Minimum temperature: {{designMinTemp}} °C</li>
+      <li>Maximum temperature: {{designMaxTemp}} °C</li>
+    </ul>
+    <p class="doc-p">
+      These values are used as the basis for equipment rating, thermal design, and environmental
+      considerations for the project.
+    </p>
+    <figure class="fig-wrap">
+      {{ambientTempChart}}
+      <div class="fig-caption">Figure 1: Ambient Temperature Data</div>
+    </figure>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Soil Temperature</h2>
+    <p class="doc-p">
+      The ground soil temperature data is sourced from {{soilTempSource}}. The closest recording station
+      to the project site is {{soilTempStation}} (Station ID: {{soilTempStationId}}). The highest recorded
+      daily average soil temperature at {{soilTempDepth}} depth over the last {{soilTempRecordYears}} years
+      for the site was {{soilTempMax}}. A soil temperature of {{soilTempSelected}}°C has been selected for
+      the analysis.
+    </p>
+    <figure class="fig-wrap">
+      {{soilTempChart}}
+      <div class="fig-caption">Figure 2: Ground Soil Temperature Data</div>
+    </figure>
+
+    <!-- ======================= 2. DC CABLES ======================= -->
+    <h1 class="toc-heading doc-h1" data-toc-level="1">DC Cables</h1>
+    <h2 class="toc-heading doc-h2" data-toc-level="2">General</h2>
+    <p class="doc-p">
+      DC cable sizing for the BESS enclosure and PCS skid has been verified in accordance with NEC
+      correction factors, ensuring that the cables are sized considering the de-rating.
+    </p>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Calculations and Results – Cable Fill Area in Tray</h2>
+    <ul>
+      <li>
+        The cable tray width considered for the project is {{dcCableTrayWidth}}" and as per NEC Table
+        392.22(B)(1) allowable cable fill area for multiconductor cables in ladder, ventilated troughs or
+        solid bottom cable trays rated {{mvCableMaxTemp}} volts or less should be less than
+        {{dcTrayFillAreaLimit}} square inches.
+      </li>
+      <li>
+        Outer diameter of {{dcCableSize}} cable is considered to be {{dcCableOuterDiameter}}" and there
+        are a total of {{dcNoOfPositiveRuns}} positive and {{dcNoOfNegativeRuns}} negative cables in the tray.
+      </li>
+      <li>Total cable fill area is {{dcTotalFillArea}} square inches, which is within the allowable limit of
+        {{dcTrayFillAreaLimit}} square inches.</li>
+      <li>Therefore, {{dcCableSize}} ({{dcNoOfPositiveRuns}} positive and {{dcNoOfNegativeRuns}} negative) DC cables are
+        laid in {{dcCableTrayWidth}}" tray.</li>
+    </ul>
+
+    <p class="table-caption"><b class="toc-table-caption">Table 2: DC Cable Ampacity and Derating Summary</b></p>
+    <table class="doc-table">
+      <tbody>
+        <tr>
+          <td>Selected Cable Size (KCMIL), Type</td>
+          <td>{{dcCableSize}}</td>
+        </tr>
+        <tr>
+          <td>Number of Runs</td>
+          <td>{{dcNoOfPositiveRuns}}</td>
+        </tr>
+        <tr>
+          <td>Reference For Cable Ampacity (A)</td>
+          <td>{{dcAmpacityReference}}</td>
+        </tr>
+        <tr>
+          <td>Cable Ampacity (A) At 30°C Ambient</td>
+          <td>{{dcAmpacityAt30C}}</td>
+        </tr>
+        <tr>
+          <td>Ambient Temperature °C</td>
+          <td>{{dcAmbientTemp}}</td>
+        </tr>
+        <tr>
+          <td>Reference For Ambient Temperature Correction Factor</td>
+          <td>{{dcTempCorrectionRef}}</td>
+        </tr>
+        <tr>
+          <td>Correction Factor (K1)</td>
+          <td>{{dcCorrectionFactorK1}}</td>
+        </tr>
+        <tr>
+          <td>Reference For Grouping</td>
+          <td>{{dcGroupingRef}}</td>
+        </tr>
+        <tr>
+          <td>Correction Factor (K2)</td>
+          <td>{{dcCorrectionFactorK2}}</td>
+        </tr>
+        <tr>
+          <td>Current Carrying Capacity After Derating (A)</td>
+          <td>{{dcDeRatedAmpacity}}</td>
+        </tr>
+        <tr>
+          <td>Required Current Carrying Capacity (A)</td>
+          <td>{{dcRequiredAmpacity}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ul>
+      <li>As per NEC 2023, Clause 392.80(A)(2), the adjustment factors of 310.15(C)(1) shall not apply to the ampacity
+        of cables in cable trays.</li>
+      <li>As per NEC 2023, Clause 392.80(A)(2)(a), the ampacities for 600 KCMIL and larger single conductor cables in
+        uncovered cable trays shall not exceed 75% of the ampacities available in Table 310.17.</li>
+      <li>Additionally, NEC 2023 Clause 392.22(B)(1)(b) specifies for all cables from 250 KCMIL through 900 KCMIL, the
+        sum of cross-sectional areas of all single-conductor cables shall not exceed the minimum allowable cable fill
+        area in Column 1 of Table 392.22(B)(1) for the appropriate cable tray width.</li>
+      <li>Therefore, {{dcCableSize}} satisfies the criteria for cable ampacity and tray fill factor. Hence,
+        {{dcNoOfPositiveRuns}} runs of {{dcCableSize}} cables (+ve and -ve) are being considered.</li>
+    </ul>
+
+    <!-- ======================= 3. MV AC CABLES ======================= -->
+    <h1 class="toc-heading doc-h1" data-toc-level="1">MV AC Cables</h1>
+    <h2 class="toc-heading doc-h2" data-toc-level="2">General</h2>
+    <p class="doc-p">
+      MV AC Cables are installed for connecting PCS Skid and Auxiliary Transformer to the plant substation.
+      MV Cables sizing has been verified using the CYMCAP software.
+    </p>
+    <p class="doc-p">
+      The current in each MV cable is determined by the number of loop-fed PCS Skids connected to the
+      cable, multiplied by each PCS Skid current rating at MV voltage. The {{projectName}} Project consists
+      of {{noOfPcsSkidsBOL}} PCS Skids at Beginning of Life (BOL), each rated at {{pcsSkidRatingKva}} kVA.
+      At nominal operating voltage, each PCS Skid draws a maximum current of {{pcsSkidCurrentAtMv}} A.
+      The PCS Skid units are configured in loop-fed topology, with a maximum of {{maxPcsPerLoop}} PCS Skids
+      connected in a single loop. Accordingly, the maximum current in one loop is calculated as
+      {{maxLoopCurrent}} A.
+    </p>
+    <p class="doc-p">For this design, 2 different MV cable sizes are considered.</p>
+    <ol>
+      <li>{{mvCableSize1}}</li>
+      <li>{{mvCableSize2}}</li>
+    </ol>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Applicable Formulas</h2>
+    <p class="doc-p">Voltage Drop Formula:</p>
+    <p class="formula-block">V% drop = (1.732 × k × L × I) / (Cm × 1000 × N × V)</p>
+    <p class="doc-p">Where:</p>
+    <ul>
+      <li>I – Max Current from MV Transformer</li>
+      <li>L – Length of the conductor in feet</li>
+      <li>k – Conductor resistivity in Ω/KCMIL·feet (21.2 for aluminum)</li>
+      <li>Cm – Cross section area of conductor (Circular mils)</li>
+      <li>V – Operating Voltage</li>
+      <li>N – Number of Parallel conductors in Circuit</li>
+    </ul>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">MVAC Cable Notes</h2>
+    <ol>
+      <li>MV Cables sizing has been verified using the CYMCAP software.</li>
+      <li>Voltage and current values for sizing the cables are based on the PCS Skid details.</li>
+      <li>Refer to Section 1.1 for soil thermal resistivity value.</li>
+      <li>Refer to Section 1.2 for ambient temperature.</li>
+      <li>Refer to Section 1.3 for soil temperature.</li>
+      <li>MV cables shall be laid directly buried at {{mvCableBurialDepth}} feet depth. Conduits are used at stub-up
+        locations and when the cables are passing below the BESS access roads.</li>
+      <li>The cable maximum temperature does not exceed {{mvCableMaxTemp}}°C for both direct buried cables and buried
+        cables in PVC conduits.</li>
+      <li>Direct buried MV cables should have their detectable warning tape run above them at {{mvWarningTapeDepth}}
+        below grade.</li>
+      <li>The typical load profile for the current BESS power plant, operated for 1 cycle/day with a
+        {{dischargePeriodHours}}h discharge, {{restPeriodHours}}h rest, and {{chargePeriodHours}}h charge period, is
+        shown below.</li>
+    </ol>
+
+    <figure class="fig-wrap">
+      {{loadProfileChart}}
+      <div class="fig-caption">Figure 3: Load profile of BESS plant for one day</div>
+    </figure>
+    <p class="doc-p"><i>Note: The load profile is considered based on a discharge rate of {{dischargeRateC}} and a
+        charging rate limited to {{chargeRateC}}.</i></p>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Calculations and Results</h2>
+    <ol>
+      <li>Based on the transient analysis of the cables and the above considerations at the given load profile for
+        8760h, the cable sizes and spacing are chosen accordingly.</li>
+      <li>All MV AC cables shall be arranged in trefoil formation.</li>
+      <li>MV AC cables of {{mvCableSize1}} and {{mvCableSize2}} shall be installed in {{mvConduitSize}} conduit.</li>
+      <li>Refer to Appendix A for CYMCAP analysis of MV cables.</li>
+    </ol>
+
+    <p class="table-caption"><b class="toc-table-caption">Table 3: Summary of Circuit Temperatures – MV AC Cable
+        Directly Buried</b></p>
+    <div class="table-wrapper">{{mvDirectBuriedSummaryTable}}</div>
+    <p class="doc-p"><i>Note: The maximum temperature amongst the 3 current-carrying conductors (R, Y, B) is specified
+        in the above summary table.</i></p>
+
+    <p class="table-caption"><b class="toc-table-caption">Table 4: Summary of Parallel Circuit Temperatures – MV AC
+        Cable Buried in Conduit</b></p>
+    <div class="table-wrapper">{{mvConduitSummaryTable}}</div>
+    <p class="doc-p"><i>Note: The maximum temperature amongst the 3 current-carrying conductors (R, Y, B) is specified
+        in the above summary table.</i></p>
+
+    <p class="table-caption"><b class="toc-table-caption">Table 5: Summary of Parallel Circuit Temperatures by Circuit
+        Count</b></p>
+    <div class="table-wrapper">{{mvParallelCircuitSummaryTable}}</div>
+    <p class="doc-p">
+      <i>Cable spacing is critical for parallel circuit ampacities. Please refer to the CYMCAP results in
+        Appendix A for cable spacing used for parallel runs. In no situation does the cable temperature
+        exceed the limit; accordingly, the cable sizes are properly designed.</i>
+    </p>
+
+    <!-- ======================= 4. AUXILIARY CABLES ======================= -->
+    <h1 class="toc-heading doc-h1" data-toc-level="1">Auxiliary Cables</h1>
+    <h2 class="toc-heading doc-h2" data-toc-level="2">General</h2>
+    <ol>
+      <li>Auxiliary cable sizing for the BESS enclosure and PCS skid has been verified in accordance with NEC correction
+        and de-rating factors since the cables are laid in precast trench.</li>
+      <li>Auxiliary Panel Board Incomer, Fuse Tap Box Incomer, FNE Power Supply, and Auxiliary Backup Power Supply (Fuse
+        Tap Box to Auxiliary Panel Boards) cable sizing has been verified using CYMCAP software, considering the maximum
+        cable temperature does not exceed the {{mvCableMaxTemp}}°C rating when laid in conduit.</li>
+      <li>Auxiliary cables are laid without conduits in precast trenches and are laid in underground conduit outside of
+        precast trench at a depth of 1'-6".</li>
+      <li>Refer to Appendix B for CYMCAP analysis of Auxiliary cables.</li>
+      <li>Refer to Section 1.1 for soil thermal resistivity value.</li>
+      <li>Refer to Section 1.2 for soil temperature.</li>
+    </ol>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Auxiliary Transformer to Auxiliary Panel Board</h2>
+    <p class="doc-p">
+      The Auxiliary Transformer with a rating of {{auxTransformerRatingKva}} kVA at {{auxTransformerVoltage}}V
+      is connected to a dedicated Auxiliary Panel Board. {{auxTransformerToBoardRuns}} runs per phase and
+      neutral of {{auxTransformerToBoardCableSize}} cables are considered between each Auxiliary
+      Transformer and Auxiliary Panel Board. The cables are laid in PVC conduit underground.
+    </p>
+    <p class="formula-block">LV Output Current (A) = (Apparent Power (kVA)) / (LV Voltage in kV × 1.732) =
+      {{auxTransformerOutputCurrent}} A</p>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Auxiliary Panel Board to BESS Enclosure and PCS Skid</h2>
+    <p class="doc-p"><b>BESS Enclosure Auxiliary Cables from the Auxiliary Panel Board are directly laid in precast
+        trench and in underground conduits where no precast trench is provided</b></p>
+    <table class="doc-table">
+      <tbody>
+        <tr>
+          <td>Selected Cable Size, Type</td>
+          <td>{{bessAuxCableSize}}</td>
+        </tr>
+        <tr>
+          <td>Reference For Cable Ampacity (A)</td>
+          <td>{{bessAuxAmpacityRef}}</td>
+        </tr>
+        <tr>
+          <td>Cable Ampacity (A) At 30°C Ambient</td>
+          <td>{{bessAuxAmpacityAt30C}}</td>
+        </tr>
+        <tr>
+          <td>Correction Factor (K1)</td>
+          <td>{{bessAuxCorrectionFactorK1}}</td>
+        </tr>
+        <tr>
+          <td>Correction Factor (K2)</td>
+          <td>{{bessAuxCorrectionFactorK2}}</td>
+        </tr>
+        <tr>
+          <td>Current Carrying Capacity After Derating (A)</td>
+          <td>{{bessAuxDeRatedAmpacity}}</td>
+        </tr>
+        <tr>
+          <td>Required Current Carrying Capacity (A)</td>
+          <td>{{bessAuxRequiredCurrent}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="doc-p"><b>PCS Skid Auxiliary Cables from the Auxiliary Panel Board are directly laid in precast trench and
+        in underground conduits where no precast trench is provided</b></p>
+    <table class="doc-table">
+      <tbody>
+        <tr>
+          <td>Selected Cable Size, Type</td>
+          <td>{{pcsAuxCableSize}}</td>
+        </tr>
+        <tr>
+          <td>Cable Ampacity (A) At 30°C Ambient</td>
+          <td>{{pcsAuxAmpacityAt30C}}</td>
+        </tr>
+        <tr>
+          <td>Correction Factor (K1)</td>
+          <td>{{pcsAuxCorrectionFactorK1}}</td>
+        </tr>
+        <tr>
+          <td>Correction Factor (K2)</td>
+          <td>{{pcsAuxCorrectionFactorK2}}</td>
+        </tr>
+        <tr>
+          <td>Current Carrying Capacity After Derating (A)</td>
+          <td>{{pcsAuxDeRatedAmpacity}}</td>
+        </tr>
+        <tr>
+          <td>Required Current Carrying Capacity (A)</td>
+          <td>{{pcsAuxRequiredCurrent}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ul>
+      <li>
+        A maximum of {{maxCablesInTrench}} cables are laid in the precast trench, where
+        {{trenchBessCableCount}} cables are 4C, #2 AWG and {{trenchPcsCableCount}} cables are 2C, #12 AWG.
+        Thus, the total maximum number of conductors in the precast trench is {{totalConductorsInTrench}}.
+      </li>
+      <li>As per NEC 310.15(C)(1), the ampacity of each conductor shall be reduced as shown in Table 310.15(C)(1) where
+        the number of current-carrying conductors in a raceway or cable exceeds three. Each current-carrying conductor
+        of a paralleled set of conductors shall be counted as a current-carrying conductor.</li>
+    </ul>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Auxiliary Panel Board to Light Poles</h2>
+    <p class="doc-p">
+      Each Light Pole consists of {{lightPoleFixtureCount}} Light Fixtures, each with a power consumption
+      of {{lightPoleFixtureWattage}}W (Tentative), at {{lightPoleVoltage}}V, and is connected to the
+      Auxiliary Panel Board using a {{lightPoleCableSize}} cable. The cables are laid in PVC conduit underground.
+    </p>
+    <p class="formula-block">LV Output Current (A) = (Apparent Power (kVA)) / (LV Voltage in kV) = {{lightPoleCurrent}}
+      A</p>
+    <p class="doc-p">Maximum of {{polesPerDaisyChain}} light poles are connected in daisy chain. Total
+      {{totalLightingPoles}} light poles used for BESS area lighting.</p>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Auxiliary Panel Board to Mini Power Center</h2>
+    <p class="doc-p">
+      The transformer inside the Mini Power Center has a rating of {{mpcRatingKva}} kVA at {{mpcVoltage}}V
+      and is connected to the Auxiliary Panel Board with a {{mpcCableSize}} cable. The cables are laid in
+      PVC conduit underground.
+    </p>
+    <p class="formula-block">LV Output Current (A) = (Apparent Power (kVA)) / (LV Voltage in kV) = {{mpcCurrent}} A</p>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Mini Power Center to Receptacle</h2>
+    <p class="doc-p">
+      The Receptacle power consumption is assumed to be {{receptacleRatingKva}} kVA (@{{receptaclePf}} P.F)
+      at {{receptacleVoltage}}V and is connected to the Auxiliary Panel Board with a {{receptacleCableSize}}
+      cable. The cables are laid in PVC conduit underground.
+    </p>
+    <p class="formula-block">LV Output Current (A) = (Apparent Power (kVA)) / (LV Voltage in kV) = {{receptacleCurrent}}
+      A</p>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Mini Power Center to Field Network Enclosure</h2>
+    <p class="doc-p">
+      The Field Network Enclosure power consumption is {{fneRatingKva}} kVA at {{fneVoltage}}V and is
+      connected to the Auxiliary Panel Board with a {{fneCableSize}} cable. The cables are laid in PVC
+      conduit underground.
+    </p>
+    <p class="formula-block">LV Output Current (A) = (Apparent Power (kVA)) / (LV Voltage in kV) = {{fneCurrent}} A</p>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Generator to Tap Box</h2>
+    <p class="doc-p">
+      The backup generator of rating {{generatorRatingKw}} kW (@{{generatorPf}} P.F) at {{generatorVoltage}}V
+      is connected to the Fuse Tap Box with {{generatorCableSize}} cable. The cables are laid in PVC
+      conduit underground.
+    </p>
+    <p class="formula-block">LV Output Current (A) = (Apparent Power (kVA)) / (1.732 × LV Voltage in kV) =
+      {{generatorCurrent}} A</p>
+
+    <h2 class="toc-heading doc-h2" data-toc-level="2">Tap Box to Auxiliary Panel Board</h2>
+    <p class="doc-p">
+      The maximum auxiliary power consumption amongst the Auxiliary Panel Boards is {{tapBoxMaxLoadKva}} kVA
+      at {{tapBoxVoltage}}V. The tap box is connected to each of the Auxiliary Panel Boards with
+      {{tapBoxCableSize}} cable for each phase and neutral. The cables are laid in PVC conduit underground.
+    </p>
+    <p class="formula-block">LV Output Current (A) = (Apparent Power (kVA)) / (LV Voltage in kV) = {{tapBoxCurrent}} A
+    </p>
+
+    <p class="table-caption"><b class="toc-table-caption">Table 6: Auxiliary Cables</b></p>
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th>Sr. No.</th>
+          <th>From</th>
+          <th>To</th>
+          <th>Cable Size</th>
+          <th>Max Cable Temp @Full Load (°C)</th>
+          <th>Remarks</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Auxiliary Transformer</td>
+          <td>Auxiliary Panel Board</td>
+          <td>{{auxCable1Size}}</td>
+          <td>{{auxCable1Temp}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Auxiliary Panel Board</td>
+          <td>Light Poles</td>
+          <td>{{auxCable2Size}}</td>
+          <td>{{auxCable2Temp}}</td>
+          <td>{{auxCable2Remarks}}</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Auxiliary Panel Board</td>
+          <td>Mini Power Center</td>
+          <td>{{auxCable3Size}}</td>
+          <td>{{auxCable3Temp}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Mini Power Center</td>
+          <td>Receptacle</td>
+          <td>{{auxCable4Size}}</td>
+          <td>{{auxCable4Temp}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Mini Power Center</td>
+          <td>FNE</td>
+          <td>{{auxCable5Size}}</td>
+          <td>{{auxCable5Temp}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>Generator</td>
+          <td>Tap Box</td>
+          <td>{{auxCable6Size}}</td>
+          <td>{{auxCable6Temp}}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>Tap Box</td>
+          <td>Auxiliary Panel Boards</td>
+          <td>{{auxCable7Size}}</td>
+          <td>{{auxCable7Temp}}</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="doc-p">
+      <i>Cable spacing is critical for parallel circuit ampacities. Please refer to the CYMCAP results in
+        Appendix B for cable spacing used for parallel runs. In no situation does the cable temperature
+        exceed the limit. So, cable sizes are properly designed.</i>
+    </p>
+
+    <!-- ======================= APPENDICES ======================= -->
+    <h1 class="toc-heading doc-h1" data-toc-level="1">Appendices</h1>
+    <p class="doc-p"><b>Appendix-A:</b> MV AC Cables – CYMCAP Reports</p>
+    <p class="doc-p"><b>Appendix-B:</b> LV Auxiliary Cables – CYMCAP Reports</p>
+    <p class="doc-p"><b>Appendix-C:</b> Geotechnical Report</p>
+
+  </div>
+</div>

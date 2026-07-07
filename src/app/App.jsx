@@ -1,6 +1,8 @@
 import { useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 
 import SignIn from "../features/auth/components/SignIn";
+import { saveReportApi } from "../features/electrical/pv/pv-design/api/reportsApi";
 
 import Sidebar from "../features/dashboard/components/Sidebar";
 import Topbar from "../features/dashboard/components/Topbar";
@@ -22,10 +24,27 @@ import { findReport } from "../data/navigation";
 import BessFormScreen from "../features/electrical/bess/bess-sizing/components/BessFormScreen";
 import { BESS_DEFAULTS } from "../features/electrical/bess/bess-sizing/forms/bessDefaults";
 import BessGenerating from "../features/electrical/bess/bess-sizing/reports/bessGenerating.jsx";
-import BessReportDoc from "../features/electrical/bess/bess-sizing/reports/BessReportDoc.jsx";
+
+import BessAmpacityFormScreen from "../features/electrical/bess/bess-ampacity/components/BessAmpacityFormScreen";
+import { BESS_AMPACITY_DEFAULTS } from "../features/electrical/bess/bess-ampacity/forms/bessAmpacityDefaults";
+import BessAmpacityGenerating from "../features/electrical/bess/bess-ampacity/reports/bessAmpacityGenerating";
+import BessAmpacityPreview from "../features/electrical/bess/bess-ampacity/reports/BessAmpacityPreview";
+
+import BessGroundingFormScreen from "../features/electrical/bess/bess-grounding/components/BessGroundingFormScreen";
+import { BESS_GROUNDING_DEFAULTS } from "../features/electrical/bess/bess-grounding/forms/bessGroundingDefaults";
+import BessGroundingGenerating from "../features/electrical/bess/bess-grounding/reports/bessGroundingGenerating";
+import BessGroundingPreview from "../features/electrical/bess/bess-grounding/reports/BessGroundingPreview";
+import useAuth from "../shared/hooks/useAuth";
+
+import HvDbrFormScreen from "../features/electrical/hv/hv-dbr/components/HvDbrFormScreen";
+import { HV_DBR_DEFAULTS } from "../features/electrical/hv/hv-dbr/forms/hvDbrDefaults";
+import HvDbrGenerating from "../features/electrical/hv/hv-dbr/reports/hvDbrGenerating";
+import HvDbrPreview from "../features/electrical/hv/hv-dbr/reports/HvDbrPreview";
 
 
 export default function App() {
+  const navigate = useNavigate();
+  const { session, signOut, user: authUser } = useAuth();
   // const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
   // temorary 
 
@@ -34,6 +53,23 @@ export default function App() {
   const t = {
     formLayout: "tabbed", showCalc: true, accent: "default", docFont: "sans",
   };
+
+  const currentUser = authUser
+    ? {
+        ...USER,
+        name: authUser.full_name || authUser.email || USER.name,
+        initials: (authUser.full_name || authUser.email || USER.name)
+          .split(" ")
+          .filter(Boolean)
+          .map((part) => part[0])
+          .slice(0, 2)
+          .join("")
+          .toUpperCase()
+          || USER.initials,
+        role: authUser.role || USER.role,
+        email: authUser.email || "",
+      }
+    : USER;
 
   const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
     const saved = localStorage.getItem("forge_sidebar_collapsed");
@@ -61,13 +97,23 @@ export default function App() {
 
       try {
         localStorage.setItem("forge-theme", next);
-      } catch { }
+      } catch {
+        // Ignore storage write failures in restricted browsers.
+      }
 
       return next;
     });
   };
 
-  const [screen, setScreen] = useState("signin");
+  const [screen, setScreen] = useState("app");
+  const [currentReportId, setCurrentReportId] = useState(null);
+  const [sourceReportId, setSourceReportId] = useState(null);
+  const [draftSync, setDraftSync] = useState({
+    dirty: false,
+    saving: false,
+    lastSavedAt: null,
+    error: null,
+  });
 
   const [sel, setSel] = useState({
     vertical: null,
@@ -88,6 +134,18 @@ export default function App() {
     ...BESS_DEFAULTS,
   });
 
+  const [bessAmpacityValues, setBessAmpacityValues] = useState({
+    ...BESS_AMPACITY_DEFAULTS,
+  });
+
+  const [bessGroundingValues, setBessGroundingValues] = useState({
+    ...BESS_GROUNDING_DEFAULTS,
+  });
+
+  const [hvDbrValues, setHvDbrValues] = useState({
+    ...HV_DBR_DEFAULTS,
+  });
+
   const [files, setFiles] = useState({
     moduleDs: null,
     inverterDs: null,
@@ -103,18 +161,35 @@ export default function App() {
   const currentValues =
     sel.report?.id === "bess-sizing"
       ? bessValues
+      : sel.report?.id === "bess-ampacity"
+      ? bessAmpacityValues
+      : sel.report?.id === "bess-grounding"
+      ? bessGroundingValues
+      : sel.report?.id === "hv-dbr"
+      ? hvDbrValues
       : pvValues;
 
   const currentFiles = files;
 
-  const setValue = (key, value) => {
-    setValues((prev) => ({
+  const markDraftDirty = () => {
+    setDraftSync((prev) => ({
       ...prev,
-      [key]: value,
+      dirty: true,
+      error: null,
     }));
   };
 
+  const resetDraftSync = () => {
+    setDraftSync({
+      dirty: false,
+      saving: false,
+      lastSavedAt: null,
+      error: null,
+    });
+  };
+
   const setFile = (key, value) => {
+    markDraftDirty();
     setFiles((prev) => ({
       ...prev,
       [key]: value,
@@ -144,8 +219,10 @@ export default function App() {
       report,
     });
 
+    setCurrentReportId(null); // Clear active report context
+    setSourceReportId(null);
+    resetDraftSync();
     setPhase("form");
-
   };
 
   const selectSub = (verticalId, subId) => {
@@ -160,7 +237,209 @@ export default function App() {
       sub,
       report: null,
     });
+    setCurrentReportId(null);
+    setSourceReportId(null);
+    resetDraftSync();
+  };
 
+  const flattenPvReport = (details) => {
+    if (!details) return {};
+    const flat = {
+      module_make: details.module_manufacturer || "",
+      module_model: details.module_model || "",
+    };
+    
+    const jsonColumns = [
+      "electrical_characteristics",
+      "mechanical_characteristics",
+      "temperature_coefficients",
+      "pvsyst_results",
+      "irradiation_data",
+      "energy_yield",
+      "loss_analysis",
+      "voc_calculations",
+      "isc_calculations",
+      "degradation_tables",
+      "site_conditions",
+    ];
+    
+    jsonColumns.forEach(col => {
+      if (details[col] && typeof details[col] === "object") {
+        Object.entries(details[col]).forEach(([key, val]) => {
+          flat[key] = val;
+        });
+      }
+    });
+    
+    return flat;
+  };
+
+  const loadReportIntoForm = (recentMeta, detail) => {
+    let verticalId = "electrical";
+    let subId = "pv";
+    let reportId = "pv-design";
+
+    if (recentMeta.report_type === "grounding") {
+      verticalId = "electrical";
+      subId = "bess";
+      reportId = "bess-grounding";
+    } else if (recentMeta.report_type === "cable") {
+      verticalId = "electrical";
+      subId = "bess";
+      reportId = "bess-ampacity";
+    } else if (recentMeta.report_type === "battery") {
+      verticalId = "electrical";
+      subId = "bess";
+      reportId = "bess-sizing";
+    } else if (recentMeta.report_type === "hv-dbr") {
+      verticalId = "electrical";
+      subId = "hv";
+      reportId = "hv-dbr";
+    }
+
+    const { vertical, sub, report } = findReport(verticalId, subId, reportId);
+
+    setSel({
+      vertical,
+      sub,
+      report,
+    });
+
+    const inputs = detail.inputs || {};
+    // Extract nested details if returned in single RPC json structure
+    const details = inputs.details || inputs;
+
+    if (recentMeta.report_type === "grounding") {
+      setBessGroundingValues(prev => ({ ...prev, ...details }));
+    } else if (recentMeta.report_type === "cable") {
+      setBessAmpacityValues(prev => ({ ...prev, ...details }));
+    } else if (recentMeta.report_type === "battery") {
+      setBessValues(prev => ({ ...prev, ...details }));
+    } else if (recentMeta.report_type === "hv-dbr") {
+      setHvDbrValues(prev => ({ ...prev, ...details }));
+    } else {
+      const metadata = detail.metadata || {};
+      const metadata_json = metadata.metadata_json || {};
+      const flatPv = flattenPvReport(details);
+      setPvValues(prev => ({ ...prev, ...metadata_json, ...flatPv }));
+    }
+
+    setPhase("form");
+  };
+
+  const handleSelectRecent = (recentMeta, detail) => {
+    loadReportIntoForm(recentMeta, detail);
+
+    setCurrentReportId(recentMeta.report_id);
+    setSourceReportId(null);
+    setDraftSync({
+      dirty: false,
+      saving: false,
+      lastSavedAt: new Date(),
+      error: null,
+    });
+  };
+
+  const handleCloneReport = (recentMeta, detail) => {
+    loadReportIntoForm(recentMeta, detail);
+
+    setCurrentReportId(null);
+    setSourceReportId(recentMeta.report_id);
+    setDraftSync({
+      dirty: true,
+      saving: false,
+      lastSavedAt: null,
+      error: null,
+    });
+  };
+
+  const persistReportDraft = async (values, { showSuccessAlert = true, status } = {}) => {
+    try {
+      setDraftSync((prev) => ({
+        ...prev,
+        saving: true,
+        error: null,
+      }));
+
+      const typeMap = {
+        "string-sizing": "pv",
+        "pv-design": "pv",
+        "bess-sizing": "battery",
+        "bess-ampacity": "cable",
+        "bess-grounding": "grounding"
+      };
+
+      const reportType = typeMap[sel.report?.id] || "pv";
+
+      const payload = {
+        report_id: currentReportId,
+        report_type: reportType,
+        document_no: values.DOCUMENT_NO || values.grounding_analysis_report_no || "PVI-GEN-001",
+        revision: values.REVISION || values.grounding_layout_drawing_no || "A",
+        prepared_date: values.PREPARATION_DATE || new Date().toISOString().split("T")[0],
+        report_title: values.REPORT_TITLE || sel.report?.name || "Engineering Report",
+        status,
+        values: values
+      };
+
+      console.log("Saving report draft to database:", payload);
+      const accessToken = session?.access_token || null;
+      const res = await saveReportApi(payload, accessToken);
+      if (res.success && res.report_id) {
+        setCurrentReportId(res.report_id);
+        setDraftSync({
+          dirty: false,
+          saving: false,
+          lastSavedAt: new Date(),
+          error: null,
+        });
+        if (showSuccessAlert) {
+          alert("Draft saved successfully to Supabase database!");
+        }
+        return res;
+      }
+
+      throw new Error("Supabase did not return a report id.");
+    } catch (err) {
+      console.error("Error saving draft:", err);
+      setDraftSync((prev) => ({
+        ...prev,
+        saving: false,
+        error: err.message,
+      }));
+      alert("Failed to save draft to database: " + err.message);
+      throw err;
+    }
+  };
+
+  const handleSaveDraft = async (values) => {
+    try {
+      await persistReportDraft(values, { status: "draft" });
+    } catch {
+      // Error is already surfaced to the user by persistReportDraft.
+    }
+  };
+
+  const handleGenerate = async (values) => {
+    try {
+      await persistReportDraft(values, { showSuccessAlert: false, status: "completed" });
+      setPhase("generating");
+    } catch {
+      // Keep the user on the form until the save issue is fixed.
+    }
+  };
+
+  const handleGoDashboard = () => {
+    resetDraftSync();
+    setCurrentReportId(null);
+    setSourceReportId(null);
+    setSel({
+      vertical: null,
+      sub: null,
+      report: null,
+    });
+    setPhase("form");
+    navigate("/dashboard", { replace: true });
   };
 
   if (screen === "signin") {
@@ -189,6 +468,27 @@ export default function App() {
         main = (
           <BessGenerating
             values={bessValues}
+            onDone={() => setPhase("preview")}
+          />
+        );
+      } else if (sel.report.id === "bess-ampacity") {
+        main = (
+          <BessAmpacityGenerating
+            values={bessAmpacityValues}
+            onDone={() => setPhase("preview")}
+          />
+        );
+      } else if (sel.report.id === "bess-grounding") {
+        main = (
+          <BessGroundingGenerating
+            values={bessGroundingValues}
+            onDone={() => setPhase("preview")}
+          />
+        );
+      } else if (sel.report.id === "hv-dbr") {
+        main = (
+          <HvDbrGenerating
+            values={hvDbrValues}
             onDone={() => setPhase("preview")}
           />
         );
@@ -225,8 +525,56 @@ export default function App() {
           />
         );
 
-      } else {
+      } else if (sel.report.id === "bess-ampacity") {
 
+        main = (
+          <BessAmpacityPreview
+            values={currentValues}
+            files={files}
+            onBack={() => setPhase("form")}
+            onNew={() =>
+              setSel({
+                vertical: null,
+                sub: null,
+                report: null,
+              })
+            }
+          />
+        );
+
+      } else if (sel.report.id === "bess-grounding") {
+
+        main = (
+          <BessGroundingPreview
+            values={currentValues}
+            files={files}
+            onBack={() => setPhase("form")}
+            onNew={() =>
+              setSel({
+                vertical: null,
+                sub: null,
+                report: null,
+              })
+            }
+          />
+        );
+
+      } else if (sel.report.id === "hv-dbr") {
+        main = (
+          <HvDbrPreview
+            values={currentValues}
+            files={files}
+            onBack={() => setPhase("form")}
+            onNew={() =>
+              setSel({
+                vertical: null,
+                sub: null,
+                report: null,
+              })
+            }
+          />
+        );
+      } else {
         main = (
           <Preview
             report={sel.report}
@@ -243,7 +591,6 @@ export default function App() {
             }
           />
         );
-
       }
     }
 
@@ -255,21 +602,171 @@ export default function App() {
             vertical={sel.vertical}
             sub={sel.sub}
             values={bessValues}
-            setValue={(k, v) =>
-              setBessValues(prev => ({
-                ...prev,
-                [k]: v,
-              }))
-            }
+            setValue={(k, v) => {
+              markDraftDirty();
+              if (typeof k === "object" && k !== null) {
+                setBessValues(prev => ({
+                  ...prev,
+                  ...k,
+                }));
+              } else {
+                setBessValues(prev => ({
+                  ...prev,
+                  [k]: v,
+                }));
+              }
+            }}
             files={files}
-            // files={bessFiles}
-            setFile={(k, v) =>
-              setBessFiles(prev => ({
-                ...prev,
-                [k]: v,
-              }))
-            }
-            onGenerate={() => setPhase("generating")}
+            setFile={setFile}
+            onGenerate={() => handleGenerate(bessValues)}
+            onSaveDraft={handleSaveDraft}
+            onClearAll={() => {
+              markDraftDirty();
+              const cleared = {};
+              Object.keys(BESS_DEFAULTS).forEach(key => {
+                const val = BESS_DEFAULTS[key];
+                if (Array.isArray(val)) {
+                  cleared[key] = [];
+                } else if (typeof val === 'object' && val !== null) {
+                  cleared[key] = {};
+                } else {
+                  cleared[key] = "";
+                }
+              });
+              setBessValues(cleared);
+              setFiles({
+                ...files,
+                batteryDs: null,
+                pcsDs: null,
+                transformerDs: null
+              });
+            }}
+          />
+        );
+      } else if (sel.report.id === "bess-ampacity") {
+        main = (
+          <BessAmpacityFormScreen
+            report={sel.report}
+            vertical={sel.vertical}
+            sub={sel.sub}
+            values={bessAmpacityValues}
+            setValue={(k, v) => {
+              markDraftDirty();
+              if (typeof k === "object" && k !== null) {
+                setBessAmpacityValues(prev => ({
+                  ...prev,
+                  ...k,
+                }));
+              } else {
+                setBessAmpacityValues(prev => ({
+                  ...prev,
+                  [k]: v,
+                }));
+              }
+            }}
+            files={files}
+            setFile={setFile}
+            onGenerate={() => handleGenerate(bessAmpacityValues)}
+            onSaveDraft={handleSaveDraft}
+            onClearAll={() => {
+              markDraftDirty();
+              const cleared = {};
+              Object.keys(BESS_AMPACITY_DEFAULTS).forEach(key => {
+                const val = BESS_AMPACITY_DEFAULTS[key];
+                if (Array.isArray(val)) {
+                  cleared[key] = [];
+                } else if (typeof val === 'object' && val !== null) {
+                  cleared[key] = {};
+                } else {
+                  cleared[key] = "";
+                }
+              });
+              setBessAmpacityValues(cleared);
+            }}
+          />
+        );
+      } else if (sel.report.id === "bess-grounding") {
+        main = (
+          <BessGroundingFormScreen
+            report={sel.report}
+            vertical={sel.vertical}
+            sub={sel.sub}
+            values={bessGroundingValues}
+            setValue={(k, v) => {
+              markDraftDirty();
+              if (typeof k === "object" && k !== null) {
+                setBessGroundingValues(prev => ({
+                  ...prev,
+                  ...k,
+                }));
+              } else {
+                setBessGroundingValues(prev => ({
+                  ...prev,
+                  [k]: v,
+                }));
+              }
+            }}
+            files={files}
+            setFile={setFile}
+            onGenerate={() => handleGenerate(bessGroundingValues)}
+            onSaveDraft={handleSaveDraft}
+            onClearAll={() => {
+              markDraftDirty();
+              const cleared = {};
+              Object.keys(BESS_GROUNDING_DEFAULTS).forEach(key => {
+                const val = BESS_GROUNDING_DEFAULTS[key];
+                if (Array.isArray(val)) {
+                  cleared[key] = [];
+                } else if (typeof val === 'object' && val !== null) {
+                  cleared[key] = {};
+                } else {
+                  cleared[key] = "";
+                }
+              });
+              setBessGroundingValues(cleared);
+            }}
+          />
+        );
+      } else if (sel.report.id === "hv-dbr") {
+        main = (
+          <HvDbrFormScreen
+            report={sel.report}
+            vertical={sel.vertical}
+            sub={sel.sub}
+            values={hvDbrValues}
+            setValue={(k, v) => {
+              markDraftDirty();
+              if (typeof k === "object" && k !== null) {
+                setHvDbrValues(prev => ({
+                  ...prev,
+                  ...k,
+                }));
+              } else {
+                setHvDbrValues(prev => ({
+                  ...prev,
+                  [k]: v,
+                }));
+              }
+            }}
+            files={files}
+            setFile={setFile}
+            onGenerate={() => handleGenerate(hvDbrValues)}
+            onSaveDraft={handleSaveDraft}
+            onClearAll={() => {
+              markDraftDirty();
+              const cleared = {};
+              Object.keys(HV_DBR_DEFAULTS).forEach(key => {
+                const val = HV_DBR_DEFAULTS[key];
+                if (Array.isArray(val)) {
+                  cleared[key] = [];
+                } else if (typeof val === 'object' && val !== null) {
+                  cleared[key] = {};
+                } else {
+                  cleared[key] = "";
+                }
+              });
+              setHvDbrValues(cleared);
+            }}
           />
         );
       } else {
@@ -279,19 +776,51 @@ export default function App() {
             vertical={sel.vertical}
             sub={sel.sub}
             values={pvValues}
-            setValue={(k, v) =>
-              setPvValues(prev => ({
-                ...prev,
-                [k]: v,
-              }))
-            }
+            setValue={(k, v) => {
+              markDraftDirty();
+              if (typeof k === "object" && k !== null) {
+                setPvValues(prev => ({
+                  ...prev,
+                  ...k,
+                }));
+              } else {
+                setPvValues(prev => ({
+                  ...prev,
+                  [k]: v,
+                }));
+              }
+            }}
+            onClearAll={() => {
+              markDraftDirty();
+              const cleared = {};
+              Object.keys(STRING_SIZE_DEFAULTS).forEach(key => {
+                const val = STRING_SIZE_DEFAULTS[key];
+                if (Array.isArray(val)) {
+                  cleared[key] = [];
+                } else if (typeof val === 'object' && val !== null) {
+                  cleared[key] = {};
+                } else {
+                  cleared[key] = "";
+                }
+              });
+              setPvValues(cleared);
+              setFiles({
+                moduleDs: null,
+                inverterDs: null,
+                vocCsv: null,
+                batteryDs: null,
+                pcsDs: null,
+                transformerDs: null,
+                pvsystReport: null
+              });
+            }}
             files={files}
-            // files={currentFiles}
             setFile={setFile}
             calc={pvCalc}
             layout={t.formLayout}
             showCalc={t.showCalc}
-            onGenerate={() => setPhase("generating")}
+            onGenerate={() => handleGenerate(pvValues)}
+            onSaveDraft={handleSaveDraft}
           />
         );
       }
@@ -312,7 +841,7 @@ export default function App() {
     );
 
   } else {
-    main = <Welcome user={USER} />;
+    main = <Welcome user={currentUser} onSelectRecent={handleSelectRecent} onCloneReport={handleCloneReport} />;
   }
 
   return (
@@ -327,20 +856,25 @@ export default function App() {
         sel={sel}
         onSelectReport={selectReport}
         onSelectSub={selectSub}
-        user={USER}
+        user={currentUser}
+        onGoDashboard={handleGoDashboard}
 
         query={query}
         setQuery={setQuery}
         collapsed={sidebarCollapsed}
         toggleCollapsed={toggleSidebar}
-        onSignOut={() => {
-          setScreen("signin");
+        onSignOut={async () => {
+          await signOut();
+          resetDraftSync();
+          setCurrentReportId(null);
+          setSourceReportId(null);
 
           setSel({
             vertical: null,
             sub: null,
             report: null,
           });
+          navigate("/sign-in", { replace: true });
         }}
       />
 
@@ -356,18 +890,63 @@ export default function App() {
           crumbs={crumbs}
           theme={theme}
           onToggleTheme={toggleTheme}
+          onGoDashboard={handleGoDashboard}
           right={
             sel.report && phase === "form" ? (
-              <span
-                className="mono"
-                style={{
-                  fontSize: 11.5,
-                  color: "var(--text-3)",
-                  marginRight: 4,
-                }}
-              >
-                {t.formLayout} layout
-              </span>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                {sourceReportId && (
+                  <span
+                    className="mono"
+                    title={`Cloned from report ${sourceReportId}`}
+                    style={{
+                      fontSize: 11.5,
+                      color: "var(--accent-text)",
+                      background: "var(--accent-soft)",
+                      padding: "6px 10px",
+                      borderRadius: 999,
+                      lineHeight: 1,
+                    }}
+                  >
+                    Cloned draft
+                  </span>
+                )}
+                <span
+                  className="mono"
+                  style={{
+                    fontSize: 11.5,
+                    color: draftSync.saving
+                      ? "var(--amber-text)"
+                      : draftSync.dirty
+                      ? "var(--red-text)"
+                      : "var(--green-text)",
+                    background: draftSync.saving
+                      ? "var(--amber-soft)"
+                      : draftSync.dirty
+                      ? "var(--red-soft)"
+                      : "var(--green-soft)",
+                    padding: "6px 10px",
+                    borderRadius: 999,
+                    lineHeight: 1,
+                    marginRight: 4,
+                  }}
+                >
+                  {draftSync.saving
+                    ? "Saving to Supabase..."
+                    : draftSync.dirty
+                    ? "Unsaved changes"
+                    : "Saved to Supabase"}
+                </span>
+                <span
+                  className="mono"
+                  style={{
+                    fontSize: 11.5,
+                    color: "var(--text-3)",
+                    marginRight: 4,
+                  }}
+                >
+                  {t.formLayout} layout
+                </span>
+              </div>
             ) : null
           }
         />

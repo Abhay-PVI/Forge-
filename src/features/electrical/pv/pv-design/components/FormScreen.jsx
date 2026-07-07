@@ -13,6 +13,7 @@ import { buildMinVoltageDegradationTable } from "../forms/utils/buildVoc&IscTabl
 import { extractPvsyst, generateAshrae, } from '../api/extractionApi';
 import { API_BASE_URL } from "../api/apiConfig";
 import { parseModuleExcel } from "../forms/utils/parseModuleExcel";
+import { fetchLastPvReportApi } from "../api/reportsApi";
 
 async function convertPdfToImages(pdfBlob) {
   return new Promise((resolve, reject) => {
@@ -480,7 +481,52 @@ function TabBody({ tab, values, setValue, files, setFile, showErrors }) {
   );
 }
 
-function FormHeader({ report, vertical, values, status, onGenerate }) {
+function AlertBanner({ banner, onClose }) {
+  if (!banner) return null;
+  
+  const bg = banner.type === 'success' ? 'var(--green-soft)' : banner.type === 'warning' ? 'var(--amber-soft)' : 'var(--red-soft)';
+  const color = banner.type === 'success' ? 'var(--green-text)' : banner.type === 'warning' ? 'var(--amber-text)' : 'var(--red-text)';
+  const icon = banner.type === 'success' ? 'check' : banner.type === 'warning' ? 'info' : 'alert';
+  
+  return (
+    <div style={{
+      display: 'flex',
+      alignItems: 'center',
+      gap: 12,
+      padding: '12px 16px',
+      background: bg,
+      color: color,
+      borderRadius: 'var(--r-md)',
+      marginBottom: 20,
+      border: `1px solid ${color}20`,
+      fontSize: 13,
+      lineHeight: 1.4,
+      animation: 'fadeIn 0.2s ease-out',
+      width: '100%',
+      boxSizing: 'border-box'
+    }}>
+      <Icon name={icon} size={16} style={{ color: color, flex: 'none' }} />
+      <div style={{ flex: 1 }}>{banner.text}</div>
+      <button 
+        onClick={onClose} 
+        style={{
+          background: 'transparent',
+          border: 'none',
+          color: color,
+          cursor: 'pointer',
+          padding: 4,
+          display: 'grid',
+          placeItems: 'center',
+          opacity: 0.6
+        }}
+      >
+        <Icon name="x" size={14} />
+      </button>
+    </div>
+  );
+}
+
+function FormHeader({ report, vertical, values, status, onGenerate, onSaveDraft, onLoadLastEntry, onClearAll }) {
   return (
     <div style={{ padding: '22px 32px 18px', borderBottom: '1px solid var(--border)', background: 'var(--surface)' }}>
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
@@ -497,7 +543,17 @@ function FormHeader({ report, vertical, values, status, onGenerate }) {
           </div>
         </div>
         <div style={{ display: 'flex', gap: 8, flex: 'none' }}>
-          <button className="btn btn-ghost btn-sm"><Icon name="copy" size={14} />Save draft</button>
+          {onLoadLastEntry && (
+            <button className="btn btn-ghost btn-sm" onClick={onLoadLastEntry}>
+              <Icon name="download" size={14} />Start from last entry
+            </button>
+          )}
+          {onClearAll && (
+            <button className="btn btn-ghost btn-sm" onClick={onClearAll}>
+              <Icon name="trash" size={14} />Clear all fields
+            </button>
+          )}
+          <button className="btn btn-ghost btn-sm" onClick={() => onSaveDraft && onSaveDraft(values)}><Icon name="copy" size={14} />Save draft</button>
           <button className="btn btn-primary btn-sm" disabled={!status.complete} onClick={onGenerate}>
             <Icon name="zap" size={14} />Generate report
           </button>
@@ -545,18 +601,87 @@ function FormFooter({ step, isLast, status, onBack, onNext, onGenerate }) {
   );
 }
 
-export default function FormScreen({ report, vertical, sub, values, setValue, files, setFile, calc, layout, showCalc, onGenerate, }) {
+export default function FormScreen({ report, vertical, sub, values, setValue, files, setFile, calc, layout, showCalc, onGenerate, onSaveDraft, onClearAll }) {
   const [step, setStep] = useState(0);
   const [showErrors, setShowErrors] = useState(false);
+  const [sourceEntityId, setSourceEntityId] = useState(null);
+  const [banner, setBanner] = useState(null);
   const status = overallStatus(values, files);
   const scrollRef = useRef(null);
 
-  useEffect(() => { setStep(0); setShowErrors(false); }, [report.id]);
+  useEffect(() => { setStep(0); setShowErrors(false); setBanner(null); }, [report.id]);
+
+  const loadLastEntry = async () => {
+    try {
+      setBanner(null);
+      const res = await fetchLastPvReportApi();
+      if (res.success && res.data) {
+        const reportData = res.data;
+        const metadata = reportData.metadata || {};
+        const metadata_json = metadata.metadata_json || {};
+        
+        const inputs = reportData.inputs || {};
+        const details = inputs.details || inputs;
+        
+        const flatPv = {
+          module_make: details.module_manufacturer || "",
+          module_model: details.module_model || "",
+        };
+        
+        const jsonColumns = [
+          "electrical_characteristics",
+          "mechanical_characteristics",
+          "temperature_coefficients",
+          "pvsyst_results",
+          "irradiation_data",
+          "energy_yield",
+          "loss_analysis",
+          "voc_calculations",
+          "isc_calculations",
+          "degradation_tables",
+          "site_conditions",
+        ];
+        
+        jsonColumns.forEach(col => {
+          if (details[col] && typeof details[col] === "object") {
+            Object.entries(details[col]).forEach(([key, val]) => {
+              flatPv[key] = val;
+            });
+          }
+        });
+
+        const mergedValues = {
+          ...metadata_json,
+          ...flatPv
+        };
+
+        // Pre-fill form fields
+        setValue(mergedValues);
+
+        // Store source entity's id separately
+        setSourceEntityId(metadata.id);
+        
+        setBanner({
+          type: "success",
+          text: `Loaded details from last PV entry (Source ID: ${metadata.id}).`
+        });
+      } else {
+        setBanner({
+          type: "warning",
+          text: "No previous entry found."
+        });
+      }
+    } catch (err) {
+      console.error("Error loading last PV entry:", err);
+      setBanner({
+        type: "error",
+        text: `Failed to load last entry: ${err.message}`
+      });
+    }
+  };
 
   const tab = STRING_SIZE_TABS[step];
   const isLast = step === STRING_SIZE_TABS.length - 1;
-
-
 
   const continueNext = () => {
     setShowErrors(false);
@@ -572,7 +697,6 @@ export default function FormScreen({ report, vertical, sub, values, setValue, fi
     const st = tabStatus(tab, values, files);
 
     if (st !== "complete") { setShowErrors(true); return; }
-
 
     // ==========================
     // ASHRAE FETCH
@@ -610,12 +734,6 @@ export default function FormScreen({ report, vertical, sub, values, setValue, fi
       }
     }
 
-    // }
-
-    // const next =  () => {
-    //   const st = tabStatus(tab, values, files);
-
-    //   if (st !== "complete") { setShowErrors(true); return; }
     // ==========================
     // VOC CSV PROCESSING
     // ==========================
@@ -739,7 +857,7 @@ export default function FormScreen({ report, vertical, sub, values, setValue, fi
   if (layout === 'scroll') {
     return (
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-        <FormHeader report={report} vertical={vertical} values={values} status={status} onGenerate={onGenerate} />
+        <FormHeader report={report} vertical={vertical} values={values} status={status} onGenerate={onGenerate} onSaveDraft={onSaveDraft} onLoadLastEntry={loadLastEntry} onClearAll={onClearAll} />
         <div style={{ flex: 1, overflowY: 'auto' }} ref={scrollRef}>
           <div style={{ maxWidth: 1080, margin: '0 auto', padding: '26px 32px 80px', display: 'grid', gridTemplateColumns: showCalc ? '186px 1fr 250px' : '186px 1fr', gap: 28, alignItems: 'start' }}>
             {/* section nav */}
@@ -758,6 +876,7 @@ export default function FormScreen({ report, vertical, sub, values, setValue, fi
             </div>
             {/* all sections */}
             <div style={{ display: 'grid', gap: 30, minWidth: 0 }}>
+              <AlertBanner banner={banner} onClose={() => setBanner(null)} />
               {STRING_SIZE_TABS.map(t => (
                 <section key={t.id} id={'sec_' + t.id} className="card" style={{ padding: 22 }}>
                   <SectionTitle tab={t} />
@@ -786,12 +905,13 @@ export default function FormScreen({ report, vertical, sub, values, setValue, fi
   if (layout === 'split') {
     return (
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-        <FormHeader report={report} vertical={vertical} values={values} status={status} onGenerate={onGenerate} />
+        <FormHeader report={report} vertical={vertical} values={values} status={status} onGenerate={onGenerate} onSaveDraft={onSaveDraft} onLoadLastEntry={loadLastEntry} onClearAll={onClearAll} />
         <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1.05fr 1fr', minHeight: 0 }}>
           {/* form */}
           <div style={{ display: 'flex', flexDirection: 'column', minHeight: 0, borderRight: '1px solid var(--border)' }}>
             <Stepper step={step} setStep={setStep} values={values} files={files} />
             <div style={{ flex: 1, overflowY: 'auto', padding: '22px 28px 24px' }} ref={scrollRef}>
+              <AlertBanner banner={banner} onClose={() => setBanner(null)} />
               <SectionTitle tab={tab} />
               <TabBody tab={tab} values={values} setValue={setValue} files={files} setFile={setFile} showErrors={showErrors} />
             </div>
@@ -806,7 +926,7 @@ export default function FormScreen({ report, vertical, sub, values, setValue, fi
             </div>
             <div style={{ padding: '20px 0', display: 'grid', placeItems: 'start center' }}>
               <div style={{ transform: 'scale(0.82)', transformOrigin: 'top center' }}>
-                <ReportDoc values={values} calc={calc} files={files} mini solarCalcValues={solarCalcValues} />
+                <ReportDoc values={values} calc={calc} files={files} mini solarCalcValues={values?.solarCalcValues} />
               </div>
             </div>
           </div>
@@ -817,13 +937,13 @@ export default function FormScreen({ report, vertical, sub, values, setValue, fi
 
   // ---------- TABBED layout (default) ----------
   return (
-
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-      <FormHeader report={report} vertical={vertical} values={values} status={status} onGenerate={onGenerate} />
+      <FormHeader report={report} vertical={vertical} values={values} status={status} onGenerate={onGenerate} onSaveDraft={onSaveDraft} onLoadLastEntry={loadLastEntry} onClearAll={onClearAll} />
       <Stepper step={step} setStep={setStep} values={values} files={files} />
       <div style={{ flex: 1, overflowY: 'auto' }} ref={scrollRef}>
         <div style={{ maxWidth: 980, margin: '0 auto', padding: '24px 32px 40px', display: 'grid', gridTemplateColumns: '1fr 256px', gap: 28, alignItems: 'start' }}>
           <div className="card fade-in" key={tab.id} style={{ padding: 24, minWidth: 0 }}>
+            <AlertBanner banner={banner} onClose={() => setBanner(null)} />
             <SectionTitle tab={tab} />
             <TabBody tab={tab} values={values} setValue={setValue} files={files} setFile={setFile} showErrors={showErrors} />
           </div>
@@ -835,6 +955,5 @@ export default function FormScreen({ report, vertical, sub, values, setValue, fi
       </div>
       <FormFooter step={step} isLast={isLast} status={status} onBack={() => setStep(step - 1)} onNext={next} onGenerate={onGenerate} />
     </div>
-
   );
 }

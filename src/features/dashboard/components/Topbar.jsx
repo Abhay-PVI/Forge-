@@ -6,7 +6,7 @@ import Icon from "../../../shared/components/Icon";
 //   return <header>Topbar</header>;
 // }
 
-export default function Topbar({ crumbs, right, theme, onToggleTheme }) {
+export default function Topbar({ crumbs, right, theme, onToggleTheme, onGoDashboard }) {
   return (
     <header style={{
       height: 'var(--topbar-h)', flex: 'none', borderBottom: '1px solid var(--border)',

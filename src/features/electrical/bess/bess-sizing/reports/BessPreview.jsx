@@ -47,7 +47,9 @@ export default function BessPreview({ values, calc, files, onBack, onNew }) {
                 </div>
                 <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
                     <button className="btn btn-soft btn-sm" onClick={onNew}><Icon name="plus" size={14} />New report</button>
-                    <button className="btn btn-primary btn-sm"><Icon name="download" size={14} />Download .docx</button>
+                    <button className="btn btn-primary btn-sm" onClick={handleDownload}>
+                        <Icon name="download" size={14} />Download .{selectedFormat}
+                    </button>
                 </div>
             </div>
             <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 320px', minHeight: 0 }}>
@@ -111,10 +113,24 @@ export default function BessPreview({ values, calc, files, onBack, onNew }) {
                                     selectedFormat === "docx"
                                          ? "1px solid var(--accent-line)"
                                          : undefined
-                            }} onClick={() => exportDocx('bess-report', fname)}>
+                            }} onClick={() => setSelectedFormat("docx")}>
                                 .docx
                             </button>
-                            <button className="btn btn-soft btn-sm" style={{ flex: 1 }} onClick={() => exportPdf("bess-report", fname.replace('.docx', '.pdf'), selectedPageSize)}>
+                            <button className="btn btn-soft btn-sm" style={{
+                                flex: 1,
+                                color:
+                                    selectedFormat === "pdf"
+                                         ? "var(--accent-text)"
+                                         : "var(--text-3)",
+                                background:
+                                    selectedFormat === "pdf"
+                                         ? "var(--accent-soft)"
+                                         : "transparent",
+                                border:
+                                    selectedFormat === "pdf"
+                                         ? "1px solid var(--accent-line)"
+                                         : undefined
+                            }} onClick={() => setSelectedFormat("pdf")}>
                                 .pdf
                             </button>
                         </div>
