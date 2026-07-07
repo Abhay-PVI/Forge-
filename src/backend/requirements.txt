@@ -19,3 +19,4 @@ beautifulsoup4
 sqlalchemy
 psycopg2-binary
 supabase
+python-dotenv
