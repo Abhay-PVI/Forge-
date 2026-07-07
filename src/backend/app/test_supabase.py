@@ -30,7 +30,7 @@ def load_env_variables():
                         k, v = line.split("=", 1)
                         k = k.strip()
                         v = v.strip().strip('"').strip("'")
-                        os.environ[k] = v
+                        os.environ.setdefault(k, v)
             loaded = True
             break
             

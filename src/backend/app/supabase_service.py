@@ -37,8 +37,7 @@ def load_env_variables():
                         k = k.strip()
                         v = v.strip().strip('"').strip("'")
                         # .env.local values win — don't overwrite already-set vars
-                        if k not in os.environ:
-                            os.environ[k] = v
+                        os.environ.setdefault(k, v)
             if env_name == ".env.local":
                 # After loading .env.local continue to pick up any missing keys from base files
                 continue
