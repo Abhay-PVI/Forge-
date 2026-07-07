@@ -315,19 +315,32 @@ def auth_sign_up(payload: AuthSignUpRequest):
         if not user:
             return JSONResponse(status_code=500, content={"success": False, "error": "Supabase did not return a created auth user."})
 
-        org_query = supabase_admin.table("organizations").select("id, name").ilike("name", normalized_org).limit(1).execute()
-        if org_query.data:
-            org_id = org_query.data[0]["id"]
-        else:
-            org_insert = supabase_admin.table("organizations").insert({"name": normalized_org}).execute()
-            org_id = org_insert.data[0]["id"]
+        org_id = None
+        try:
+            org_query = supabase_admin.table("organizations").select("id, name").ilike("name", normalized_org).limit(1).execute()
+            if org_query.data:
+                org_id = org_query.data[0]["id"]
+            else:
+                org_insert = supabase_admin.table("organizations").insert({"name": normalized_org}).execute()
+                org_id = org_insert.data[0]["id"]
+        except Exception as org_error:
+            # Sign-up should not fail just because workspace provisioning is misconfigured.
+            # We still create the auth account and let the profile be linked later if needed.
+            print(f"Organization provisioning failed during signup: {org_error}")
 
-        supabase_admin.table("profiles").upsert({
-            "id": user.id,
-            "organization_id": org_id,
-            "role": "member",
-            "full_name": normalized_full_name,
-        }, on_conflict="id").execute()
+        try:
+            profile_payload = {
+                "id": user.id,
+                "role": "member",
+                "full_name": normalized_full_name,
+            }
+            if org_id:
+                profile_payload["organization_id"] = org_id
+
+            supabase_admin.table("profiles").upsert(profile_payload, on_conflict="id").execute()
+        except Exception as profile_error:
+            # The auth user already exists; keep signup successful and log the linkage issue.
+            print(f"Profile linkage failed during signup: {profile_error}")
 
         return {
             "success": True,
