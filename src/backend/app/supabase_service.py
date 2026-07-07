@@ -66,8 +66,46 @@ def _load_or_create_profile(user_id: str, email: str | None, full_name_hint: str
 
     if profile_response.data:
         profile = profile_response.data[0]
+        organization_id = profile.get("organization_id")
+        if organization_id:
+            return {
+                "organization_id": organization_id,
+                "role": profile.get("role") or "member",
+                "full_name": profile.get("full_name") or full_name_hint or email or "User",
+            }
+
+        # Some newly created auth users are left with a profile row but no
+        # workspace assignment yet. Repair that here so login can continue.
+        workspace_label = (full_name_hint or email or "User").strip()
+        if "@" in workspace_label:
+            workspace_label = workspace_label.split("@", 1)[0]
+        workspace_label = workspace_label.split()[0] if workspace_label.split() else "User"
+        default_org_name = f"{workspace_label}'s Workspace"
+
+        org_id = None
+        try:
+            orgs = supabase_admin.table("organizations").select("id").eq("name", default_org_name).limit(1).execute()
+            if orgs.data:
+                org_id = orgs.data[0]["id"]
+            else:
+                new_org = supabase_admin.table("organizations").insert({"name": default_org_name}).execute()
+                org_id = new_org.data[0]["id"]
+        except Exception as e:
+            print(f"Error creating fallback organization for existing profile: {e}")
+
+        if org_id:
+            try:
+                supabase_admin.table("profiles").upsert({
+                    "id": user_id,
+                    "organization_id": org_id,
+                    "role": profile.get("role") or "member",
+                    "full_name": profile.get("full_name") or full_name_hint or email or "User",
+                }, on_conflict="id").execute()
+            except Exception as e:
+                print(f"Error repairing incomplete profile: {e}")
+
         return {
-            "organization_id": profile.get("organization_id"),
+            "organization_id": org_id,
             "role": profile.get("role") or "member",
             "full_name": profile.get("full_name") or full_name_hint or email or "User",
         }

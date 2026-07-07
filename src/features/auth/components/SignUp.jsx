@@ -20,7 +20,7 @@ export default function SignUp({
     event.preventDefault();
     setLocalError("");
 
-    if (!fullName.trim() || !email.trim() || !password || !confirmPassword) {
+    if (!fullName.trim() || !email.trim() || !organizationName.trim() || !password || !confirmPassword) {
       setLocalError("Please complete all fields.");
       return;
     }
@@ -137,7 +137,13 @@ export default function SignUp({
           <form onSubmit={submit} style={{ display: "grid", gap: 14 }}>
             <Field label="Full name" id="signup-name" value={fullName} onChange={setFullName} placeholder="Aman Sharma" autoComplete="name" />
             <Field label="Email" id="signup-email" type="email" value={email} onChange={setEmail} placeholder="you@company.com" autoComplete="email" />
-            <Field label="Organization name (optional)" id="signup-org" value={organizationName} onChange={setOrganizationName} placeholder="PVinsight Energy" autoComplete="organization" />
+            <SelectField
+              label="Organization"
+              id="signup-org"
+              value={organizationName}
+              onChange={setOrganizationName}
+              options={["Electrical", "Civil", "Structural"]}
+            />
             <Field label="Password" id="signup-password" type="password" value={password} onChange={setPassword} placeholder="Create a password" autoComplete="new-password" />
             <Field label="Confirm password" id="signup-confirm" type="password" value={confirmPassword} onChange={setConfirmPassword} placeholder="Repeat your password" autoComplete="new-password" />
 
@@ -184,6 +190,27 @@ function Field({ label, id, value, onChange, placeholder, type = "text", autoCom
         placeholder={placeholder}
         autoComplete={autoComplete}
       />
+    </div>
+  );
+}
+
+function SelectField({ label, id, value, onChange, options }) {
+  return (
+    <div>
+      <label className="field-label" htmlFor={id}>{label}</label>
+      <select
+        id={id}
+        className="input"
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+      >
+        <option value="">Select an option</option>
+        {options.map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }
