@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Icon from "../../../shared/components/Icon";
 import ReportRow from "./ReportRow";
-import { fetchReportsApi, fetchReportDetailApi } from "../../electrical/pv/pv-design/api/reportsApi";
+import { fetchReportsApi, fetchReportDetailApi, deleteReportApi } from "../../electrical/pv/pv-design/api/reportsApi";
 
 const DRAFT_STATUSES = ['draft', 'generating'];
 
@@ -56,6 +56,24 @@ export default function Welcome({ user, onSelectRecent, onCloneReport }) {
     }
   };
 
+  const handleDelete = async (report) => {
+    if (!report.id) return;
+    const confirmDelete = window.confirm(`Are you sure you want to permanently delete "${report.report_title || 'Unnamed Report'}"?`);
+    if (!confirmDelete) return;
+
+    try {
+      const res = await deleteReportApi(report.id);
+      if (res.success) {
+        setReports(prev => prev.filter(r => r.id !== report.id));
+      } else {
+        alert("Failed to delete report: " + (res.error || "Unknown error"));
+      }
+    } catch (err) {
+      console.error("Error deleting report:", err);
+      alert("Error deleting report: " + err.message);
+    }
+  };
+
   return (
     <div style={{ flex: 1, overflowY: 'auto' }}>
       <div style={{ maxWidth: 880, margin: '0 auto', padding: '52px 40px 60px' }} className="fade-up">
@@ -79,14 +97,28 @@ export default function Welcome({ user, onSelectRecent, onCloneReport }) {
               key={r.id}
               report={r}
               action={
-                <button
-                  className="btn btn-soft btn-sm"
-                  disabled={cloningId === r.id}
-                  onClick={(e) => { e.stopPropagation(); handleClone(r); }}
-                >
-                  <Icon name="copy" size={13} />
-                  {cloningId === r.id ? 'Cloning...' : 'Clone'}
-                </button>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <button
+                    className="btn btn-soft btn-sm"
+                    disabled={cloningId === r.id}
+                    onClick={(e) => { e.stopPropagation(); handleClone(r); }}
+                  >
+                    <Icon name="copy" size={13} />
+                    {cloningId === r.id ? 'Cloning...' : 'Clone'}
+                  </button>
+                  <button
+                    className="btn btn-soft btn-sm"
+                    style={{
+                      color: 'var(--red-text, #ef4444)',
+                      background: 'var(--red-soft, rgba(239, 68, 68, 0.08))',
+                      border: 'none'
+                    }}
+                    onClick={(e) => { e.stopPropagation(); handleDelete(r); }}
+                  >
+                    <Icon name="trash" size={13} />
+                    Delete
+                  </button>
+                </div>
               }
             />
           ))}
@@ -100,7 +132,25 @@ export default function Welcome({ user, onSelectRecent, onCloneReport }) {
             </div>
           )}
           {drafts.map((r) => (
-            <ReportRow key={r.id} report={r} onClick={() => handleResume(r)} />
+            <ReportRow
+              key={r.id}
+              report={r}
+              onClick={() => handleResume(r)}
+              action={
+                <button
+                  className="btn btn-soft btn-sm"
+                  style={{
+                    color: 'var(--red-text, #ef4444)',
+                    background: 'var(--red-soft, rgba(239, 68, 68, 0.08))',
+                    border: 'none'
+                  }}
+                  onClick={(e) => { e.stopPropagation(); handleDelete(r); }}
+                >
+                  <Icon name="trash" size={13} />
+                  Delete
+                </button>
+              }
+            />
           ))}
         </div>
 

@@ -102,3 +102,14 @@ export async function fetchLastReportApi(reportType, accessToken = null) {
   }
   return await response.json();
 }
+
+export async function deleteReportApi(reportId, accessToken = null) {
+  const response = await fetch(`${API_BASE_URL}/api/reports/${reportId}`, {
+    method: "DELETE",
+    headers: buildAuthHeaders(false, accessToken),
+  });
+  if (!response.ok) {
+    throw new Error(`Failed to delete report: ${response.status}`);
+  }
+  return await response.json();
+}

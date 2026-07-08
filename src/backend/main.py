@@ -707,3 +707,27 @@ def get_report_detail(report_id: str, current_user: dict = Depends(get_current_u
     except Exception as e:
         return JSONResponse(status_code=500, content={"success": False, "error": str(e)})
 
+@app.delete("/api/reports/{report_id}")
+def delete_report(report_id: str, current_user: dict = Depends(get_current_user)):
+    try:
+        user_id = current_user["id"]
+        org_id = current_user.get("organization_id")
+        if not org_id:
+            return JSONResponse(status_code=400, content={"success": False, "error": "Authenticated user is missing an organization."})
+
+        # Check if the report exists and belongs to the user
+        existing = supabase_admin.table("reports").select("created_by, organization_id").eq("id", report_id).execute()
+        if not existing.data:
+            return JSONResponse(status_code=404, content={"success": False, "error": "Report not found."})
+            
+        if existing.data[0]["created_by"] != user_id or existing.data[0]["organization_id"] != org_id:
+            return JSONResponse(status_code=403, content={"success": False, "error": "You do not own this report."})
+
+        # Perform cascading delete
+        supabase_admin.table("reports").delete().eq("id", report_id).execute()
+        
+        return {"success": True, "message": "Report deleted successfully."}
+    except Exception as e:
+        traceback.print_exc()
+        return JSONResponse(status_code=500, content={"success": False, "error": str(e)})
+
