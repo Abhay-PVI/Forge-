@@ -131,8 +131,8 @@ export function AuthProvider({ children }) {
     return nextState;
   };
 
-  const signUp = async ({ fullName, email, organizationName, password }) => {
-    const res = await signUpApi({ fullName, email, organizationName, password });
+  const signUp = async ({ fullName, email, department, password }) => {
+    const res = await signUpApi({ fullName, email, department, password });
     const nextSession = res.session || null;
     let nextUser = res.user || null;
 

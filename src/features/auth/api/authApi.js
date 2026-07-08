@@ -35,16 +35,13 @@ export function signInApi(email, password) {
   });
 }
 
-export function signUpApi({ fullName, email, organizationName, password }) {
+export function signUpApi({ fullName, email, department, password }) {
   const payload = {
     full_name: fullName,
     email,
     password,
+    department,
   };
-
-  if (organizationName && organizationName.trim()) {
-    payload.organization_name = organizationName.trim();
-  }
 
   return authFetch("/api/auth/sign-up", {
     method: "POST",

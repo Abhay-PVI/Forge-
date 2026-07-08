@@ -304,8 +304,12 @@ export default function BessFormScreen({ report, vertical, sub, values, setValue
         const reportData = res.data;
         const metadata = reportData.metadata || {};
         const metadata_json = metadata.metadata_json || {};
+        const inputs = reportData.inputs || {};
         
-        setValue(metadata_json);
+        setValue({
+          ...metadata_json,
+          ...inputs
+        });
         
         setBanner({
           type: "success",

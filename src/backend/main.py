@@ -30,6 +30,30 @@ from pdf_utils import generate_pdf_from_html, generate_pdf_with_toc
 
 app = FastAPI()
 
+@app.get("/api/diag-db")
+def diag_db():
+    try:
+        orgs = supabase_admin.table("organizations").select("*").execute()
+        profiles = supabase_admin.table("profiles").select("*").execute()
+        org_id = get_default_organization_id()
+        
+        test_update = None
+        if profiles.data and org_id:
+            try:
+                test_update = supabase_admin.table("profiles").update({"organization_id": org_id}).eq("id", profiles.data[0]["id"]).execute()
+                test_update = {"success": True, "data": test_update.data}
+            except Exception as e:
+                test_update = {"success": False, "error": str(e)}
+                
+        return {
+            "organizations": orgs.data,
+            "profiles": profiles.data,
+            "default_org_id": org_id,
+            "test_update": test_update
+        }
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
 from pydantic import BaseModel
 
 class AshraeRequest(BaseModel):
@@ -226,7 +250,7 @@ async def generate_pdf_with_toc_endpoint(payload: dict):
 
 from typing import Optional
 from fastapi import Header, HTTPException, Depends
-from app.supabase_service import supabase_admin, get_current_user
+from app.supabase_service import supabase_admin, get_current_user, get_default_organization_id, DEFAULT_ORGANIZATION_NAME
 
 
 # TODO: replace with get_current_user (supabase_service.py) once real Supabase
@@ -244,7 +268,7 @@ class AuthSignInRequest(BaseModel):
 class AuthSignUpRequest(BaseModel):
     full_name: str
     email: str
-    organization_name: str = ""
+    department: str
     password: str
 
 
@@ -295,10 +319,12 @@ def auth_sign_up(payload: AuthSignUpRequest):
     try:
         normalized_full_name = payload.full_name.strip()
         normalized_email = payload.email.strip()
-        normalized_org = (payload.organization_name or "").strip() or _derive_default_organization_name(
-            normalized_full_name,
-            normalized_email,
-        )
+        normalized_department = payload.department.strip()
+
+        # Get the fixed shared default organization
+        org_id = get_default_organization_id()
+        if not org_id:
+            raise Exception("Failed to retrieve or create default organization.")
 
         auth_res = supabase_admin.auth.sign_up({
             "email": normalized_email,
@@ -306,7 +332,7 @@ def auth_sign_up(payload: AuthSignUpRequest):
             "options": {
                 "data": {
                     "full_name": normalized_full_name,
-                    "organization_name": normalized_org,
+                    "department": normalized_department,
                 }
             }
         })
@@ -315,28 +341,14 @@ def auth_sign_up(payload: AuthSignUpRequest):
         if not user:
             return JSONResponse(status_code=500, content={"success": False, "error": "Supabase did not return a created auth user."})
 
-        org_id = None
-        try:
-            org_query = supabase_admin.table("organizations").select("id, name").ilike("name", normalized_org).limit(1).execute()
-            if org_query.data:
-                org_id = org_query.data[0]["id"]
-            else:
-                org_insert = supabase_admin.table("organizations").insert({"name": normalized_org}).execute()
-                org_id = org_insert.data[0]["id"]
-        except Exception as org_error:
-            # Sign-up should not fail just because workspace provisioning is misconfigured.
-            # We still create the auth account and let the profile be linked later if needed.
-            print(f"Organization provisioning failed during signup: {org_error}")
-
         try:
             profile_payload = {
                 "id": user.id,
                 "role": "member",
                 "full_name": normalized_full_name,
+                "department": normalized_department,
+                "organization_id": org_id,
             }
-            if org_id:
-                profile_payload["organization_id"] = org_id
-
             supabase_admin.table("profiles").upsert(profile_payload, on_conflict="id").execute()
         except Exception as profile_error:
             # The auth user already exists; keep signup successful and log the linkage issue.
@@ -351,10 +363,11 @@ def auth_sign_up(payload: AuthSignUpRequest):
                 "organization_id": org_id,
                 "role": "member",
                 "full_name": normalized_full_name,
+                "department": normalized_department,
             },
             "organization": {
                 "id": org_id,
-                "name": normalized_org,
+                "name": DEFAULT_ORGANIZATION_NAME,
             },
         }
     except Exception as e:

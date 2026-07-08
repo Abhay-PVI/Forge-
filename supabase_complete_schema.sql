@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS profiles (
     organization_id UUID REFERENCES organizations(id) ON DELETE SET NULL,
     role TEXT DEFAULT 'member' CHECK (role IN ('admin', 'member')),
     full_name TEXT,
+    department TEXT,
     updated_at TIMESTAMPTZ
 );
 
@@ -254,12 +255,13 @@ CREATE TABLE IF NOT EXISTS grounding_reports (
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-  INSERT INTO public.profiles (id, organization_id, role, full_name, updated_at)
+  INSERT INTO public.profiles (id, organization_id, role, full_name, department, updated_at)
   VALUES (
     new.id,
     NULL,
     'member',
     COALESCE(new.raw_user_meta_data->>'full_name', 'New Engineering User'),
+    NULLIF(new.raw_user_meta_data->>'department', ''),
     now()
   );
   RETURN NEW;

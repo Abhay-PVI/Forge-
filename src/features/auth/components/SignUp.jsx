@@ -11,7 +11,7 @@ export default function SignUp({
 }) {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
-  const [organizationName, setOrganizationName] = useState("");
+  const [department, setDepartment] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [localError, setLocalError] = useState("");
@@ -20,7 +20,7 @@ export default function SignUp({
     event.preventDefault();
     setLocalError("");
 
-    if (!fullName.trim() || !email.trim() || !organizationName.trim() || !password || !confirmPassword) {
+    if (!fullName.trim() || !email.trim() || !department.trim() || !password || !confirmPassword) {
       setLocalError("Please complete all fields.");
       return;
     }
@@ -38,7 +38,7 @@ export default function SignUp({
     await onSubmit?.({
       fullName: fullName.trim(),
       email: email.trim(),
-      organizationName: organizationName.trim(),
+      department: department.trim(),
       password,
     });
   };
@@ -88,16 +88,16 @@ export default function SignUp({
             Engineering Report Builder
           </div>
           <h1 style={{ fontSize: 38, lineHeight: 1.12, fontWeight: 600, letterSpacing: "-0.02em", margin: "14px 0 18px", maxWidth: 460 }}>
-            Build your workspace with the right organization from day one.
+            Build your workspace with the right discipline from day one.
           </h1>
           <p style={{ fontSize: 15, lineHeight: 1.6, color: "oklch(0.86 0.01 220)", maxWidth: 430, margin: 0 }}>
-            New engineers and teams can create an account, join or create an organization, and start generating reports in a consistent workflow.
+            New engineers and teams can create an account, choose a discipline, and start generating reports in a consistent workflow.
           </p>
         </div>
 
         <div style={{ position: "relative", display: "flex", gap: 28 }}>
           <Stat value="1" label="Account per engineer" />
-          <Stat value="1" label="Organization per team" />
+          <Stat value="1" label="Fixed workspace" />
           <Stat value="0" label="Manual setup" />
         </div>
       </div>
@@ -138,10 +138,10 @@ export default function SignUp({
             <Field label="Full name" id="signup-name" value={fullName} onChange={setFullName} placeholder="Aman Sharma" autoComplete="name" />
             <Field label="Email" id="signup-email" type="email" value={email} onChange={setEmail} placeholder="you@company.com" autoComplete="email" />
             <SelectField
-              label="Organization"
-              id="signup-org"
-              value={organizationName}
-              onChange={setOrganizationName}
+              label="Department"
+              id="signup-department"
+              value={department}
+              onChange={setDepartment}
               options={["Electrical", "Civil", "Structural"]}
             />
             <Field label="Password" id="signup-password" type="password" value={password} onChange={setPassword} placeholder="Create a password" autoComplete="new-password" />

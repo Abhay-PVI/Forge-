@@ -59,9 +59,26 @@ supabase_admin: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 security = HTTPBearer()
 
+DEFAULT_ORGANIZATION_NAME = os.getenv("DEFAULT_ORGANIZATION_NAME", "PV-Insight")
+
+
+def get_default_organization_id() -> str | None:
+    orgs = supabase_admin.table("organizations").select("id").ilike("name", DEFAULT_ORGANIZATION_NAME).limit(1).execute()
+    if orgs.data:
+        return orgs.data[0]["id"]
+
+    try:
+        new_org = supabase_admin.table("organizations").insert({"name": DEFAULT_ORGANIZATION_NAME}).execute()
+        if new_org.data:
+            return new_org.data[0]["id"]
+    except Exception as e:
+        print(f"Error creating default organization: {e}")
+
+    return None
+
 def _load_or_create_profile(user_id: str, email: str | None, full_name_hint: str | None = None):
     profile_response = supabase_admin.table("profiles").select(
-        "organization_id, role, full_name"
+        "organization_id, role, full_name, department"
     ).eq("id", user_id).limit(1).execute()
 
     if profile_response.data:
@@ -72,26 +89,12 @@ def _load_or_create_profile(user_id: str, email: str | None, full_name_hint: str
                 "organization_id": organization_id,
                 "role": profile.get("role") or "member",
                 "full_name": profile.get("full_name") or full_name_hint or email or "User",
+                "department": profile.get("department"),
             }
 
         # Some newly created auth users are left with a profile row but no
         # workspace assignment yet. Repair that here so login can continue.
-        workspace_label = (full_name_hint or email or "User").strip()
-        if "@" in workspace_label:
-            workspace_label = workspace_label.split("@", 1)[0]
-        workspace_label = workspace_label.split()[0] if workspace_label.split() else "User"
-        default_org_name = f"{workspace_label}'s Workspace"
-
-        org_id = None
-        try:
-            orgs = supabase_admin.table("organizations").select("id").eq("name", default_org_name).limit(1).execute()
-            if orgs.data:
-                org_id = orgs.data[0]["id"]
-            else:
-                new_org = supabase_admin.table("organizations").insert({"name": default_org_name}).execute()
-                org_id = new_org.data[0]["id"]
-        except Exception as e:
-            print(f"Error creating fallback organization for existing profile: {e}")
+        org_id = get_default_organization_id()
 
         if org_id:
             try:
@@ -100,6 +103,7 @@ def _load_or_create_profile(user_id: str, email: str | None, full_name_hint: str
                     "organization_id": org_id,
                     "role": profile.get("role") or "member",
                     "full_name": profile.get("full_name") or full_name_hint or email or "User",
+                    "department": profile.get("department"),
                 }, on_conflict="id").execute()
             except Exception as e:
                 print(f"Error repairing incomplete profile: {e}")
@@ -108,16 +112,12 @@ def _load_or_create_profile(user_id: str, email: str | None, full_name_hint: str
             "organization_id": org_id,
             "role": profile.get("role") or "member",
             "full_name": profile.get("full_name") or full_name_hint or email or "User",
+            "department": profile.get("department"),
         }
 
     org_id = None
     try:
-        orgs = supabase_admin.table("organizations").select("id").limit(1).execute()
-        if orgs.data:
-            org_id = orgs.data[0]["id"]
-        else:
-            new_org = supabase_admin.table("organizations").insert({"name": "Default Org"}).execute()
-            org_id = new_org.data[0]["id"]
+        org_id = get_default_organization_id()
     except Exception as e:
         print(f"Error finding fallback organization: {e}")
 
@@ -126,6 +126,7 @@ def _load_or_create_profile(user_id: str, email: str | None, full_name_hint: str
         "organization_id": org_id,
         "role": "member",
         "full_name": full_name_hint or email or "User",
+        "department": None,
     }
 
     try:
@@ -137,6 +138,7 @@ def _load_or_create_profile(user_id: str, email: str | None, full_name_hint: str
         "organization_id": org_id,
         "role": "member",
         "full_name": profile_payload["full_name"],
+        "department": profile_payload["department"],
     }
 
 # 2. Dependency: Validate JWT and return user authentication context
@@ -162,31 +164,26 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Security(
             pass
         
         if not org_id:
-            try:
-                # Query first organization in the DB
-                orgs = supabase_admin.table("organizations").select("id").limit(1).execute()
-                if orgs.data:
-                    org_id = orgs.data[0]["id"]
-                else:
-                    new_org = supabase_admin.table("organizations").insert({"name": "Default Dev Org"}).execute()
-                    org_id = new_org.data[0]["id"]
-                
-                # Upsert profile for this test user
-                supabase_admin.table("profiles").upsert({
-                    "id": test_user_id,
-                    "organization_id": org_id,
-                    "role": role,
-                    "full_name": full_name,
-                }, on_conflict="id").execute()
-            except Exception as e:
-                print(f"Error establishing fallback organization for dev bypass: {e}")
-        
+            org_id = get_default_organization_id()
+            if org_id:
+                try:
+                    # Upsert profile for this test user
+                    supabase_admin.table("profiles").upsert({
+                        "id": test_user_id,
+                        "organization_id": org_id,
+                        "role": role,
+                        "full_name": full_name,
+                    }, on_conflict="id").execute()
+                except Exception as e:
+                    print(f"Error establishing fallback organization for dev bypass: {e}")
+
         return {
             "id": test_user_id,
             "email": "forge-test-user@pvinsight.local",
             "organization_id": org_id,
             "role": role,
             "full_name": full_name,
+            "department": None,
         }
 
     try:
@@ -211,6 +208,7 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Security(
             "organization_id": profile.get("organization_id"),
             "role": profile.get("role") or "member",
             "full_name": profile.get("full_name"),
+            "department": profile.get("department") or user_metadata.get("department"),
         }
     except Exception as e:
         raise HTTPException(

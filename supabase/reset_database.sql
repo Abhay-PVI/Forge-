@@ -1,3 +1,25 @@
+-- ============================================================================
+-- FORGE DATABASE WIPE & FRESH REBUILD SCRIPT (CONSOLIDATED MIGRATIONS)
+-- ============================================================================
+
+-- 1. DANGER: WIPE EVERYTHING IN THE SCHEMA
+DROP SCHEMA IF EXISTS public CASCADE;
+CREATE SCHEMA public;
+
+-- Grant standard permissions back
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO anon;
+GRANT ALL ON SCHEMA public TO authenticated;
+GRANT ALL ON SCHEMA public TO service_role;
+
+-- Set default privileges for future objects created in the schema
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO postgres, anon, authenticated, service_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON FUNCTIONS TO postgres, anon, authenticated, service_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO postgres, anon, authenticated, service_role;
+
+-- 2. CLEAR ALL AUTH USERS (Allows starting fresh with signups)
+TRUNCATE auth.users CASCADE;
+
 -- 3. CORE SCHEMAS
 
 -- 3.1 Organizations Table (Multi-Tenancy Root)

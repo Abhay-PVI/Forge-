@@ -66,7 +66,7 @@ export default function App() {
           .join("")
           .toUpperCase()
           || USER.initials,
-        role: authUser.role || USER.role,
+        role: authUser.department || authUser.role || USER.role,
         email: authUser.email || "",
       }
     : USER;
@@ -366,7 +366,8 @@ export default function App() {
         "pv-design": "pv",
         "bess-sizing": "battery",
         "bess-ampacity": "cable",
-        "bess-grounding": "grounding"
+        "bess-grounding": "grounding",
+        "hv-dbr": "hv-dbr"
       };
 
       const reportType = typeMap[sel.report?.id] || "pv";

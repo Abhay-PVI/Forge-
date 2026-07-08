@@ -50,7 +50,15 @@ export async function saveReportApi({ report_id, report_type, document_no, revis
     })
   });
   if (!response.ok) {
-    throw new Error(`Failed to save report: ${response.status}`);
+    const text = await response.text();
+    let detail = text;
+    try {
+      const parsed = text ? JSON.parse(text) : null;
+      detail = parsed?.error || parsed?.detail || text;
+    } catch {
+      // keep raw text
+    }
+    throw new Error(detail ? `Failed to save report: ${response.status} - ${detail}` : `Failed to save report: ${response.status}`);
   }
   return await response.json();
 }
