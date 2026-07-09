@@ -111,10 +111,10 @@ export default function ReportDoc({ values = {}, calc = {}, files = {}, solarCal
 
     degradationRows.push(`
     <tr>
-      <td>${degradationData[`year${year}`]}</td>
-      <td>${degradationData[`year${year}_min`]}</td>
-      <td>${degradationData[`year${year}_deg`]}</td>
-      <td>${degradationData[`year${year}_after`]}</td>
+      <td style="text-align: center;">${degradationData[`year${year}`]}</td>
+      <td style="text-align: center;">${degradationData[`year${year}_min`]}</td>
+      <td style="text-align: center;">${degradationData[`year${year}_deg`]}</td>
+      <td style="text-align: center;">${degradationData[`year${year}_after`]}</td>
     </tr>
   `);
   }

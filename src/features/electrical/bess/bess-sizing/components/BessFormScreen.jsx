@@ -60,17 +60,7 @@ function overallStatus(values, files) {
 }
 
 function docNumber(values) {
-  if (!values) {
-    return 'PVI-BESS-XXX-DBR-R0';
-  }
-
-  const code = (values.projectCode || 'XXX')
-    .toUpperCase()
-    .replace(/\s/g, '');
-
-  const rev = values.revision || 'R0';
-
-  return `PVI-BESS-${code}-DBR-${rev}`;
+  return '807004A-DE3-04000';
 }
 
 function StatusDot({ status }) {
@@ -132,12 +122,23 @@ function TabBody({ tab, values, setValue, files, setFile, showErrors }) {
               <h3 style={{ fontSize: 12.5, fontWeight: 600, margin: 0, fontFamily: 'var(--mono)', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-2)' }}>{group.title}</h3>
               <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px 20px' }}>
-              {group.fields.map((field) => (
-                <div key={field.key} style={{ gridColumn: field.type === 'textarea' ? '1 / -1' : 'auto' }}>
-                  <Field field={field} value={values[field.key]} onChange={(value) => setValue(field.key, value)} error={errFor(field)} />
-                </div>
-              ))}
+            <div style={{ display: 'grid', gridTemplateColumns: (group.title.includes('EGC') || group.title.includes('Auxiliary Cables')) ? 'repeat(3, 1fr)' : 'repeat(2, 1fr)', gap: '16px 20px' }}>
+              {group.fields.map((field, index) => {
+                if (field.type === 'subtitle') {
+                  return (
+                    <div key={field.key} style={{ gridColumn: '1 / -1', marginTop: index === 0 ? 0 : 16, marginBottom: 4 }}>
+                      <div style={{ fontSize: 12.5, fontWeight: 600, color: 'var(--text-1)', paddingBottom: 4, borderBottom: '1px solid var(--border-subtle)' }}>
+                        {field.label}
+                      </div>
+                    </div>
+                  );
+                }
+                return (
+                  <div key={field.key} style={{ gridColumn: field.type === 'textarea' ? '1 / -1' : 'auto' }}>
+                    <Field field={field} value={values[field.key]} onChange={(value) => setValue(field.key, value)} error={errFor(field)} />
+                  </div>
+                );
+              })}
             </div>
           </div>
         ))}
@@ -146,11 +147,22 @@ function TabBody({ tab, values, setValue, files, setFile, showErrors }) {
   } else if (tab.fields) {
     fieldsContent = (
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px 20px' }}>
-        {tab.fields.map((field) => (
-          <div key={field.key} style={{ gridColumn: field.type === 'textarea' ? '1 / -1' : 'auto' }}>
-            <Field field={field} value={values[field.key]} onChange={(value) => setValue(field.key, value)} error={errFor(field)} />
-          </div>
-        ))}
+        {tab.fields.map((field, index) => {
+          if (field.type === 'subtitle') {
+            return (
+              <div key={field.key} style={{ gridColumn: '1 / -1', marginTop: index === 0 ? 0 : 16, marginBottom: 4 }}>
+                <div style={{ fontSize: 12.5, fontWeight: 600, color: 'var(--text-1)', paddingBottom: 4, borderBottom: '1px solid var(--border-subtle)' }}>
+                  {field.label}
+                </div>
+              </div>
+            );
+          }
+          return (
+            <div key={field.key} style={{ gridColumn: field.type === 'textarea' ? '1 / -1' : 'auto' }}>
+              <Field field={field} value={values[field.key]} onChange={(value) => setValue(field.key, value)} error={errFor(field)} />
+            </div>
+          );
+        })}
       </div>
     );
   }

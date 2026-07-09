@@ -1,4 +1,5 @@
 import coverImage from "../../../assets/report-cover.jpg";
+import bessCoverImage from "../../../assets/bess-cover.jpg";
 import pvLogo from "../../../assets/PV insight Logo.png";
 import defaultClientLogo from "../../../assets/signal Energy.png";
 
@@ -34,7 +35,8 @@ export function buildReportMeta(values = {}, report = {}) {
       values.documentNumber || "",
 
     COVER_IMAGE:
-      values.coverImage || coverImage,
+      values.coverImage ||
+      ((values.bessManufacturer || values.noOfPCS || report?.id?.includes('battery') || report?.vertical === 'battery') ? bessCoverImage : coverImage),
 
     PV_LOGO:
       values.pvLogo || pvLogo,

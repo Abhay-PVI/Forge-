@@ -22,6 +22,7 @@ import ashraeTableTemplate from "../../../../../backend/Ashrae/ASHARE.html?raw";
 console.log(ashraeTableTemplate);
 
 import Logo from "../../../../../shared/components/Logo";
+import { buildReportMeta } from "../../../../../shared/reports/buildReportMeta";
 
 const TODAY = new Date().toLocaleDateString("en-GB");
 
@@ -32,7 +33,7 @@ function V(value, fallback = "—") {
 }
 
 function docNumber(values) {
-  return `${values?.projectCode || "SH2"}-STR-${values?.revision || "R0"}`;
+  return '807004A-DE3-04000';
 }
 
 function DocPage({ children }) {
@@ -83,11 +84,38 @@ export default function BessReportDoc({ values = {}, files = {} }) {
   const safeFiles = files;
 
 
+  // Combine aux cable parts (Core No, Size, Material) into single fields for the report template
+  const compiledAuxCables = {};
+  for (let i = 1; i <= 9; i++) {
+    const core = values[`auxCable${i}CoreNo`]?.trim();
+    const size = values[`auxCable${i}Size`]?.trim();
+    const mat = values[`auxCable${i}Material`]?.trim();
+    if (core || size || mat) {
+      compiledAuxCables[`auxCable${i}`] = [core, size, mat].filter(Boolean).join(", ");
+    }
+  }
+
+  const reportMeta = buildReportMeta({
+    ...values,
+    reportTitle: "Design Basis Report - Bess Electrical",
+    documentNumber: "807004A-DE3-04000",
+  });
+
   // 1. Fill the BESS report body template to resolve its placeholders first
   const initialValues = {
     ...values,
+    ...compiledAuxCables,
+    ...reportMeta,
+    reportTitle: "Design Basis Report - Bess Electrical",
+    documentNo: "807004A-DE3-04000",
+    preparedDate: new Date().toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' }),
+    groundingSoftware: "WinIGS",
+    groundConductorBess: "500 KCMIL Cu",
+    groundConductorPcs: "600 KCMIL Cu",
+    groundConductorAux: "#4/0 AWG Cu",
+    groundConductorMisc: "#6 AWG Cu",
     ASHRAE_TABLE: ashraeTableTemplate,
-    REPORT_NAME: "BESS Design Basis Report",
+    REPORT_NAME: "BESS Design Basis Report - Bess Electrical",
   };
   const bodyHtml = fillTemplate(template, initialValues);
 

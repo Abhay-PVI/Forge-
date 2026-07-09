@@ -8,11 +8,11 @@ export function buildVocTable(summary = [], allTimeMax) {
 
   return `
     <table border="1" style="border-collapse: collapse; text-align: center; width: 100%;">
-      <thead style="background-color: #ffffff;">
+      <thead style="background-color: #ffffff; display: table-header-group;">
         <tr>
-          <th>Year</th>
-          <th>Max Voltage (V)</th>
-          <th>Min Voltage (V)</th>
+          <th style="width: 33.33%; text-align: center;">Year</th>
+          <th style="width: 33.33%; text-align: center;">Max Voltage (V)</th>
+          <th style="width: 33.33%; text-align: center;">Min Voltage (V)</th>
         </tr>
       </thead>
       <tbody>
@@ -26,9 +26,9 @@ export function buildVocTable(summary = [], allTimeMax) {
 
           return `
             <tr>
-              <td style="${cellStyle}">${row.year}</td>
-              <td style="${cellStyle}">${row.maxVoltage}${badge}</td>
-              <td style="${cellStyle}">${row.minVoltage}</td>
+              <td style="${cellStyle} text-align: center;">${row.year}</td>
+              <td style="${cellStyle} text-align: center;">${row.maxVoltage}${badge}</td>
+              <td style="${cellStyle} text-align: center;">${row.minVoltage}</td>
             </tr>
           `;
         })
@@ -46,35 +46,25 @@ export function buildIscTable(summary = []) {
   const peakAvg = summary.length
     ? summary.reduce( (max, row) => (row.avg > max ? row.avg : max), -Infinity ) : null;
 
-  return `
-    <tr>
-      <th>Year</th>
-      <th>Hr-1 (A)</th>
-      <th>Hr-2 (A)</th>
-      <th>Hr-3 (A)</th>
-      <th>Avg of 3-Hr (A)</th>
-    </tr>
+  return summary
+    .map((row) => {
+      const isPeak = peakAvg !== null && row.avg === peakAvg;
+      const rowStyle = isPeak
+        ? `style="background-color: #dcebf8; color: #0f3057; font-weight: bold; 
+        -webkit-print-color-adjust: exact; print-color-adjust: exact;"`: '';
+      const badge = isPeak ? ' <span style="font-size: 11px; color: #0f4f8f;">(Peak)</span>' : '';
 
-    ${summary
-      .map((row) => {
-        const isPeak = peakAvg !== null && row.avg === peakAvg;
-        const rowStyle = isPeak
-          ? `style="background-color: #dcebf8; color: #0f3057; font-weight: bold; 
-          -webkit-print-color-adjust: exact; print-color-adjust: exact;"`: '';
-        const badge = isPeak ? ' <span style="font-size: 11px; color: #0f4f8f;">(Peak)</span>' : '';
-
-        return `
-          <tr ${rowStyle}>
-            <td>${row.year}</td>
-            <td>${row.h1}</td>
-            <td>${row.h2}</td>
-            <td>${row.h3}</td>
-            <td>${row.avg}${badge}</td>
-          </tr>
-        `;
-      })
-      .join("")}
-  `;
+      return `
+        <tr ${rowStyle}>
+          <td style="text-align: center;">${row.year}</td>
+          <td style="text-align: center;">${row.h1}</td>
+          <td style="text-align: center;">${row.h2}</td>
+          <td style="text-align: center;">${row.h3}</td>
+          <td style="text-align: center;">${row.avg}${badge}</td>
+        </tr>
+      `;
+    })
+    .join("");
 }
 
 

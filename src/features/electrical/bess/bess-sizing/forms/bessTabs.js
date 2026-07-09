@@ -1,19 +1,5 @@
 export const BESS_TABS = [
 
-  // ─── DOCUMENT INFORMATION ──────────────────────────────────────────────────
-  {
-    id: 'document',
-    name: 'Document Information',
-    icon: 'file-text',
-    blurb: 'Report title and revision control information shown on the cover sheet.',
-    fields: [
-      { key: 'reportTitle', label: 'Report Title', type: 'text', required: true, placeholder: 'Design Basis Report' },
-      { key: 'documentNo', label: 'Document Number', type: 'text', required: true },
-      { key: 'revision', label: 'Revision', type: 'text', required: true, placeholder: 'A' },
-      { key: 'preparedDate', label: 'Prepared Date', type: 'text', required: true },
-    ]
-  },
-
   // ─── CLIENT INFORMATION ────────────────────────────────────────────────────
   {
     id: 'client',
@@ -26,6 +12,7 @@ export const BESS_TABS = [
       { key: 'clientEmail', label: 'Contact email', type: 'text', required: true, placeholder: 'name@company.com' },
       { key: 'clientAddress', label: 'Client address', type: 'textarea', required: true, placeholder: 'Street, City, State, Country' },
       { key: 'consultant', label: 'Consultant / EPC', type: 'text', required: true, placeholder: 'Preparing organization' },
+      { key: 'revision', label: 'Revision', type: 'text', required: true, placeholder: 'A' },
     ]
   },
 
@@ -70,7 +57,7 @@ export const BESS_TABS = [
       { key: 'tempDesign', label: 'Design Temp', type: 'number', required: true, unit: '°F' },
       { key: 'altitude', label: 'Altitude', type: 'number', required: true, unit: 'ft' },
       { key: 'windSpeed', label: 'Design Wind Speed', type: 'number', required: true, unit: 'mph' },
-      { key: 'riskCategory', label: 'Risk Category', type: 'text', required: true, placeholder: 'CAT-II' },
+      { key: 'riskCategory', label: 'Risk Category', type: 'select', options: ['CAT-I', 'CAT-II', 'IEC 60364-7-712', 'AS/NZS 5033'], required: true },
       { key: 'snowLoad', label: 'Snow Load', type: 'number', required: true, unit: 'psf' },
       { key: 'snowDepth', label: 'Snow Depth', type: 'number', required: true, unit: 'inch' },
       { key: 'roadWidth', label: 'Road Width', type: 'number', required: true, unit: 'ft' },
@@ -159,12 +146,12 @@ export const BESS_TABS = [
       { key: 'mvtManufacturer', label: 'Manufacturer', type: 'text', required: true },
       { key: 'mvtRating', label: 'Rating', type: 'number', required: true, unit: 'kVA' },
       { key: 'transformerVoltageRating', label: 'Voltage Rating', type: 'text', required: true, placeholder: '34.5 / 0.69 kV' },
-      { key: 'transformerWindingConfig', label: 'Winding Configuration', type: 'text', required: true, placeholder: 'HV – Wye, LV – Delta' },
-      { key: 'transformerVectorGroup', label: 'Vector Group', type: 'text', required: true, placeholder: 'Yd11' },
+      { key: 'transformerWindingConfig', label: 'Winding Configuration', type: 'select', options: ['HV – Wye, LV – Delta (HOLD)', 'HV – Wye, LV – Delta', 'HV – Delta, LV – Wye', 'HV – Delta, LV – Delta', 'HV – Wye, LV – Wye', 'HV – Wye-Gnd, LV – Delta', 'HV – Wye-Gnd, LV – Wye'], required: true },
+      { key: 'transformerVectorGroup', label: 'Vector Group', type: 'select', options: ['Yd11 (HOLD)', 'Yd11', 'Dyn11', 'Dyn1', 'Yd1', 'Ynd11', 'Yy0', 'Dd0'], required: true },
       { key: 'transformerImpedance', label: 'Impedance', type: 'number', required: true, unit: '%', placeholder: '5.75' },
       { key: 'transformerEfficiency', label: 'Efficiency at Full Load', type: 'number', required: true, unit: '%', placeholder: '99' },
-      { key: 'transformerWindingMaterial', label: 'Winding Material', type: 'text', required: true, placeholder: 'Aluminum' },
-      { key: 'transformerCooling', label: 'Cooling', type: 'text', required: true, placeholder: 'KNAN' },
+      { key: 'transformerWindingMaterial', label: 'Winding Material', type: 'select', options: ['Aluminum', 'Copper'], required: true },
+      { key: 'transformerCooling', label: 'Cooling', type: 'select', options: ['KNAN', 'ONAN', 'KNAF', 'ONAF'], required: true },
       { key: 'maxMvtLoop', label: 'Max Loop', type: 'number', required: true },
     ]
   },
@@ -214,23 +201,48 @@ export const BESS_TABS = [
           { key: 'chargePeriodHours', label: 'Charging Period', type: 'number', required: true, unit: 'hours' },
           { key: 'mvCableSize1', label: 'MV Cable Size 1', type: 'text', required: true },
           { key: 'mvCableSize2', label: 'MV Cable Size 2', type: 'text', required: true },
-          { key: 'mvCableSize3', label: 'MV Cable Size 3', type: 'text' },
-          { key: 'mvCableSize4', label: 'MV Cable Size 4', type: 'text' },
         ]
       },
       {
         title: 'Auxiliary Cables',
         fields: [
-          { key: 'auxCableBurialDepth', label: 'Aux Cable Burial Depth', type: 'text', required: true, placeholder: '1\'-6"' },
-          { key: 'auxCable1', label: 'Aux Transformer → Aux Panel Board', type: 'text', required: true },
-          { key: 'auxCable2', label: 'Aux Panel Board → BESS Enclosure', type: 'text', required: true },
-          { key: 'auxCable3', label: 'Aux Panel Board → PCS Skid', type: 'text', required: true },
-          { key: 'auxCable4', label: 'Aux Panel Board → Light Poles', type: 'text', required: true },
-          { key: 'auxCable5', label: 'Aux Panel Board → Mini Power Center', type: 'text', required: true },
-          { key: 'auxCable6', label: 'Mini Power Center → Receptacle', type: 'text', required: true },
-          { key: 'auxCable7', label: 'Mini Power Center → FNE', type: 'text', required: true },
-          { key: 'auxCable8', label: 'Generator → Tap Box', type: 'text', required: true },
-          { key: 'auxCable9', label: 'Tap Box → Aux Panel Boards', type: 'text', required: true },
+          // { key: 'auxCableBurialDepth', label: 'Aux Cable Burial Depth', type: 'text', required: true, placeholder: '1\'-6"' },
+          { key: 'auxCable1Header', label: 'Aux Transformer → Aux Panel Board', type: 'subtitle' },
+          { key: 'auxCable1CoreNo', label: 'Cable Core No', type: 'select', options: ['6R x 4 x 1C', '4 x 1C', '4C', '2C', '1C', '3C'], required: true },
+          { key: 'auxCable1Size', label: 'Cable Size', type: 'select', options: ['1000 KCMIL', '500 KCMIL', '#2 AWG', '#4 AWG', '#8 AWG', '#10 AWG', '#12 AWG'], required: true },
+          { key: 'auxCable1Material', label: 'Cable Material', type: 'select', options: ['Cu cable', 'Al cable'], required: true },
+          { key: 'auxCable2Header', label: 'Aux Panel Board → BESS Enclosure', type: 'subtitle' },
+          { key: 'auxCable2CoreNo', label: 'Cable Core No', type: 'select', options: ['6R x 4 x 1C', '4 x 1C', '4C', '2C', '1C', '3C'], required: true },
+          { key: 'auxCable2Size', label: 'Cable Size', type: 'select', options: ['1000 KCMIL', '500 KCMIL', '#2 AWG', '#4 AWG', '#8 AWG', '#10 AWG', '#12 AWG'], required: true },
+          { key: 'auxCable2Material', label: 'Cable Material', type: 'select', options: ['Cu cable', 'Al cable'], required: true },
+          { key: 'auxCable3Header', label: 'Aux Panel Board → PCS Skid', type: 'subtitle' },
+          { key: 'auxCable3CoreNo', label: 'Cable Core No', type: 'select', options: ['6R x 4 x 1C', '4 x 1C', '4C', '2C', '1C', '3C'], required: true },
+          { key: 'auxCable3Size', label: 'Cable Size', type: 'select', options: ['1000 KCMIL', '500 KCMIL', '#2 AWG', '#4 AWG', '#8 AWG', '#10 AWG', '#12 AWG'], required: true },
+          { key: 'auxCable3Material', label: 'Cable Material', type: 'select', options: ['Cu cable', 'Al cable'], required: true },
+          { key: 'auxCable4Header', label: 'Aux Panel Board → Light Poles', type: 'subtitle' },
+          { key: 'auxCable4CoreNo', label: 'Cable Core No', type: 'select', options: ['6R x 4 x 1C', '4 x 1C', '4C', '2C', '1C', '3C'], required: true },
+          { key: 'auxCable4Size', label: 'Cable Size', type: 'select', options: ['1000 KCMIL', '500 KCMIL', '#2 AWG', '#4 AWG', '#8 AWG', '#10 AWG', '#12 AWG'], required: true },
+          { key: 'auxCable4Material', label: 'Cable Material', type: 'select', options: ['Cu cable', 'Al cable'], required: true },
+          { key: 'auxCable5Header', label: 'Aux Panel Board → Mini Power Center', type: 'subtitle' },
+          { key: 'auxCable5CoreNo', label: 'Cable Core No', type: 'select', options: ['6R x 4 x 1C', '4 x 1C', '4C', '2C', '1C', '3C'], required: true },
+          { key: 'auxCable5Size', label: 'Cable Size', type: 'select', options: ['1000 KCMIL', '500 KCMIL', '#2 AWG', '#4 AWG', '#8 AWG', '#10 AWG', '#12 AWG'], required: true },
+          { key: 'auxCable5Material', label: 'Cable Material', type: 'select', options: ['Cu cable', 'Al cable'], required: true },
+          { key: 'auxCable6Header', label: 'Mini Power Center → Receptacle', type: 'subtitle' },
+          { key: 'auxCable6CoreNo', label: 'Cable Core No', type: 'select', options: ['6R x 4 x 1C', '4 x 1C', '4C', '2C', '1C', '3C'], required: true },
+          { key: 'auxCable6Size', label: 'Cable Size', type: 'select', options: ['1000 KCMIL', '500 KCMIL', '#2 AWG', '#4 AWG', '#8 AWG', '#10 AWG', '#12 AWG'], required: true },
+          { key: 'auxCable6Material', label: 'Cable Material', type: 'select', options: ['Cu cable', 'Al cable'], required: true },
+          { key: 'auxCable7Header', label: 'Mini Power Center → FNE', type: 'subtitle' },
+          { key: 'auxCable7CoreNo', label: 'Cable Core No', type: 'select', options: ['6R x 4 x 1C', '4 x 1C', '4C', '2C', '1C', '3C'], required: true },
+          { key: 'auxCable7Size', label: 'Cable Size', type: 'select', options: ['1000 KCMIL', '500 KCMIL', '#2 AWG', '#4 AWG', '#8 AWG', '#10 AWG', '#12 AWG'], required: true },
+          { key: 'auxCable7Material', label: 'Cable Material', type: 'select', options: ['Cu cable', 'Al cable'], required: true },
+          { key: 'auxCable8Header', label: 'Generator → Tap Box', type: 'subtitle' },
+          { key: 'auxCable8CoreNo', label: 'Cable Core No', type: 'select', options: ['6R x 4 x 1C', '4 x 1C', '4C', '2C', '1C', '3C'], required: true },
+          { key: 'auxCable8Size', label: 'Cable Size', type: 'select', options: ['1000 KCMIL', '500 KCMIL', '#2 AWG', '#4 AWG', '#8 AWG', '#10 AWG', '#12 AWG'], required: true },
+          { key: 'auxCable8Material', label: 'Cable Material', type: 'select', options: ['Cu cable', 'Al cable'], required: true },
+          { key: 'auxCable9Header', label: 'Tap Box → Aux Panel Boards', type: 'subtitle' },
+          { key: 'auxCable9CoreNo', label: 'Cable Core No', type: 'select', options: ['6R x 4 x 1C', '4 x 1C', '4C', '2C', '1C', '3C'], required: true },
+          { key: 'auxCable9Size', label: 'Cable Size', type: 'select', options: ['1000 KCMIL', '500 KCMIL', '#2 AWG', '#4 AWG', '#8 AWG', '#10 AWG', '#12 AWG'], required: true },
+          { key: 'auxCable9Material', label: 'Cable Material', type: 'select', options: ['Cu cable', 'Al cable'], required: true },
         ]
       }
     ]
@@ -271,54 +283,21 @@ export const BESS_TABS = [
   },
 
   // ─── WEATHER DATA (ASHRAE) ─────────────────────────────────────────────────
-  {
-    id: 'ashrae',
-    name: 'Weather Data (ASHRAE)',
-    icon: 'cloud-rain',
-    blurb: 'Key weather parameters obtained from the ASHRAE database.',
-    fields: [
-      { key: 'ashraeMaxDryBulb', label: 'Max Dry Bulb Temp', type: 'number', required: false, unit: '°F' },
-      { key: 'ashraeMinDryBulb', label: 'Min Dry Bulb Temp', type: 'number', required: false, unit: '°F' },
-      { key: 'ashraeWindSpeed', label: 'Design Wind Speed', type: 'number', required: false, unit: 'mph' },
-      { key: 'ashraeSnowLoad', label: 'Ground Snow Load', type: 'number', required: false, unit: 'psf' },
-      { key: 'ashraeElevation', label: 'Elevation', type: 'number', required: false, unit: 'ft' },
-    ]
-  },
+  // {
+  //   id: 'ashrae',
+  //   name: 'Weather Data (ASHRAE)',
+  //   icon: 'cloud-rain',
+  //   blurb: 'Key weather parameters obtained from the ASHRAE database.',
+  //   fields: [
+  //     { key: 'ashraeMaxDryBulb', label: 'Max Dry Bulb Temp', type: 'number', required: false, unit: '°F' },
+  //     { key: 'ashraeMinDryBulb', label: 'Min Dry Bulb Temp', type: 'number', required: false, unit: '°F' },
+  //     { key: 'ashraeWindSpeed', label: 'Design Wind Speed', type: 'number', required: false, unit: 'mph' },
+  //     { key: 'ashraeSnowLoad', label: 'Ground Snow Load', type: 'number', required: false, unit: 'psf' },
+  //     { key: 'ashraeElevation', label: 'Elevation', type: 'number', required: false, unit: 'ft' },
+  //   ]
+  // },
 
-  // ─── WIRING COLOR CODES ────────────────────────────────────────────────────
-  {
-    id: 'wiringColors',
-    name: 'Wiring Color Codes',
-    icon: 'palette',
-    blurb: 'Conductor color coding by voltage class used throughout the plant.',
-    groups: [
-      {
-        title: 'LV Wiring (480/690V)',
-        fields: [
-          { key: 'wiringLvVoltageClass', label: 'Voltage Class Label', type: 'text', required: true, placeholder: '480/690V' },
-          { key: 'wiringLvLineAColor', label: 'Line A Color', type: 'text', required: true, placeholder: 'Brown' },
-          { key: 'wiringLvLineBColor', label: 'Line B Color', type: 'text', required: true, placeholder: 'Orange' },
-          { key: 'wiringLvLineCColor', label: 'Line C Color', type: 'text', required: true, placeholder: 'Yellow' },
-          { key: 'wiringLvNeutralColor', label: 'Neutral Color', type: 'text', required: true, placeholder: 'Grey' },
-        ]
-      },
-      {
-        title: 'MV Wiring',
-        fields: [
-          { key: 'wiringMvVoltageClass', label: 'Voltage Class Label', type: 'text', required: true, placeholder: '35kV' },
-          { key: 'wiringMvPhaseLabeling', label: 'Phase Labeling Convention', type: 'text', required: true, placeholder: 'White tape / printed placard: A-Phase, B-Phase, C-Phase' },
-        ]
-      },
-      {
-        title: 'DC & Ground',
-        fields: [
-          { key: 'wiringDcPositiveColor', label: 'DC Positive Color', type: 'text', required: true, placeholder: 'Red' },
-          { key: 'wiringDcNegativeColor', label: 'DC Negative Color', type: 'text', required: true, placeholder: 'Black' },
-          { key: 'wiringGroundColor', label: 'Ground Conductor Color', type: 'text', required: true, placeholder: 'Green / Bare' },
-        ]
-      }
-    ]
-  },
+
 
   // ─── COMMUNICATION AND CONTROL ─────────────────────────────────────────────
   {
@@ -364,11 +343,6 @@ export const BESS_TABS = [
       {
         title: 'Grounding Design Basis',
         fields: [
-          { key: 'groundingSoftware', label: 'Grounding Analysis Software', type: 'text', required: true, placeholder: 'WinIGS' },
-          { key: 'groundConductorBess', label: 'BESS Enclosure Ground Conductor', type: 'text', required: true, placeholder: '500 KCMIL Cu' },
-          { key: 'groundConductorPcs', label: 'PCS Skid Ground Conductor', type: 'text', required: true, placeholder: '600 KCMIL Cu' },
-          { key: 'groundConductorAux', label: 'Auxiliary Equipment Ground Conductor', type: 'text', required: true, placeholder: '#4/0 AWG Cu' },
-          { key: 'groundConductorMisc', label: 'Misc. Equipment Ground Conductor', type: 'text', required: true, placeholder: '#6 AWG Cu' },
           { key: 'groundingLayoutDrawingNo', label: 'Grounding Layout Drawing No.', type: 'text', required: false },
           { key: 'groundingAnalysisReportNo', label: 'Grounding Analysis Report No.', type: 'text', required: false },
         ]
@@ -376,36 +350,46 @@ export const BESS_TABS = [
       {
         title: 'Equipment Grounding Conductor (EGC) Table',
         fields: [
-          { key: 'egc1Ocpd', label: 'Row 1 (Aux Xfmr → Aux Panel) – OCPD', type: 'text', required: true },
-          { key: 'egc1PowerCable', label: 'Row 1 – Power Cable', type: 'text', required: true },
-          { key: 'egc1Egc', label: 'Row 1 – EGC', type: 'text', required: true },
-          { key: 'egc2Ocpd', label: 'Row 2 (BESS Enclosure → PCS Skid) – OCPD', type: 'text', required: true },
-          { key: 'egc2PowerCable', label: 'Row 2 – Power Cable', type: 'text', required: true },
-          { key: 'egc2Egc', label: 'Row 2 – EGC', type: 'text', required: true },
-          { key: 'egc3Ocpd', label: 'Row 3 (Generator → Tap Box) – OCPD', type: 'text', required: true },
-          { key: 'egc3PowerCable', label: 'Row 3 – Power Cable', type: 'text', required: true },
-          { key: 'egc3Egc', label: 'Row 3 – EGC', type: 'text', required: true },
-          { key: 'egc4Ocpd', label: 'Row 4 (Aux Panel → BESS Enclosure) – OCPD', type: 'text', required: true },
-          { key: 'egc4PowerCable', label: 'Row 4 – Power Cable', type: 'text', required: true },
-          { key: 'egc4Egc', label: 'Row 4 – EGC', type: 'text', required: true },
-          { key: 'egc5Ocpd', label: 'Row 5 (Aux Panel → Mini Power Center) – OCPD', type: 'text', required: true },
-          { key: 'egc5PowerCable', label: 'Row 5 – Power Cable', type: 'text', required: true },
-          { key: 'egc5Egc', label: 'Row 5 – EGC', type: 'text', required: true },
-          { key: 'egc6Ocpd', label: 'Row 6 (Tap Box → Aux Panel) – OCPD', type: 'text', required: true },
-          { key: 'egc6PowerCable', label: 'Row 6 – Power Cable', type: 'text', required: true },
-          { key: 'egc6Egc', label: 'Row 6 – EGC', type: 'text', required: true },
-          { key: 'egc7Ocpd', label: 'Row 7 (Aux Panel → PCS Skid) – OCPD', type: 'text', required: true },
-          { key: 'egc7PowerCable', label: 'Row 7 – Power Cable', type: 'text', required: true },
-          { key: 'egc7Egc', label: 'Row 7 – EGC', type: 'text', required: true },
-          { key: 'egc8Ocpd', label: 'Row 8 (Aux Panel → Light Poles) – OCPD', type: 'text', required: true },
-          { key: 'egc8PowerCable', label: 'Row 8 – Power Cable', type: 'text', required: true },
-          { key: 'egc8Egc', label: 'Row 8 – EGC', type: 'text', required: true },
-          { key: 'egc9Ocpd', label: 'Row 9 (Mini Power Center → Receptacle) – OCPD', type: 'text', required: true },
-          { key: 'egc9PowerCable', label: 'Row 9 – Power Cable', type: 'text', required: true },
-          { key: 'egc9Egc', label: 'Row 9 – EGC', type: 'text', required: true },
-          { key: 'egc10Ocpd', label: 'Row 10 (Mini Power Center → FNE) – OCPD', type: 'text', required: true },
-          { key: 'egc10PowerCable', label: 'Row 10 – Power Cable', type: 'text', required: true },
-          { key: 'egc10Egc', label: 'Row 10 – EGC', type: 'text', required: true },
+          { key: 'egc1Header', label: 'Row 1 (Aux Transformer → Aux Panel)', type: 'subtitle' },
+          { key: 'egc1Ocpd', label: 'Over Projectio Device Rating', type: 'select', options: ['2000A', '900A', '300A', '80A', '20A'], required: true },
+          { key: 'egc1PowerCable', label: 'Power Cable', type: 'select', options: ['1000 KCMIL', '350KCMIL', '500 KCMIL', '#2 AWG', '#12 AWG'], required: true },
+          { key: 'egc1Egc', label: 'EGC', type: 'select', options: ['1C, 250KCMIL, Cu Cable per run', '1C, 350KCMIL, Cu cable', '1C, #4 AWG, Cu cable', '1C, #8 AWG, Cu cable', '1C, #8AWG, Cu cable', '1C, #12 AWG, Cu cable'], required: true },
+          { key: 'egc2Header', label: 'Row 2 (BESS Enclosure → PCS Skid)', type: 'subtitle' },
+          { key: 'egc2Ocpd', label: 'Over Protectio Device Rating', type: 'select', options: ['2000A', '900A', '300A', '80A', '20A'], required: true },
+          { key: 'egc2PowerCable', label: 'Power Cable', type: 'select', options: ['1000 KCMIL', '350KCMIL', '500 KCMIL', '#2 AWG', '#12 AWG'], required: true },
+          { key: 'egc2Egc', label: 'EGC', type: 'select', options: ['1C, 250KCMIL, Cu Cable per run', '1C, 350KCMIL, Cu cable', '1C, #4 AWG, Cu cable', '1C, #8 AWG, Cu cable', '1C, #8AWG, Cu cable', '1C, #12 AWG, Cu cable'], required: true },
+          { key: 'egc3Header', label: 'Row 3 (Generator → Tap Box)', type: 'subtitle' },
+          { key: 'egc3Ocpd', label: 'Over Protectio Device Rating', type: 'select', options: ['2000A', '900A', '300A', '80A', '20A'], required: true },
+          { key: 'egc3PowerCable', label: 'Power Cable', type: 'select', options: ['1000 KCMIL', '350KCMIL', '500 KCMIL', '#2 AWG', '#12 AWG'], required: true },
+          { key: 'egc3Egc', label: 'EGC', type: 'select', options: ['1C, 250KCMIL, Cu Cable per run', '1C, 350KCMIL, Cu cable', '1C, #4 AWG, Cu cable', '1C, #8 AWG, Cu cable', '1C, #8AWG, Cu cable', '1C, #12 AWG, Cu cable'], required: true },
+          { key: 'egc4Header', label: 'Row 4 (Aux Panel → BESS Enclosure)', type: 'subtitle' },
+          { key: 'egc4Ocpd', label: 'Over Protectio Device Rating', type: 'select', options: ['2000A', '900A', '300A', '80A', '20A'], required: true },
+          { key: 'egc4PowerCable', label: 'Power Cable', type: 'select', options: ['1000 KCMIL', '350KCMIL', '500 KCMIL', '#2 AWG', '#12 AWG'], required: true },
+          { key: 'egc4Egc', label: 'EGC', type: 'select', options: ['1C, 250KCMIL, Cu Cable per run', '1C, 350KCMIL, Cu cable', '1C, #4 AWG, Cu cable', '1C, #8 AWG, Cu cable', '1C, #8AWG, Cu cable', '1C, #12 AWG, Cu cable'], required: true },
+          { key: 'egc5Header', label: 'Row 5 (Aux Panel → Mini Power Center)', type: 'subtitle' },
+          { key: 'egc5Ocpd', label: 'Over Protectio Device Rating', type: 'select', options: ['2000A', '900A', '300A', '80A', '20A'], required: true },
+          { key: 'egc5PowerCable', label: 'Power Cable', type: 'select', options: ['1000 KCMIL', '350KCMIL', '500 KCMIL', '#2 AWG', '#12 AWG'], required: true },
+          { key: 'egc5Egc', label: 'EGC', type: 'select', options: ['1C, 250KCMIL, Cu Cable per run', '1C, 350KCMIL, Cu cable', '1C, #4 AWG, Cu cable', '1C, #8 AWG, Cu cable', '1C, #8AWG, Cu cable', '1C, #12 AWG, Cu cable'], required: true },
+          { key: 'egc6Header', label: 'Row 6 (Tap Box → Aux Panel)', type: 'subtitle' },
+          { key: 'egc6Ocpd', label: 'Over Protectio Device Rating', type: 'select', options: ['2000A', '900A', '300A', '80A', '20A'], required: true },
+          { key: 'egc6PowerCable', label: 'Power Cable', type: 'select', options: ['1000 KCMIL', '350KCMIL', '500 KCMIL', '#2 AWG', '#12 AWG'], required: true },
+          { key: 'egc6Egc', label: 'EGC', type: 'select', options: ['1C, 250KCMIL, Cu Cable per run', '1C, 350KCMIL, Cu cable', '1C, #4 AWG, Cu cable', '1C, #8 AWG, Cu cable', '1C, #8AWG, Cu cable', '1C, #12 AWG, Cu cable'], required: true },
+          { key: 'egc7Header', label: 'Row 7 (Aux Panel → PCS Skid)', type: 'subtitle' },
+          { key: 'egc7Ocpd', label: 'Over Protectio Device Rating', type: 'select', options: ['2000A', '900A', '300A', '80A', '20A'], required: true },
+          { key: 'egc7PowerCable', label: 'Power Cable', type: 'select', options: ['1000 KCMIL', '350KCMIL', '500 KCMIL', '#2 AWG', '#12 AWG'], required: true },
+          { key: 'egc7Egc', label: 'EGC', type: 'select', options: ['1C, 250KCMIL, Cu Cable per run', '1C, 350KCMIL, Cu cable', '1C, #4 AWG, Cu cable', '1C, #8 AWG, Cu cable', '1C, #8AWG, Cu cable', '1C, #12 AWG, Cu cable'], required: true },
+          { key: 'egc8Header', label: 'Row 8 (Aux Panel → Light Poles)', type: 'subtitle' },
+          { key: 'egc8Ocpd', label: 'Over Protectio Device Rating', type: 'select', options: ['2000A', '900A', '300A', '80A', '20A'], required: true },
+          { key: 'egc8PowerCable', label: 'Power Cable', type: 'select', options: ['1000 KCMIL', '350KCMIL', '500 KCMIL', '#2 AWG', '#12 AWG'], required: true },
+          { key: 'egc8Egc', label: 'EGC', type: 'select', options: ['1C, 250KCMIL, Cu Cable per run', '1C, 350KCMIL, Cu cable', '1C, #4 AWG, Cu cable', '1C, #8 AWG, Cu cable', '1C, #8AWG, Cu cable', '1C, #12 AWG, Cu cable'], required: true },
+          { key: 'egc9Header', label: 'Row 9 (Mini Power Center → Receptacle)', type: 'subtitle' },
+          { key: 'egc9Ocpd', label: 'Over Protectio Device Rating', type: 'select', options: ['2000A', '900A', '300A', '80A', '20A'], required: true },
+          { key: 'egc9PowerCable', label: 'Power Cable', type: 'select', options: ['1000 KCMIL', '350KCMIL', '500 KCMIL', '#2 AWG', '#12 AWG'], required: true },
+          { key: 'egc9Egc', label: 'EGC', type: 'select', options: ['1C, 250KCMIL, Cu Cable per run', '1C, 350KCMIL, Cu cable', '1C, #4 AWG, Cu cable', '1C, #8 AWG, Cu cable', '1C, #8AWG, Cu cable', '1C, #12 AWG, Cu cable'], required: true },
+          { key: 'egc10Header', label: 'Row 10 (Mini Power Center → FNE)', type: 'subtitle' },
+          { key: 'egc10Ocpd', label: 'Over Protectio Device Rating', type: 'select', options: ['2000A', '900A', '300A', '80A', '20A'], required: true },
+          { key: 'egc10PowerCable', label: 'Power Cable', type: 'select', options: ['1000 KCMIL', '350KCMIL', '500 KCMIL', '#2 AWG', '#12 AWG'], required: true },
+          { key: 'egc10Egc', label: 'EGC', type: 'select', options: ['1C, 250KCMIL, Cu Cable per run', '1C, 350KCMIL, Cu cable', '1C, #4 AWG, Cu cable', '1C, #8 AWG, Cu cable', '1C, #8AWG, Cu cable', '1C, #12 AWG, Cu cable'], required: true },
         ]
       }
     ]

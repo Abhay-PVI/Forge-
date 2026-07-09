@@ -7,11 +7,47 @@ const errStyle = {
 
 export default function Field({ field, value, onChange, error }) {
   const id = 'f_' + field.key;
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      const formElements = Array.from(
+        document.querySelectorAll('input:not([type="file"]):not([placeholder*="Search"]):not([type="search"]), textarea, select')
+      );
+      const currentIndex = formElements.indexOf(event.target);
+      if (currentIndex === -1) return;
+
+      // Find next empty field forward
+      for (let i = currentIndex + 1; i < formElements.length; i++) {
+        const nextEl = formElements[i];
+        if (!nextEl.value || nextEl.value.trim() === '') {
+          nextEl.focus();
+          return;
+        }
+      }
+
+      // Wrap around from the beginning
+      for (let i = 0; i < currentIndex; i++) {
+        const nextEl = formElements[i];
+        if (!nextEl.value || nextEl.value.trim() === '') {
+          nextEl.focus();
+          return;
+        }
+      }
+
+      // Fallback: move to next element regardless
+      if (currentIndex + 1 < formElements.length) {
+        formElements[currentIndex + 1].focus();
+      }
+    }
+  };
+
   const commonProps = {
     id,
     value: value || '',
     placeholder: field.placeholder,
     onChange: (event) => onChange(event.target.value),
+    onKeyDown: handleKeyDown,
   };
 
   let control;
@@ -71,6 +107,7 @@ export default function Field({ field, value, onChange, error }) {
         className="select"
         value={value || ''}
         onChange={(event) => onChange(event.target.value)}
+        onKeyDown={handleKeyDown}
         style={error ? errStyle : null}
       >
         {field.options.map((option) => (
