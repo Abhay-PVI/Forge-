@@ -79,7 +79,7 @@ function DocRow({ k, v }) {
   );
 }
 
-export default function BessReportDoc({ values = {}, files = {} }) {
+export default function BessReportDoc({ values = {}, files = {}, showStamp = false }) {
   const safeValues = values;
   const safeFiles = files;
 
@@ -100,6 +100,18 @@ export default function BessReportDoc({ values = {}, files = {} }) {
     reportTitle: "Design Basis Report - Bess Electrical",
     documentNumber: "807004A-DE3-04000",
   });
+
+  const sealContent = values.SEAL_IMAGE
+    ? `<img src="${values.SEAL_IMAGE}" alt="Professional Engineer Seal" class="seal-img" />`
+    : `
+        <div class="seal-placeholder">
+          <strong>STATE OF TEXAS</strong><br>
+          JOSHUA D. MILLS<br>
+          No. 129710<br>
+          LICENSED PROFESSIONAL ENGINEER<br>
+          ${reportMeta.ISSUE_DATE || TODAY}
+        </div>
+      `;
 
   // 1. Fill the BESS report body template to resolve its placeholders first
   const initialValues = {
@@ -129,6 +141,8 @@ export default function BessReportDoc({ values = {}, files = {} }) {
     LIST_OF_TABLES_PLACEHOLDER: renderSectionIfNotEmpty("List of Tables", tables, { key: "title" }),
     LIST_OF_FIGURES_PLACEHOLDER: renderSectionIfNotEmpty("List of Figures", figures, { key: "title" }),
     LIST_OF_ABBREVIATIONS_PLACEHOLDER: renderAbbreviationsTable(abbreviations),
+    SHOW_STAMP: showStamp ? "flex" : "none",
+    SEAL_CONTENT: sealContent,
   };
 
   const appendixPages = values.appendixPages || [];

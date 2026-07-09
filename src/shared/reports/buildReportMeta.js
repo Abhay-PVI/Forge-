@@ -1,5 +1,6 @@
 import coverImage from "../../assets/report-cover.jpg";
 import bessCoverImage from "../../assets/bess-cover.jpg";
+import hvCoverImage from "../../assets/HV - Cover.jpg";
 import pvLogo from "../../assets/PV insight Logo.png";
 import defaultClientLogo from "../../assets/signal Energy.png";
 
@@ -10,10 +11,11 @@ function formatIssueDate(date = new Date()) {
 export function buildReportMeta(values = {}, report = {}) {
   return {
     PROJECT_NAME:
-      values.projectName || "",
+      values.projectName || values.plant_name || "",
 
     REPORT_TITLE:
       values.reportTitle ||
+      values.reportName ||
       report?.name ||
       "",
 
@@ -36,7 +38,11 @@ export function buildReportMeta(values = {}, report = {}) {
 
     COVER_IMAGE:
       values.coverImage ||
-      ((values.bessManufacturer || values.noOfPCS || report?.id?.includes('battery') || report?.vertical === 'battery') ? bessCoverImage : coverImage),
+      ((values.bessManufacturer || values.noOfPCS || report?.id?.includes('battery') || report?.vertical === 'battery')
+        ? bessCoverImage
+        : (report?.id?.includes('hv') || report?.vertical === 'hv')
+          ? hvCoverImage
+          : coverImage),
 
     PV_LOGO:
       values.pvLogo || pvLogo,

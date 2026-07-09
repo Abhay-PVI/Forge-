@@ -9,6 +9,7 @@ export default function HvDbrPreview({ values, files, onBack, onNew }) {
     const fname = docNo + '.docx';
     const [selectedFormat, setSelectedFormat] = useState("pdf");
     const [selectedPageSize, setPageSize] = useState("A4");
+    const [showStamp, setShowStamp] = useState(false);
 
     const handleDownload = () => {
         if (selectedFormat === "pdf") {
@@ -45,7 +46,7 @@ export default function HvDbrPreview({ values, files, onBack, onNew }) {
                 {/* doc canvas */}
                 <div style={{ overflowY: 'auto', background: 'var(--surface-2)', padding: '34px 0' }}>
                     <div style={{ display: 'grid', placeItems: 'start center' }} className={`fade-up preview-size-${selectedPageSize.toLowerCase()}`}>
-                        <HvDbrReportDoc values={values} files={files} />
+                        <HvDbrReportDoc values={values} files={files} showStamp={showStamp} />
                     </div>
                 </div>
                 {/* download rail */}
@@ -76,6 +77,29 @@ export default function HvDbrPreview({ values, files, onBack, onNew }) {
                                 className={`segmented-control-option ${selectedPageSize === "A4" ? "active" : ""}`}
                             >
                                 A4
+                            </div>
+                        </div>
+
+                        {/* Stamp Certification Toggle Segment Switch */}
+                        <div className="label-eyebrow" style={{ marginTop: "14px", marginBottom: "6px" }}>Certification Stamp</div>
+                        <div className="segmented-control">
+                            {/* Selector pill */}
+                            <div className={`segmented-control-pill ${!showStamp ? "left" : "right"}`} />
+                            
+                            {/* No Stamp option */}
+                            <div 
+                                onClick={() => setShowStamp(false)}
+                                className={`segmented-control-option ${!showStamp ? "active" : ""}`}
+                            >
+                                No Stamp
+                            </div>
+                            
+                            {/* Stamp option */}
+                            <div 
+                                onClick={() => setShowStamp(true)}
+                                className={`segmented-control-option ${showStamp ? "active" : ""}`}
+                            >
+                                Add Stamp
                             </div>
                         </div>
 

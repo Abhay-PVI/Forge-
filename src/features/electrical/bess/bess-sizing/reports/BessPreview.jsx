@@ -20,22 +20,23 @@ const TODAY = new Date().toLocaleDateString(undefined, { year: 'numeric', month:
 // ---- Preview + download ------------------------------------
 export default function BessPreview({ values, calc, files, onBack, onNew }) {
     const fname = bessDocNumber(values) + '.docx';
-   const [selectedFormat, setSelectedFormat] = useState("pdf");
-   const [selectedPageSize, setPageSize] = useState("A4");
-   const handleDownload = () => {
-    if (selectedFormat === "pdf") {
-        exportPdfWithToc(
-            "bess-report",
-            fname.replace(".docx", ".pdf"),
-            selectedPageSize
-        );
-    } else {
-        exportDocx(
-            "bess-report",
-            fname
-        );
-    }
-};
+    const [selectedFormat, setSelectedFormat] = useState("pdf");
+    const [selectedPageSize, setPageSize] = useState("A4");
+    const [showStamp, setShowStamp] = useState(false);
+    const handleDownload = () => {
+        if (selectedFormat === "pdf") {
+            exportPdfWithToc(
+                "bess-report",
+                fname.replace(".docx", ".pdf"),
+                selectedPageSize
+            );
+        } else {
+            exportDocx(
+                "bess-report",
+                fname
+            );
+        }
+    };
     return (
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
             {/* success banner */}
@@ -56,7 +57,7 @@ export default function BessPreview({ values, calc, files, onBack, onNew }) {
                 {/* doc canvas */}
                 <div style={{ overflowY: 'auto', background: 'var(--surface-2)', padding: '34px 0' }}>
                     <div style={{ display: 'grid', placeItems: 'start center' }} className={`fade-up preview-size-${selectedPageSize.toLowerCase()}`}>
-                        <BessReportDoc values={values} files={files} />
+                        <BessReportDoc values={values} files={files} showStamp={showStamp} />
                     </div>
                 </div>
                 {/* download rail */}
@@ -72,29 +73,52 @@ export default function BessPreview({ values, calc, files, onBack, onNew }) {
                         <button className="btn btn-primary" style={{ width: '100%', marginTop: 14 }} onClick={handleDownload}>
                             <Icon name="download" size={15} />Download
                         </button>
-                        <button className="btn btn-secondary" style={{ width: '100%', marginTop: 8 }} onClick={() => exportPdfServer("bess-report", fname.replace(".docx", ".pdf"), selectedPageSize)}>
+                        {/* <button className="btn btn-secondary" style={{ width: '100%', marginTop: 8 }} onClick={() => exportPdfServer("bess-report", fname.replace(".docx", ".pdf"), selectedPageSize)}>
                             Test Server PDF
-                        </button>
-                        
+                        </button> */}
+
                         {/* Dynamic Slider Segment Switch */}
                         <div className="segmented-control" style={{ marginTop: "10px" }}>
                             {/* Selector pill */}
                             <div className={`segmented-control-pill ${selectedPageSize === "Letter" ? "left" : "right"}`} />
-                            
+
                             {/* Letter option */}
-                            <div 
+                            <div
                                 onClick={() => setPageSize("Letter")}
                                 className={`segmented-control-option ${selectedPageSize === "Letter" ? "active" : ""}`}
                             >
                                 Letter
                             </div>
-                            
+
                             {/* A4 option */}
-                            <div 
+                            <div
                                 onClick={() => setPageSize("A4")}
                                 className={`segmented-control-option ${selectedPageSize === "A4" ? "active" : ""}`}
                             >
                                 A4
+                            </div>
+                        </div>
+
+                        {/* Stamp Certification Toggle Segment Switch */}
+                        <div className="label-eyebrow" style={{ marginTop: "14px", marginBottom: "6px" }}>Certification Stamp</div>
+                        <div className="segmented-control">
+                            {/* Selector pill */}
+                            <div className={`segmented-control-pill ${!showStamp ? "left" : "right"}`} />
+
+                            {/* No Stamp option */}
+                            <div
+                                onClick={() => setShowStamp(false)}
+                                className={`segmented-control-option ${!showStamp ? "active" : ""}`}
+                            >
+                                No Stamp
+                            </div>
+
+                            {/* Stamp option */}
+                            <div
+                                onClick={() => setShowStamp(true)}
+                                className={`segmented-control-option ${showStamp ? "active" : ""}`}
+                            >
+                                Add Stamp
                             </div>
                         </div>
 
@@ -103,16 +127,16 @@ export default function BessPreview({ values, calc, files, onBack, onNew }) {
                                 flex: 1,
                                 color:
                                     selectedFormat === "docx"
-                                         ? "var(--accent-text)"
-                                         : "var(--text-3)",
+                                        ? "var(--accent-text)"
+                                        : "var(--text-3)",
                                 background:
                                     selectedFormat === "docx"
-                                         ? "var(--accent-soft)"
-                                         : "transparent",
+                                        ? "var(--accent-soft)"
+                                        : "transparent",
                                 border:
                                     selectedFormat === "docx"
-                                         ? "1px solid var(--accent-line)"
-                                         : undefined
+                                        ? "1px solid var(--accent-line)"
+                                        : undefined
                             }} onClick={() => setSelectedFormat("docx")}>
                                 .docx
                             </button>
@@ -120,16 +144,16 @@ export default function BessPreview({ values, calc, files, onBack, onNew }) {
                                 flex: 1,
                                 color:
                                     selectedFormat === "pdf"
-                                         ? "var(--accent-text)"
-                                         : "var(--text-3)",
+                                        ? "var(--accent-text)"
+                                        : "var(--text-3)",
                                 background:
                                     selectedFormat === "pdf"
-                                         ? "var(--accent-soft)"
-                                         : "transparent",
+                                        ? "var(--accent-soft)"
+                                        : "transparent",
                                 border:
                                     selectedFormat === "pdf"
-                                         ? "1px solid var(--accent-line)"
-                                         : undefined
+                                        ? "1px solid var(--accent-line)"
+                                        : undefined
                             }} onClick={() => setSelectedFormat("pdf")}>
                                 .pdf
                             </button>
