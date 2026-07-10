@@ -8,11 +8,14 @@ import listOfAbbreviations from "../../../../../shared/reports/copy/listOfAbbrev
 import tableOfContents from "../../../../../shared/reports/tableOfContents.html?raw";
 import { scanAndNumberReportContent, renderSimpleList, renderSectionIfNotEmpty, renderAbbreviationsTable } from "../../../../../shared/reports/utils/tocScanner";
 import { fillTemplate } from "../../../../report-engine/templateEngine";
+import { buildReportMeta } from "../../../../../shared/reports/buildReportMeta";
 
 export default function BessAmpacityReportDoc({ values = {}, files = {} }) {
   // 1. Fill the report body template to resolve its placeholders first
+  const reportMeta = buildReportMeta(values, { name: values.reportTitle || "Cable Ampacity Calculation Report" });
   const initialValues = {
     ...values,
+    ...reportMeta,
     REPORT_NAME: values.reportTitle || "Cable Ampacity Calculation Report",
   };
   const bodyHtml = fillTemplate(template, initialValues);

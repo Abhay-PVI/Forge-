@@ -59,7 +59,7 @@
       margin-top: 80px;
     }
 
-    .grid > div {
+    .grid>div {
       text-align: center;
     }
 
@@ -67,7 +67,7 @@
     .logo-row-container {
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       height: 60px;
       /* Constrains logo space visually */
       margin-top: calc(70px - 1cm);
@@ -101,7 +101,6 @@
       margin: 0 0 0.75rem 0;
       border-bottom: 1px solid #e2e8f0;
       padding-bottom: 0.25rem;
-      text-align: center;
     }
 
     .org-name {
@@ -110,7 +109,6 @@
       font-weight: 600;
       margin: 0 0 0.5rem 0;
       color: #0f172a;
-      text-align: center;
     }
 
     .address {
@@ -119,7 +117,6 @@
       margin-top: 0cm;
       line-height: 1.5;
       white-space: pre-line;
-      text-align: center;
     }
 
     /* Bottom dynamic layout grouping keeping elements anchored safely together */
@@ -226,7 +223,7 @@
 
       <div>
         <div class="logo-row-container">
-          <img src="{{CLIENT_LOGO}}" alt="Signal Energy Logo" class="logo-element" />
+          <img src="{{CLIENT_LOGO}}" alt="Client Logo" class="logo-element" />
         </div>
 
         <h3 class="sub-heading">Submitted To</h3>

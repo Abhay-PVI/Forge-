@@ -10,6 +10,7 @@ export const BESS_TABS = [
       { key: 'clientName', label: 'Client / Company name', type: 'text', required: true, placeholder: 'e.g. Clenera LLC' },
       { key: 'clientContact', label: 'Primary contact', type: 'text', required: true, placeholder: 'Full name' },
       { key: 'clientEmail', label: 'Contact email', type: 'text', required: true, placeholder: 'name@company.com' },
+      { key: 'clientLogo', label: 'Client Logo', type: 'file', required: true },
       { key: 'clientAddress', label: 'Client address', type: 'textarea', required: true, placeholder: 'Street, City, State, Country' },
       { key: 'consultant', label: 'Consultant / EPC', type: 'text', required: true, placeholder: 'Preparing organization' },
       { key: 'revision', label: 'Revision', type: 'text', required: true, placeholder: 'A' },

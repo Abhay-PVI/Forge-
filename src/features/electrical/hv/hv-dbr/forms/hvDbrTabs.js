@@ -16,6 +16,7 @@ export const SUBSTATION_DBR_TABS = [
       { key: 'preparedByAddress', label: 'Prepared By – Address', type: 'text', required: true },
       { key: 'submittedToCompany', label: 'Submitted To – Company', type: 'text', required: true, placeholder: 'RES' },
       { key: 'submittedToAddress', label: 'Submitted To – Address', type: 'text', required: true },
+      { key: "clientLogo", label: "Client Logo", type: "file", required: true },
     ]
   },
 

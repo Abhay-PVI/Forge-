@@ -8,10 +8,13 @@ import listOfAbbreviations from "../../../../../shared/reports/copy/listOfAbbrev
 import tableOfContents from "../../../../../shared/reports/tableOfContents.html?raw";
 import { scanAndNumberReportContent, renderSimpleList, renderSectionIfNotEmpty, renderAbbreviationsTable } from "../../../../../shared/reports/utils/tocScanner";
 import { fillTemplate } from "../../../../report-engine/templateEngine";
+import { buildReportMeta } from "../../../../../shared/reports/buildReportMeta";
 
 export default function BessGroundingReportDoc({ values = {}, files = {} }) {
+  const reportMeta = buildReportMeta(values, { name: values.reportTitle || "Grounding Design Basis Report" });
   const initialValues = {
     ...values,
+    ...reportMeta,
     REPORT_NAME: values.reportTitle || "Grounding Design Basis Report",
   };
   const bodyHtml = fillTemplate(template, initialValues);

@@ -49,5 +49,16 @@ export function buildReportMeta(values = {}, report = {}) {
 
     CLIENT_LOGO:
       values.clientLogo || defaultClientLogo,
+
+    submittedTo:
+      values.submittedToCompany ||
+      values.clientContact ||
+      values.clientName ||
+      "Signal Energy",
+
+    submittedToAddress:
+      values.submittedToAddress ||
+      values.clientAddress ||
+      "2034 Hamilton Place BLVD. Suite 100 Chattanooga, TN 37421",
   };
 }
