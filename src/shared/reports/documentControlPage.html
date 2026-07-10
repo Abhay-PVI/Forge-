@@ -134,6 +134,7 @@
 
     .table {
       width: 100%;
+      table-layout: fixed;
       border-collapse: collapse;
       text-align: left;
       font-size: 0.9rem;
@@ -166,6 +167,10 @@
       flex-direction: column;
       align-items: center;
       width: 100%;
+    }
+
+    .seal-container[data-display="none"] {
+      display: none;
     }
 
     .seal-container .sub-heading {
@@ -205,28 +210,28 @@
 <body>
 
   <div class="report-page doc-control-page">
-    <div class="grid">
+    <table border="0" style="width: 100%; table-layout: fixed; border: none; border-collapse: collapse; margin-top: 80px; margin-bottom: 3rem;">
+      <tr>
+        <td style="width: 50%; border: none !important; padding: 0 1.25rem 0 0; vertical-align: top; text-align: left;">
+          <div class="logo-row-container" style="justify-content: flex-start;">
+            <img src="{{PV_LOGO}}" alt="PVinsight Logo" class="logo-element" />
+          </div>
 
-      <div>
-        <div class="logo-row-container">
-          <img src="{{PV_LOGO}}" alt="PVinsight Logo" class="logo-element" />
-        </div>
+          <h3 class="sub-heading">Prepared By</h3>
+          <p class="org-name">PVinsight Inc</p>
+          <p class="address">5717 Legacy Dr Suite 250, Plano, Texas, 75024</p>
+        </td>
+        <td style="width: 50%; border: none !important; padding: 0 0 0 1.25rem; vertical-align: top; text-align: left;">
+          <div class="logo-row-container" style="justify-content: flex-start;">
+            <img src="{{CLIENT_LOGO}}" alt="Client Logo" class="logo-element" />
+          </div>
 
-        <h3 class="sub-heading">Prepared By</h3>
-        <p class="org-name">PVinsight Inc</p>
-        <p class="address">5717 Legacy Dr Suite 250, Plano, Texas, 75024</p>
-      </div>
-
-      <div>
-        <div class="logo-row-container">
-          <img src="{{CLIENT_LOGO}}" alt="Client Logo" class="logo-element" />
-        </div>
-
-        <h3 class="sub-heading">Submitted To</h3>
-        <p class="org-name">{{submittedTo}}</p>
-        <p class="address">{{submittedToAddress}}</p>
-      </div>
-    </div>
+          <h3 class="sub-heading">Submitted To</h3>
+          <p class="org-name">{{submittedTo}}</p>
+          <p class="address">{{submittedToAddress}}</p>
+        </td>
+      </tr>
+    </table>
 
 
     <div class="bottom-layout-group">
@@ -256,7 +261,7 @@
       </table>
     </div>
 
-    <div class="seal-container" style="display: {{SHOW_STAMP}};">
+    <div class="seal-container" data-display="{{SHOW_STAMP}}">
       <!-- <h3 class="sub-heading">Professional Engineer Seal</h3> -->
       <div class="seal-box">
         {{SEAL_CONTENT}}

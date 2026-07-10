@@ -127,7 +127,7 @@ export default function BessReportDoc({ values = {}, files = {}, showStamp = fal
     groundConductorAux: "#4/0 AWG Cu",
     groundConductorMisc: "#6 AWG Cu",
     ASHRAE_TABLE: ashraeTableTemplate,
-    REPORT_NAME: "BESS Design Basis Report - Bess Electrical",
+    REPORT_NAME: " Design Basis Report - Bess Electrical",
   };
   const bodyHtml = fillTemplate(template, initialValues);
 

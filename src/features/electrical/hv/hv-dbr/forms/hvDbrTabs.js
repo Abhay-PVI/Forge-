@@ -12,8 +12,6 @@ export const SUBSTATION_DBR_TABS = [
       { key: 'substationTitle', label: 'Substation Title', type: 'text', required: true, placeholder: '69/34.5 kV Kitt Solar HV Collector Substation' },
       { key: 'documentNo', label: 'Document Number', type: 'text', required: true, placeholder: '25021-HR-01' },
       { key: 'revision', label: 'Current Revision', type: 'text', required: true, placeholder: '2' },
-      { key: 'preparedByCompany', label: 'Prepared By – Company', type: 'text', required: true, placeholder: 'PVinsight Inc' },
-      { key: 'preparedByAddress', label: 'Prepared By – Address', type: 'text', required: true },
       { key: 'submittedToCompany', label: 'Submitted To – Company', type: 'text', required: true, placeholder: 'RES' },
       { key: 'submittedToAddress', label: 'Submitted To – Address', type: 'text', required: true },
       { key: "clientLogo", label: "Client Logo", type: "file", required: true },

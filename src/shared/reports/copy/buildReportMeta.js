@@ -20,7 +20,7 @@ export function buildReportMeta(values = {}, report = {}) {
       "",
 
     CLIENT_NAME:
-      values.clientName || "",
+      values.clientName || values.submittedToCompany || "",
 
     PREPARED_BY:
       values.preparedBy ||
@@ -57,8 +57,8 @@ export function buildReportMeta(values = {}, report = {}) {
       "Signal Energy",
 
     submittedToAddress:
-      values.submittedToAddress ||
+      (values.submittedToAddress ||
       values.clientAddress ||
-      "2034 Hamilton Place BLVD. Suite 100 Chattanooga, TN 37421",
+      "2034 Hamilton Place BLVD. Suite 100 Chattanooga, TN 37421").replace(/\r?\n/g, '<br>'),
   };
 }
