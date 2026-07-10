@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Icon from "../../../../../shared/components/Icon";
 import { bessAmpacityDocNumber } from "../forms/utils/bessAmpacityDocNumber.js";
 import BessAmpacityReportDoc from "./BessAmpacityReportDoc.jsx";
-import { exportPdf, exportPdfServer, exportPdfWithToc } from "../../../../../shared/utils/exporter/exportPdf";
+import { exportPdfWithToc } from "../../../../../shared/utils/exporter/exportPdf";
 import { exportDocx } from "../../../../../shared/utils/exporter/exportDocx";
 
 function V(value) {

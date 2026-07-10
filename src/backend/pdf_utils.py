@@ -9,32 +9,60 @@ import fitz  # PyMuPDF
 from bs4 import BeautifulSoup
 from playwright.async_api import async_playwright
 import asyncio
+import time
 
-async def generate_pdf_from_html(html: str, *, format: str = "A4") -> bytes:
-    """Render *html* in headless Chromium and return a PDF.
 
-    Parameters
-    ----------
-    html: str
-        Complete HTML document (including `<html>`/`<head>`/`<body>`).
-    format: str, optional
-        Paper format accepted by Playwright – ``"Letter"`` or ``"A4"``.
-        Defaults to ``"A4"``.
-    Returns
-    -------
-    bytes
-        PDF binary data.
-    """
-    async with async_playwright() as p:
-        browser = await p.chromium.launch()
-        page = await browser.new_page()
-        await page.set_content(html, wait_until="networkidle")
-        pdf_bytes = await page.pdf(
-            format=format, 
-            print_background=True,
+async def generate_pdf_from_html(html: str, browser=None, *, format: str = "A4") -> bytes:
+    """Render *html* in headless Chromium and return a PDF."""
+    t0 = time.time()
+    
+    close_browser_needed = False
+    p = None
+    if browser is None:
+        p = await async_playwright().start()
+        browser = await p.chromium.launch(
+            args=[
+                "--proxy-server=direct://",
+                "--proxy-bypass-list=*",
+                "--disable-gpu",
+                "--disable-dev-shm-usage",
+                "--no-first-run",
+                "--no-sandbox",
+            ]
         )
+        close_browser_needed = True
+        
+    t1 = time.time()
+    if close_browser_needed:
+        print(f"[PROFILE] Playwright context setup + browser launch took: {t1 - t0:.3f}s")
+    else:
+        print(f"[PROFILE] Using global browser instance. Setup overhead: {t1 - t0:.3f}s")
+        
+    page = await browser.new_page()
+    t2 = time.time()
+    print(f"[PROFILE] Page open took: {t2 - t1:.3f}s")
+    
+    await page.set_content(html, wait_until="networkidle")
+    t3 = time.time()
+    print(f"[PROFILE] Load content (networkidle) took: {t3 - t2:.3f}s")
+    
+    pdf_bytes = await page.pdf(
+        format=format, 
+        print_background=True,
+    )
+    t4 = time.time()
+    print(f"[PROFILE] Playwright page.pdf print took: {t4 - t3:.3f}s")
+    
+    await page.close()
+    
+    if close_browser_needed:
         await browser.close()
-        return pdf_bytes
+        await p.stop()
+        
+    t5 = time.time()
+    print(f"[PROFILE] generate_pdf_from_html total time: {t5 - t0:.3f}s")
+    return pdf_bytes
+
 
 # Helper for synchronous contexts (e.g., test scripts)
 def generate_pdf_sync(html: str, *, format: str = "A4") -> bytes:
@@ -173,41 +201,59 @@ def render_toc_html(entries: list) -> str:
 
 
 # pdf_utils.py
-async def generate_pdf_with_toc(html: str, *, format: str = "Letter") -> bytes:
-    """
-    Two-pass TOC-aware PDF generation.
-
-    Pass 1: Render the full HTML to a temporary PDF to discover page numbers.
-    Pass 2: Inject page numbers into .toc-page-num spans, re-render final PDF.
-
-    The frontend sends the complete assembled HTML (cover + TOC + body).
-    The TOC rows already exist with empty .toc-page-num spans.
-    """
-    # --- Pass 1: render to PDF to find where headings land ---
+async def generate_pdf_with_toc(html: str, browser=None, *, format: str = "Letter") -> bytes:
+    t_start = time.time()
+    
+    close_browser_needed = False
+    p = None
+    if browser is None:
+        p = await async_playwright().start()
+        browser = await p.chromium.launch(
+            args=[
+                "--proxy-server=direct://",
+                "--proxy-bypass-list=*",
+                "--disable-gpu",
+                "--disable-dev-shm-usage",
+                "--no-first-run",
+                "--no-sandbox",
+            ]
+        )
+        close_browser_needed = True
+        
+    t_init = time.time()
+    if close_browser_needed:
+        print(f"[PROFILE] Playwright context setup + browser launch took: {t_init - t_start:.3f}s")
+    else:
+        print(f"[PROFILE] Using global browser instance. Setup overhead: {t_init - t_start:.3f}s")
+        
+    # Collect headings
     headings = collect_headings_from_html(html)
-    print(f"[DEBUG] Collected headings count: {len(headings)}")
-    for i, h in enumerate(headings[:5]):
-        print(f"[DEBUG] Heading {i}: {h}")
-
-    pass1_pdf = await generate_pdf_from_html(html, format=format)
-    print(f"[DEBUG] Pass 1 PDF generated. Bytes: {len(pass1_pdf)}")
-
+    t1 = time.time()
+    print(f"[PROFILE] BS4 collect headings took: {t1 - t_init:.3f}s (Count: {len(headings)})")
+    
+    # Create page
+    page = await browser.new_page()
+    t2 = time.time()
+    print(f"[PROFILE] Page open took: {t2 - t1:.3f}s")
+    
+    # Pass 1 Render
+    print("[PROFILE] Starting Pass 1 Render...")
+    await page.set_content(html, wait_until="networkidle")
+    pass1_pdf = await page.pdf(format=format, print_background=True)
+    t3 = time.time()
+    print(f"[PROFILE] Pass 1 Render complete: {t3 - t2:.3f}s")
+    
+    # PyMuPDF scan
+    print("[PROFILE] Starting PyMuPDF scan...")
     toc_entries = extract_toc_entries(pass1_pdf, headings)
-    print(f"[DEBUG] Extracted TOC entries count: {len(toc_entries)}")
-    for i, entry in enumerate(toc_entries[:5]):
-        print(f"[DEBUG] Matched Entry {i}: {entry}")
-
-    # --- Inject page numbers into the HTML ---
+    t4 = time.time()
+    print(f"[PROFILE] PyMuPDF scan complete: {t4 - t3:.3f}s (Entries matched: {len(toc_entries)})")
+    
+    # BS4 Injection
+    print("[PROFILE] Starting BS4 Injection...")
     soup = BeautifulSoup(html, "html.parser")
     page_num_spans = soup.select(".toc-page-num")
-    print(f"[DEBUG] Found {len(page_num_spans)} .toc-page-num spans in HTML")
-
-    # Build a lookup: heading title -> page number
-    page_lookup = {}
-    for entry in toc_entries:
-        page_lookup[entry["title"]] = entry["page"]
-
-    # For each TOC row, find its title sibling and inject the page number
+    page_lookup = {entry["title"]: entry["page"] for entry in toc_entries}
     matched_count = 0
     for span in page_num_spans:
         row = span.find_parent(class_="toc-row")
@@ -220,9 +266,23 @@ async def generate_pdf_with_toc(html: str, *, format: str = "Letter") -> bytes:
         if title_text in page_lookup:
             span.string = str(page_lookup[title_text])
             matched_count += 1
-
-    print(f"[DEBUG] Injected page numbers into {matched_count} spans")
     final_html = str(soup)
-
-    # --- Pass 2: render the final PDF with page numbers filled in ---
-    return await generate_pdf_from_html(final_html, format=format)
+    t5 = time.time()
+    print(f"[PROFILE] BS4 Injection complete: {t5 - t4:.3f}s (Injected spans: {matched_count})")
+    
+    # Pass 2 Render on SAME page
+    print("[PROFILE] Starting Pass 2 Render on reused page...")
+    await page.set_content(final_html, wait_until="networkidle")
+    final_pdf = await page.pdf(format=format, print_background=True)
+    t6 = time.time()
+    print(f"[PROFILE] Pass 2 Render complete: {t6 - t5:.3f}s")
+    
+    await page.close()
+    
+    if close_browser_needed:
+        await browser.close()
+        await p.stop()
+        
+    t7 = time.time()
+    print(f"[PROFILE] generate_pdf_with_toc grand total time: {t7 - t_start:.3f}s")
+    return final_pdf

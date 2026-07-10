@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Icon from "../../../../../shared/components/Icon";
 import { docNumber } from "../forms/utils/docNumber.js";
 import ReportDoc from "./ReportDoc.jsx";
-import { exportPdf, exportPdfServer, exportPdfWithToc } from "../../../../../shared/utils/exporter/exportPdf";
+import { exportPdfWithToc } from "../../../../../shared/utils/exporter/exportPdf";
 import { exportDocx } from "../../../../../shared/utils/exporter/exportDocx";
 
 function V(value) {

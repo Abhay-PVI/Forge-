@@ -10,7 +10,7 @@ _root = _os.path.abspath(_os.path.join(_os.path.dirname(__file__), "..", ".."))
 load_dotenv(_os.path.join(_root, ".env.local"))
 load_dotenv(_os.path.join(_root, ".env"))
 
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, Request
 import tempfile
 import os
 import traceback
@@ -18,6 +18,8 @@ from pydantic import BaseModel
 from fastapi.responses import StreamingResponse, JSONResponse
 import io
 import traceback
+from contextlib import asynccontextmanager
+from playwright.async_api import async_playwright
 
 from calculationRepo.generateSolarReport import build_solar_report_data, build_solar_report_pdf 
 from Ashrae.ashrae_service import process_and_populate_report
@@ -27,8 +29,30 @@ from parsers.pvsyst_parser import extract_pvsyst_data
 from pdf_utils import generate_pdf_from_html, generate_pdf_with_toc
 
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("[INIT] Starting global Playwright browser...")
+    app.state.playwright = await async_playwright().start()
+    app.state.browser = await app.state.playwright.chromium.launch(
+        args=[
+            "--proxy-server=direct://",
+            "--proxy-bypass-list=*",
+            "--disable-gpu",
+            "--disable-dev-shm-usage",
+            "--no-first-run",
+            "--no-sandbox",
+        ]
+    )
+    app.state.context = await app.state.browser.new_context()
+    print("[INIT] Global Playwright browser & context started successfully.")
+    yield
+    print("[SHUTDOWN] Closing global Playwright context & browser...")
+    await app.state.context.close()
+    await app.state.browser.close()
+    await app.state.playwright.stop()
+    print("[SHUTDOWN] Global Playwright browser stopped.")
 
-app = FastAPI()
+app = FastAPI(lifespan=lifespan)
 
 @app.get("/api/diag-db")
 def diag_db():
@@ -213,7 +237,7 @@ async def generate_solar_report_pdf_endpoint(payload: SolarReportRequest):
 
 
 @app.post("/api/generate-pdf")
-async def generate_pdf_endpoint(payload: dict):
+async def generate_pdf_endpoint(payload: dict, request: Request):
     """Receive the full HTML string from the front‑end and return a PDF."""
     html = payload.get("html")
     if not html:
@@ -221,7 +245,8 @@ async def generate_pdf_endpoint(payload: dict):
             status_code=400,
             content={"status": "error", "message": "Missing html content"},
         )
-    pdf_bytes = await generate_pdf_from_html(html, format="Letter")
+    browser = getattr(request.app.state, "context", None)
+    pdf_bytes = await generate_pdf_from_html(html, browser=browser, format="Letter")
     return StreamingResponse(
         io.BytesIO(pdf_bytes),
         media_type="application/pdf",
@@ -230,7 +255,7 @@ async def generate_pdf_endpoint(payload: dict):
 
 
 @app.post("/api/generate-pdf-with-toc")
-async def generate_pdf_with_toc_endpoint(payload: dict):
+async def generate_pdf_with_toc_endpoint(payload: dict, request: Request):
     """Two-pass PDF: discover page numbers, inject into TOC, re-render."""
     html = payload.get("html")
     if not html:
@@ -238,7 +263,8 @@ async def generate_pdf_with_toc_endpoint(payload: dict):
             status_code=400,
             content={"status": "error", "message": "Missing html content"},
         )
-    pdf_bytes = await generate_pdf_with_toc(html, format="Letter")
+    browser = getattr(request.app.state, "context", None)
+    pdf_bytes = await generate_pdf_with_toc(html, browser=browser, format="Letter")
     return StreamingResponse(
         io.BytesIO(pdf_bytes),
         media_type="application/pdf",
