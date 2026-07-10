@@ -54,7 +54,7 @@ export default function Preview({ values, calc, files, onBack, onNew }) {
         </div>
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 8, alignItems: 'center' }}>
           <button className="btn btn-soft btn-sm" onClick={onNew}><Icon name="plus" size={14} />New report</button>
-          <button className="btn btn-primary btn-sm" onClick={handleDownload}><Icon name="download" size={14} />Download .docx</button>
+          <button className="btn btn-primary btn-sm" onClick={handleDownload}><Icon name="download" size={14} />Download .{selectedFormat}</button>
 
           {/* Toggle Rail Button panel */}
           <button
@@ -173,8 +173,30 @@ export default function Preview({ values, calc, files, onBack, onNew }) {
                 </div>
 
                 <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
-                  <button className="btn btn-soft btn-sm" style={{ flex: 1 }} onClick={() => setSelectedFormat("docx")}>.docx</button>
-                  <button className="btn btn-soft btn-sm" style={{ flex: 1 }} onClick={() => setSelectedFormat("pdf")}>.pdf</button>
+                  <button
+                    className="btn btn-soft btn-sm"
+                    style={{
+                      flex: 1,
+                      color: selectedFormat === "docx" ? "var(--accent-text)" : "var(--text-3)",
+                      background: selectedFormat === "docx" ? "var(--accent-soft)" : "transparent",
+                      border: selectedFormat === "docx" ? "1px solid var(--accent-line)" : "1px solid transparent"
+                    }}
+                    onClick={() => setSelectedFormat("docx")}
+                  >
+                    .docx
+                  </button>
+                  <button
+                    className="btn btn-soft btn-sm"
+                    style={{
+                      flex: 1,
+                      color: selectedFormat === "pdf" ? "var(--accent-text)" : "var(--text-3)",
+                      background: selectedFormat === "pdf" ? "var(--accent-soft)" : "transparent",
+                      border: selectedFormat === "pdf" ? "1px solid var(--accent-line)" : "1px solid transparent"
+                    }}
+                    onClick={() => setSelectedFormat("pdf")}
+                  >
+                    .pdf
+                  </button>
                 </div>
               </div>
 

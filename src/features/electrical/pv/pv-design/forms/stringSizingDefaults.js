@@ -33,6 +33,7 @@ plant_name: 'Sandhills Solar — Phase II',
   dc_ac_ratio_poi: '1.32',
   dc_ac_ratio_inv: '1.30',
   pv_area: '1000',
+  Pitch: '6.0',
   temp_min: '-5',
   temp_max: '32',
 

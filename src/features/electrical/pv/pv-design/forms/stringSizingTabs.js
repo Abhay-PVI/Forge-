@@ -28,7 +28,14 @@ export const STRING_SIZE_TABS = [{
     type: 'text',
     required: true,
     placeholder: 'name@company.com'
-  }, {
+  },
+  {
+    key: "clientLogo",
+    label: "Client Logo",
+    type: "file",
+    required: true
+  },
+  {
     key: 'clientAddress',
     label: 'Client address',
     type: 'textarea',
@@ -156,12 +163,7 @@ export const STRING_SIZE_TABS = [{
   name: "Report Information",
   icon: "fileText",
   fields: [
-    {
-      key: "clientLogo",
-      label: "Client Logo",
-      type: "file",
-      required: true
-    },
+
     // {
     //   key: "issueDate",
     //   label: "Issue Date",
@@ -232,6 +234,13 @@ export const STRING_SIZE_TABS = [{
         mono: true,
         required: true,
         placeholder: '1000'
+      }, {
+        key: 'Pitch',
+        label: 'Pitch',
+        type: 'number',
+        unit: 'm',
+        required: true,
+        placeholder: '6.0'
       }
         // }, {
         //   key: 'temp_min',

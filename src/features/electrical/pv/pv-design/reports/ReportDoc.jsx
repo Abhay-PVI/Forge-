@@ -184,17 +184,26 @@ export default function ReportDoc({ values = {}, calc = {}, files = {}, solarCal
 
   const degradationYear30After = degradationData ? degradationData.year30_after : 1031.42;
 
+  const minStringVoltageVmp = (Number(values.moduleVmp || 0) * Number(values.modules_series || 0));
+  const minStringVoltageVmpStr = minStringVoltageVmp > 0 ? minStringVoltageVmp.toFixed(2) : "1173.76";
+
+  const pvAreaVal = Number(values.pv_area || 0);
+  const dcCapVal = Number(values.dc_capacity || 0);
+  const pvAreaPerMwDcStr = dcCapVal > 0 ? (pvAreaVal / dcCapVal).toFixed(2) : "—";
+
   const templateValues = {
     ...values,
     allTimeMaxVoc: typeof allTimeMaxVocVal === 'number' ? allTimeMaxVocVal.toFixed(2) : allTimeMaxVocVal,
     vmpMaxTemp: typeof vmpMaxTempVal === 'number' ? vmpMaxTempVal.toFixed(1) : vmpMaxTempVal,
     degradation_year30_after: degradationYear30After,
+    minStringVoltageVmp: minStringVoltageVmpStr,
+    pvAreaPerMwDc: pvAreaPerMwDcStr,
     ...reportMeta,
     ...peakTableData, // Spreads t1_datetime, t1_ghi, t2_... etc. directly into your template context
     ...solarVocTemplateValues,
     ...pvsystLossTemplateValues,
-    submittedTo: values.submittedTo || "Signal Energy",
-    submittedToAddress: values.submittedToAddress || "2034 Hamilton Place BLVD. Suite 100 Chattanooga, TN 37421",
+    submittedTo: values.clientContact || "Signal Energy",
+    submittedToAddress: values.clientAddress || "2034 Hamilton Place BLVD. Suite 100 Chattanooga, TN 37421",
     weather_station_city: values.weather_station_city,
     weather_station_state: values.weather_station_state,
     weather_station_country: values.weather_station_country,
@@ -272,15 +281,7 @@ export default function ReportDoc({ values = {}, calc = {}, files = {}, solarCal
   }
 
   // 1. Fill the report body template with templateValues to resolve all its placeholders
-  const modifiedTemplate = template
-    .replaceAll("{{1441.33 Vdc}}", "{{allTimeMaxVoc}} Vdc")
-    .replaceAll("{{1441.33}} Voc", "{{allTimeMaxVoc}} Voc")
-    .replaceAll("{{36.9}}", "{{vmpMaxTemp}}")
-    .replaceAll("{{1031.42}}", "{{degradation_year30_after}}")
-    .replace('font-style: normal;">{{tempCellMax}}</span>', 'font-style: normal;">{{vmpMaxTemp}}</span>')
-    .replace('font-style: normal;">N_MIN</span>', 'font-style: normal;">{{N_MIN}}</span>')
-    .replace('font-style: normal;">N_MIN_ROUNDED</span>', 'font-style: normal;">{{N_MIN_ROUNDED}}</span>');
-  const bodyHtml = fillTemplate(modifiedTemplate, templateValues);
+  const bodyHtml = fillTemplate(template, templateValues);
 
   // 2. Scan and number the resolved body HTML
   const { numberedBodyHtml, headings, tables, figures, abbreviations } = scanAndNumberReportContent(bodyHtml);

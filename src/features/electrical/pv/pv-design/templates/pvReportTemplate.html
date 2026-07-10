@@ -361,7 +361,7 @@
       <tr>
         <td>19</td>
         <td>GCR</td>DC surge protection
-        <td>{{gcr}}</td>
+        <td>TBD</td>
         <td>%</td>
       </tr>
 
@@ -573,7 +573,7 @@
       <tr>
         <td>50</td>
         <td>Degradation</td>
-        <td>{{degradation}}</td>
+        <td>{{moduleDegradation}}</td>
         <td>%/year</td>
       </tr>
 
@@ -1011,7 +1011,7 @@
     <p>
       Since the modules used in the project are
       {{module_type}}, a bifacial factor of
-      {{bifacial_factor}} is adopted for estimating the maximum current
+      0.8 is adopted for estimating the maximum current
       as per the inputs provided in the technical datasheet of the module manufacturer.
     </p>
 
@@ -1276,13 +1276,13 @@
       understand the impact of temperature and irradiance on the voltage. To validate the maximum Voc of the string, a
       string sizing analysis has been conducted using the SAM software considering the module rating of the highest
       bin wattage, {{max_module_power}}Wp with the TMY data provided by SolarGIS. The maximum Voc obtained from this
-      analysis is
-      {{1428.04 Vdc}}, which is lower than the rated voltage of 1500 Vdc.
+      analysis is {{allTimeMaxVoc}} Vdc, which is lower than the rated voltage of 1500 Vdc.
     </p>
 
     <p>
       Further we have carried out the SAM simulation utilizing the past 26 years NSRDB historical weather data set,
-      the maximum Voc obtained from this analysis is {{1441.33 Vdc}} considering {{max_module_power}}Wp module, which is
+      the maximum Voc obtained from this analysis is {{allTimeMaxVoc}} Vdc considering {{max_module_power}}Wp module,
+      which is
       lower than
       the
       rated voltage of 1500 Vdc, the results of this analysis have been included in the following table.
@@ -1304,7 +1304,8 @@
       From the above table it can be observed that with {{modules_series}} modules in series using SAM simulation
       method and NSRDB
       data, the maximum voltage is within the 1500Vdc limit. Considering that the maximum voltage obtained from the
-      SAM analysis is {{1441.33}} Voc and in compliance with NEC 690.7 A(3) we can conclude that the String Sizing can
+      SAM analysis is {{allTimeMaxVoc}} Voc and in compliance with NEC 690.7 A(3) we can conclude that the String Sizing
+      can
       be
       considered with 28 modules in series.
     </p>
@@ -1312,7 +1313,7 @@
     <h3 id="MinimumSystemVoltage" class="toc-heading" data-toc-level="2">Minimum System Voltage</h3>
 
     <p>
-      According to Annexure-1, the Vmp at the maximum temperature is {{tempCellMax}}V, and the inverter's minimum MPP
+      According to Annexure-1, the Vmp at the maximum temperature is {{vmpMaxTemp}}V, and the inverter's minimum MPP
       voltage
       is {{PCS_Min_PV_Input_Voltage}}V.
     </p>
@@ -1338,13 +1339,13 @@
         style="display: inline-flex; flex-direction: column; align-items: center; text-align: center; padding: 0 4px;">
         <span
           style="border-bottom: 1px solid #000; width: 100%; padding-bottom: 2px; font-style: normal;">{{PCS_Min_PV_Input_Voltage}}</span>
-        <span style="padding-top: 2px; font-style: normal;">{{tempCellMax}}</span>
+        <span style="padding-top: 2px; font-style: normal;">{{vmpMaxTemp}}</span>
       </div>
 
       <span style="margin: 0 10px; font-style: normal;">=</span>
-      <span style="font-style: normal;">N_MIN</span>
+      <span style="font-style: normal;">{{N_MIN}}</span>
       <span style="margin: 0 10px; font-style: normal;">&approx;</span>
-      <span style="font-style: normal;">N_MIN_ROUNDED</span>
+      <span style="font-style: normal;">{{N_MIN_ROUNDED}}</span>
     </div>
 
     <p>
@@ -1354,9 +1355,11 @@
     <p>
       Using the SAM simulation, the maximum string size was determined to be {{modules_series}} modules per string
       with each module
-      rated at highest bin wattage {{max_module_power}}Wp. The Vmp for the {{max_module_power}}Wp module is {{41.92}}
+      rated at highest bin wattage {{max_module_power}}Wp. The Vmp for the {{max_module_power}}Wp module is
+      {{moduleVmp}}
       Vdc. When verifying the
-      minimum string voltage with {{modules_series}} modules per string, we obtained {{1173.76}}, which is higher than
+      minimum string voltage with {{modules_series}} modules per string, we obtained {{minStringVoltageVmp}}, which is
+      higher than
       the
       inverter's lower MPPT voltage of {{PCS_Min_PV_Input_Voltage}}V.
     </p>
@@ -1364,8 +1367,9 @@
     <p>
       Additionally, we have been verified the lowest voltage using 26 years of NSRDB Data, which is {{1014.22}}Vdc.
       The lower end of the inverter's MPPT range is {{PCS_Min_PV_Input_Voltage}}Vdc. Accounting for an annual
-      degradation of 0.4%, the
-      voltage at the end of 30 years would be {{1031.42}} Vdc. Therefore, the string sizing will still comply with the
+      degradation of {{moduleDegradation}}%, the
+      voltage at the end of 30 years would be {{degradation_year30_after}} Vdc. Therefore, the string sizing will still
+      comply with the
       lower side of the MPPT range even after considering degradation.
     </p>
     ``
@@ -2136,7 +2140,7 @@
         </p>
 
         <p>
-          The analysis was conducted using the .PAN file for the highest bin wattage {{620Wp}} module.
+          The analysis was conducted using the .PAN file for the highest bin wattage 620Wp module.
         </p>
 
         <h3 id="LossAssumptions" class="toc-heading" data-toc-level="2">Loss Assumptions</h3>
@@ -2159,7 +2163,7 @@
         <p>
           Expected Energy Generation: The simulation of the entire solar PV plant at the proposed location is expected
           to
-          generate about{{ 683,030 MWh}} of energy for the first year at DC-CUF of {{dc_cuf}} at the P50 base value.
+          generate about TBD of energy for the first year at DC-CUF of {{dc_cuf}} at the P50 base value.
           The 3D
           shading scene has been used in the current version of the PVsyst.
         </p>
@@ -2188,7 +2192,7 @@
           <tr>
             <td>Scenario</td>
             <td>-</td>
-            <td>{{Scenario}}</td>
+            <td>IFC</td>
           </tr>
           <tr>
             <td>Tracker Manufacturer</td>
@@ -2199,7 +2203,7 @@
           <tr>
             <td>North-South Spacing</td>
             <td>Ft</td>
-            <td>{{North-South Spacing}}</td>
+            <td>TBD</td>
           </tr>
           <tr>
             <td>Pitch</td>
@@ -2209,13 +2213,13 @@
           <tr>
             <td>GCR</td>
             <td>%</td>
-            <td>{{GCR}}</td>
+            <td>TBD</td>
           </tr>
 
           <tr>
             <td>Total Area of the Plant Acres</td>
             <td>Acres</td>
-            <td>{{Total Area of the Plant Acres}}</td>
+            <td>{{Total Area of the Plant}}</td>
           </tr>
           <tr>
             <td>Total PV Fence Area</td>
@@ -2225,7 +2229,7 @@
           <tr>
             <td>Acres per MW DC</td>
             <td>Acres</td>
-            <td>{{pv_area/dc}}</td>
+            <td>{{pvAreaPerMwDc}}</td>
           </tr>
 
           <tr>
@@ -2236,7 +2240,7 @@
           <tr>
             <td>Inverter Power</td>
             <td>kVA</td>
-            <td>{{Inverter Power}}</td>
+            <td>{{Centarl_inverter_rating}}</td>
           </tr>
 
           <tr>
@@ -2274,7 +2278,10 @@
           <tr>
             <td>Tracker Configuration</td>
             <td>-</td>
-            <td>{{Tracker Configuration}}</td>
+            <td> {{tracker_type_1}}X{{tracker_module_1}}<br>
+              {{tracker_type_2}}X{{tracker_module_2}}<br>
+              {{tracker_type_3}}X{{tracker_module_3}}
+            </td>
           </tr>
 
           <tr>
