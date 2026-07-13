@@ -277,7 +277,7 @@ export default function App() {
     return flat;
   };
 
-  const loadReportIntoForm = (recentMeta, detail) => {
+  const loadReportIntoForm = (recentMeta, detail, targetPhase = "form") => {
     let verticalId = "electrical";
     let subId = "pv";
     let reportId = "pv-design";
@@ -328,11 +328,12 @@ export default function App() {
       setPvValues(prev => ({ ...prev, ...metadata_json, ...flatPv }));
     }
 
-    setPhase("form");
+    setPhase(targetPhase);
   };
 
   const handleSelectRecent = (recentMeta, detail) => {
-    loadReportIntoForm(recentMeta, detail);
+    const targetPhase = recentMeta.targetPhase || (recentMeta.status === "completed" ? "preview" : "form");
+    loadReportIntoForm(recentMeta, detail, targetPhase);
 
     setCurrentReportId(recentMeta.report_id);
     setLoadedReportMeta({
@@ -350,7 +351,7 @@ export default function App() {
   };
 
   const handleCloneReport = (recentMeta, detail) => {
-    loadReportIntoForm(recentMeta, detail);
+    loadReportIntoForm(recentMeta, detail, "form");
 
     setCurrentReportId(null);
     setLoadedReportMeta(null);

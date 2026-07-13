@@ -29,12 +29,17 @@ export default function Welcome({ user, onSelectRecent, onCloneReport }) {
   const submitted = reports.filter(r => r.status === 'completed');
   const drafts = reports.filter(r => DRAFT_STATUSES.includes(r.status));
 
-  const handleResume = async (report) => {
+  const handleResume = async (report, targetPhase) => {
     if (!report.id || !onSelectRecent) return;
     try {
       const detailRes = await fetchReportDetailApi(report.id);
       if (detailRes.success && detailRes.data) {
-        onSelectRecent({ report_id: report.id, report_type: report.report_type }, detailRes.data);
+        onSelectRecent({
+          report_id: report.id,
+          report_type: report.report_type,
+          status: report.status,
+          targetPhase: targetPhase
+        }, detailRes.data);
       }
     } catch (err) {
       console.error("Error loading report detail:", err);
@@ -96,8 +101,16 @@ export default function Welcome({ user, onSelectRecent, onCloneReport }) {
             <ReportRow
               key={r.id}
               report={r}
+              onClick={() => handleResume(r, "preview")}
               action={
                 <div style={{ display: 'flex', gap: 8 }}>
+                  <button
+                    className="btn btn-soft btn-sm"
+                    onClick={(e) => { e.stopPropagation(); handleResume(r, "form"); }}
+                  >
+                    <Icon name="edit" size={13} />
+                    Edit
+                  </button>
                   <button
                     className="btn btn-soft btn-sm"
                     disabled={cloningId === r.id}
@@ -135,7 +148,7 @@ export default function Welcome({ user, onSelectRecent, onCloneReport }) {
             <ReportRow
               key={r.id}
               report={r}
-              onClick={() => handleResume(r)}
+              onClick={() => handleResume(r, "form")}
               action={
                 <button
                   className="btn btn-soft btn-sm"
