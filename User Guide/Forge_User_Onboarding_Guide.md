@@ -66,6 +66,9 @@ graph TD
 
 Forge features a secure, corporate authentication interface built on top of **Supabase Auth**.
 
+> [!NOTE]
+> **Authentication Performance**: Logging in and signing up may take a few moments as the system establishes secure communication with Supabase. Please wait for the application to respond and do not refresh or close the page while these operations are processing.
+
 ![Forge sign-in screen](./login.png)
 *The Forge sign-in screen, split between the branded intro panel and the workspace login form.*
 
@@ -193,6 +196,9 @@ In the right rail panel, you can adjust the document format before downloading:
 - **Certification Stamp**: Toggle **Add Stamp** to overlay a professional engineering sign-off stamp on the cover page. Selecting **No Stamp** keeps the cover sheet clean.
 - **Download**: Click the main blue **Download** button in the header or rail. The file will generate and download to your local machine.
 
+> [!NOTE]
+> **PDF Export Duration**: Generating and downloading the PDF document uses a client-side rendering engine (`html2pdf.js`). Depending on the report's complexity, size, and equations, compiling the PDF may take up to 10-15 seconds. Please do not navigate away from the page while downloading is in progress.
+
 ---
 
 ## 6. Managing Existing Reports
@@ -271,3 +277,12 @@ Below is the documentation for the specific departments where reports are active
   - **Fault Levels**: Maximum short circuit current ratings and transformer impedances.
   - **Major Equipment (BOM)**: Interactive equipment table representing long-lead apparatus details (Transformer, Breakers, Disconnect Switches, Surge Arresters).
 - **Core Calculations**: Verifies that spacing, clearing distances, and electrical ratings comply with substation safety standards.
+
+---
+
+## Support & Assistance
+
+If you encounter any issues, need assistance, or have feedback regarding the Forge platform, please contact:
+
+- **Contact Person**: Abhay Pratap Singh
+- **Email**: [AbhayPratap.Singh@PVinsightinc.com](mailto:AbhayPratap.Singh@PVinsightinc.com)
