@@ -260,7 +260,8 @@ async def generate_pdf_with_toc_endpoint(payload: dict, request: Request):
 
 from typing import Optional
 from fastapi import Header, HTTPException, Depends
-from app.supabase_service import supabase_admin, get_current_user, get_default_organization_id, DEFAULT_ORGANIZATION_NAME
+from app.supabase_service import supabase_admin, get_current_user, get_default_organization_id, DEFAULT_ORGANIZATION_NAME, SUPABASE_URL, SUPABASE_KEY
+from supabase import create_client
 
 
 # TODO: replace with get_current_user (supabase_service.py) once real Supabase
@@ -310,7 +311,8 @@ def _serialize_supabase_value(value):
 @app.post("/api/auth/sign-in")
 def auth_sign_in(payload: AuthSignInRequest):
     try:
-        auth_res = supabase_admin.auth.sign_in_with_password({
+        user_client = create_client(SUPABASE_URL, SUPABASE_KEY)
+        auth_res = user_client.auth.sign_in_with_password({
             "email": payload.email,
             "password": payload.password,
         })
@@ -352,7 +354,8 @@ def auth_sign_up(payload: AuthSignUpRequest):
             return JSONResponse(status_code=500, content={"success": False, "error": "Supabase did not return a created auth user."})
 
         # Log in the user right away to acquire the session token
-        signin_res = supabase_admin.auth.sign_in_with_password({
+        user_client = create_client(SUPABASE_URL, SUPABASE_KEY)
+        signin_res = user_client.auth.sign_in_with_password({
             "email": normalized_email,
             "password": payload.password,
         })
@@ -405,7 +408,8 @@ def auth_sign_up(payload: AuthSignUpRequest):
 @app.post("/api/auth/refresh")
 def auth_refresh(payload: AuthRefreshRequest):
     try:
-        auth_res = supabase_admin.auth.refresh_session(payload.refresh_token)
+        user_client = create_client(SUPABASE_URL, SUPABASE_KEY)
+        auth_res = user_client.auth.refresh_session(payload.refresh_token)
         return {
             "success": True,
             "session": _serialize_supabase_value(auth_res.session),
@@ -419,7 +423,8 @@ def auth_refresh(payload: AuthRefreshRequest):
 @app.post("/api/auth/forgot-password")
 def auth_forgot_password(payload: AuthForgotPasswordRequest):
     try:
-        supabase_admin.auth.reset_password_for_email(payload.email)
+        user_client = create_client(SUPABASE_URL, SUPABASE_KEY)
+        user_client.auth.reset_password_for_email(payload.email)
         return {"success": True}
     except Exception as e:
         traceback.print_exc()
