@@ -19,7 +19,6 @@ from fastapi.responses import StreamingResponse, JSONResponse
 import io
 import traceback
 from contextlib import asynccontextmanager
-from playwright.async_api import async_playwright
 
 from calculationRepo.generateSolarReport import build_solar_report_data, build_solar_report_pdf 
 from Ashrae.ashrae_service import process_and_populate_report
@@ -31,28 +30,15 @@ from pdf_utils import generate_pdf_from_html, generate_pdf_with_toc
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print("[INIT] Starting global Playwright browser...")
-    app.state.playwright = await async_playwright().start()
-    app.state.browser = await app.state.playwright.chromium.launch(
-        args=[
-            "--proxy-server=direct://",
-            "--proxy-bypass-list=*",
-            "--disable-gpu",
-            "--disable-dev-shm-usage",
-            "--no-first-run",
-            "--no-sandbox",
-        ]
-    )
-    app.state.context = await app.state.browser.new_context()
-    print("[INIT] Global Playwright browser & context started successfully.")
+    # No global browser initialization to save memory (Option B)
     yield
-    print("[SHUTDOWN] Closing global Playwright context & browser...")
-    await app.state.context.close()
-    await app.state.browser.close()
-    await app.state.playwright.stop()
-    print("[SHUTDOWN] Global Playwright browser stopped.")
 
 app = FastAPI(lifespan=lifespan)
+
+@app.get("/")
+async def health_check():
+    """Simple root health check endpoint returning 200 OK."""
+    return {"status": "healthy", "service": "Forge-Backend"}
 
 @app.get("/api/diag-db")
 def diag_db():
@@ -245,8 +231,7 @@ async def generate_pdf_endpoint(payload: dict, request: Request):
             status_code=400,
             content={"status": "error", "message": "Missing html content"},
         )
-    browser = getattr(request.app.state, "context", None)
-    pdf_bytes = await generate_pdf_from_html(html, browser=browser, format="Letter")
+    pdf_bytes = await generate_pdf_from_html(html, browser=None, format="Letter")
     return StreamingResponse(
         io.BytesIO(pdf_bytes),
         media_type="application/pdf",
@@ -263,8 +248,7 @@ async def generate_pdf_with_toc_endpoint(payload: dict, request: Request):
             status_code=400,
             content={"status": "error", "message": "Missing html content"},
         )
-    browser = getattr(request.app.state, "context", None)
-    pdf_bytes = await generate_pdf_with_toc(html, browser=browser, format="Letter")
+    pdf_bytes = await generate_pdf_with_toc(html, browser=None, format="Letter")
     return StreamingResponse(
         io.BytesIO(pdf_bytes),
         media_type="application/pdf",

@@ -38,30 +38,36 @@ async def generate_pdf_from_html(html: str, browser=None, *, format: str = "A4")
     else:
         print(f"[PROFILE] Using global browser instance. Setup overhead: {t1 - t0:.3f}s")
         
-    page = await browser.new_page()
-    t2 = time.time()
-    print(f"[PROFILE] Page open took: {t2 - t1:.3f}s")
-    
-    await page.set_content(html, wait_until="networkidle")
-    t3 = time.time()
-    print(f"[PROFILE] Load content (networkidle) took: {t3 - t2:.3f}s")
-    
-    pdf_bytes = await page.pdf(
-        format=format, 
-        print_background=True,
-    )
-    t4 = time.time()
-    print(f"[PROFILE] Playwright page.pdf print took: {t4 - t3:.3f}s")
-    
-    await page.close()
-    
-    if close_browser_needed:
-        await browser.close()
-        await p.stop()
+    context = None
+    page = None
+    try:
+        context = await browser.new_context()
+        page = await context.new_page()
+        t2 = time.time()
+        print(f"[PROFILE] Page open took: {t2 - t1:.3f}s")
         
-    t5 = time.time()
-    print(f"[PROFILE] generate_pdf_from_html total time: {t5 - t0:.3f}s")
-    return pdf_bytes
+        await page.set_content(html, wait_until="networkidle")
+        t3 = time.time()
+        print(f"[PROFILE] Load content (networkidle) took: {t3 - t2:.3f}s")
+        
+        pdf_bytes = await page.pdf(
+            format=format, 
+            print_background=True,
+        )
+        t4 = time.time()
+        print(f"[PROFILE] Playwright page.pdf print took: {t4 - t3:.3f}s")
+        return pdf_bytes
+    finally:
+        if page:
+            await page.close()
+        if context:
+            await context.close()
+        if close_browser_needed:
+            await browser.close()
+            if p:
+                await p.stop()
+        t5 = time.time()
+        print(f"[PROFILE] generate_pdf_from_html total time: {t5 - t0:.3f}s")
 
 
 # Helper for synchronous contexts (e.g., test scripts)
@@ -226,63 +232,84 @@ async def generate_pdf_with_toc(html: str, browser=None, *, format: str = "Lette
     else:
         print(f"[PROFILE] Using global browser instance. Setup overhead: {t_init - t_start:.3f}s")
         
-    # Collect headings
-    headings = collect_headings_from_html(html)
+    # Parse BeautifulSoup once to get headings and reuse the soup object
+    soup = BeautifulSoup(html, "html.parser")
+    
+    # Collect headings, tables, figures
+    headings = [
+        {"title": h.get_text(strip=True), "level": int(h.get("data-toc-level", 1))}
+        for h in soup.select(".toc-heading")
+    ]
+    tables = [
+        {"title": t.get_text(strip=True), "level": 1}
+        for t in soup.select(".toc-table-caption")
+    ]
+    figures = [
+        {"title": f.get_text(strip=True), "level": 1}
+        for f in soup.select(".toc-figure-caption")
+    ]
+    headings = headings + tables + figures
+    
     t1 = time.time()
     print(f"[PROFILE] BS4 collect headings took: {t1 - t_init:.3f}s (Count: {len(headings)})")
     
-    # Create page
-    page = await browser.new_page()
-    t2 = time.time()
-    print(f"[PROFILE] Page open took: {t2 - t1:.3f}s")
-    
-    # Pass 1 Render
-    print("[PROFILE] Starting Pass 1 Render...")
-    await page.set_content(html, wait_until="networkidle")
-    pass1_pdf = await page.pdf(format=format, print_background=True)
-    t3 = time.time()
-    print(f"[PROFILE] Pass 1 Render complete: {t3 - t2:.3f}s")
-    
-    # PyMuPDF scan
-    print("[PROFILE] Starting PyMuPDF scan...")
-    toc_entries = extract_toc_entries(pass1_pdf, headings)
-    t4 = time.time()
-    print(f"[PROFILE] PyMuPDF scan complete: {t4 - t3:.3f}s (Entries matched: {len(toc_entries)})")
-    
-    # BS4 Injection
-    print("[PROFILE] Starting BS4 Injection...")
-    soup = BeautifulSoup(html, "html.parser")
-    page_num_spans = soup.select(".toc-page-num")
-    page_lookup = {entry["title"]: entry["page"] for entry in toc_entries}
-    matched_count = 0
-    for span in page_num_spans:
-        row = span.find_parent(class_="toc-row")
-        if not row:
-            continue
-        title_span = row.select_one(".toc-title")
-        if not title_span:
-            continue
-        title_text = title_span.get_text(strip=True)
-        if title_text in page_lookup:
-            span.string = str(page_lookup[title_text])
-            matched_count += 1
-    final_html = str(soup)
-    t5 = time.time()
-    print(f"[PROFILE] BS4 Injection complete: {t5 - t4:.3f}s (Injected spans: {matched_count})")
-    
-    # Pass 2 Render on SAME page
-    print("[PROFILE] Starting Pass 2 Render on reused page...")
-    await page.set_content(final_html, wait_until="networkidle")
-    final_pdf = await page.pdf(format=format, print_background=True)
-    t6 = time.time()
-    print(f"[PROFILE] Pass 2 Render complete: {t6 - t5:.3f}s")
-    
-    await page.close()
-    
-    if close_browser_needed:
-        await browser.close()
-        await p.stop()
+    context = None
+    page = None
+    try:
+        context = await browser.new_context()
+        page = await context.new_page()
+        t2 = time.time()
+        print(f"[PROFILE] Page open took: {t2 - t1:.3f}s")
         
-    t7 = time.time()
-    print(f"[PROFILE] generate_pdf_with_toc grand total time: {t7 - t_start:.3f}s")
-    return final_pdf
+        # Pass 1 Render (use original html string)
+        print("[PROFILE] Starting Pass 1 Render...")
+        await page.set_content(html, wait_until="networkidle")
+        pass1_pdf = await page.pdf(format=format, print_background=True)
+        t3 = time.time()
+        print(f"[PROFILE] Pass 1 Render complete: {t3 - t2:.3f}s")
+        
+        # PyMuPDF scan
+        print("[PROFILE] Starting PyMuPDF scan...")
+        toc_entries = extract_toc_entries(pass1_pdf, headings)
+        t4 = time.time()
+        print(f"[PROFILE] PyMuPDF scan complete: {t4 - t3:.3f}s (Entries matched: {len(toc_entries)})")
+        
+        # BS4 Injection on the existing parsed soup
+        print("[PROFILE] Starting BS4 Injection...")
+        page_num_spans = soup.select(".toc-page-num")
+        page_lookup = {entry["title"]: entry["page"] for entry in toc_entries}
+        matched_count = 0
+        for span in page_num_spans:
+            row = span.find_parent(class_="toc-row")
+            if not row:
+                continue
+            title_span = row.select_one(".toc-title")
+            if not title_span:
+                continue
+            title_text = title_span.get_text(strip=True)
+            if title_text in page_lookup:
+                span.string = str(page_lookup[title_text])
+                matched_count += 1
+        final_html = str(soup)
+        t5 = time.time()
+        print(f"[PROFILE] BS4 Injection complete: {t5 - t4:.3f}s (Injected spans: {matched_count})")
+        
+        # Pass 2 Render on SAME page
+        print("[PROFILE] Starting Pass 2 Render on reused page...")
+        await page.set_content(final_html, wait_until="networkidle")
+        final_pdf = await page.pdf(format=format, print_background=True)
+        t6 = time.time()
+        print(f"[PROFILE] Pass 2 Render complete: {t6 - t5:.3f}s")
+        return final_pdf
+    finally:
+        del soup
+        if page:
+            await page.close()
+        if context:
+            await context.close()
+        if close_browser_needed:
+            await browser.close()
+            if p:
+                await p.stop()
+        t7 = time.time()
+        print(f"[PROFILE] generate_pdf_with_toc grand total time: {t7 - t_start:.3f}s")
