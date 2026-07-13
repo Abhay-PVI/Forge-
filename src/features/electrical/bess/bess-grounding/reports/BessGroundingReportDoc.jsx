@@ -10,7 +10,21 @@ import { scanAndNumberReportContent, renderSimpleList, renderSectionIfNotEmpty, 
 import { fillTemplate } from "../../../../report-engine/templateEngine";
 import { buildReportMeta } from "../../../../../shared/reports/buildReportMeta";
 
-export default function BessGroundingReportDoc({ values = {}, files = {} }) {
+export default function BessGroundingReportDoc({ values = {}, files = {}, isEditMode = false, customHtml = null, onHtmlChange = null }) {
+  const htmlToRender = customHtml || values.custom_html;
+
+  if (htmlToRender) {
+    return (
+      <div 
+        id="bess-grounding-report" 
+        contentEditable={isEditMode}
+        suppressContentEditableWarning={true}
+        onBlur={onHtmlChange ? (e) => onHtmlChange(e.currentTarget.innerHTML) : undefined}
+        dangerouslySetInnerHTML={{ __html: htmlToRender }} 
+      />
+    );
+  }
+
   const reportMeta = buildReportMeta(values, { name: values.reportTitle || "Grounding Design Basis Report" });
   const initialValues = {
     ...values,
@@ -33,6 +47,12 @@ export default function BessGroundingReportDoc({ values = {}, files = {} }) {
   const reportHtml = fillTemplate(completeTemplate, finalValues);
 
   return (
-    <div id="bess-grounding-report" dangerouslySetInnerHTML={{ __html: reportHtml }} />
+    <div 
+      id="bess-grounding-report" 
+      contentEditable={isEditMode}
+      suppressContentEditableWarning={true}
+      onBlur={onHtmlChange ? (e) => onHtmlChange(e.currentTarget.innerHTML) : undefined}
+      dangerouslySetInnerHTML={{ __html: reportHtml }} 
+    />
   );
 }

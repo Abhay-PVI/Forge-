@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import Icon from "../../../../../shared/components/Icon";
 import Field from "../../../../../shared/components/Field";
 import { CABLE_AMPACITY_TABS } from "../forms/bessAmpacityTabs";
-import BessAmpacityStepper from "./BessAmpacityStepper";
-import UploadZone from "../../../pv/pv-design/components/UploadZone.jsx";
+import BessAmpacityStepper from "../../../../../shared/components/Stepper";
+import UploadZone from "../../../../../shared/components/UploadZone";
 import BessAmpacityReportDoc from "../reports/BessAmpacityReportDoc";
 import { fetchLastReportApi } from "../../../pv/pv-design/api/reportsApi";
 
@@ -314,7 +314,7 @@ export default function BessAmpacityFormScreen({ report, vertical, sub, values, 
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
       <FormHeader report={report} vertical={vertical} values={values} status={status} onGenerate={onGenerate} onSaveDraft={onSaveDraft} onLoadLastEntry={loadLastEntry} onClearAll={onClearAll} />
       {banner && <Banner banner={banner} onClose={() => setBanner(null)} />}
-      <BessAmpacityStepper step={step} setStep={setStep} values={values} files={files} />
+      <BessAmpacityStepper step={step} setStep={setStep} values={values} files={files} tabs={CABLE_AMPACITY_TABS} />
       <div style={{ flex: 1, overflowY: 'auto' }} ref={scrollRef}>
         <div style={{ maxWidth: 980, margin: '0 auto', padding: '24px 32px 40px', display: 'grid', gridTemplateColumns: '1fr 256px', gap: 28, alignItems: 'start' }}>
           <div className="card fade-in" key={tab.id} style={{ padding: 24, minWidth: 0 }}>

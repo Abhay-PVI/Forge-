@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import Icon from "../../../../../shared/components/Icon";
 import Field from "../../../../../shared/components/Field";
 import { GROUNDING_ANALYSIS_TABS } from "../forms/bessGroundingTabs";
-import BessGroundingStepper from "./BessGroundingStepper";
-import UploadZone from "../../../pv/pv-design/components/UploadZone.jsx";
+import BessGroundingStepper from "../../../../../shared/components/Stepper";
+import UploadZone from "../../../../../shared/components/UploadZone";
 import BessGroundingReportDoc from "../reports/BessGroundingReportDoc";
 import { fetchLastReportApi } from "../../../pv/pv-design/api/reportsApi";
 
@@ -313,7 +313,7 @@ export default function BessGroundingFormScreen({ report, vertical, sub, values,
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
       <FormHeader report={report} vertical={vertical} values={values} status={status} onGenerate={onGenerate} onSaveDraft={onSaveDraft} onLoadLastEntry={loadLastEntry} onClearAll={onClearAll} />
       {banner && <Banner banner={banner} onClose={() => setBanner(null)} />}
-      <BessGroundingStepper step={step} setStep={setStep} values={values} files={files} />
+      <BessGroundingStepper step={step} setStep={setStep} values={values} files={files} tabs={GROUNDING_ANALYSIS_TABS} />
       <div style={{ flex: 1, overflowY: 'auto' }} ref={scrollRef}>
         <div style={{ maxWidth: 980, margin: '0 auto', padding: '24px 32px 40px', display: 'grid', gridTemplateColumns: '1fr 256px', gap: 28, alignItems: 'start' }}>
           <div className="card fade-in" key={tab.id} style={{ padding: 24, minWidth: 0 }}>

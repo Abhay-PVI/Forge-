@@ -40,3 +40,24 @@ td {
     border: 1px solid black;
     padding: 5px;
 }
+
+/* ── EDITABLE REPORT UX STYLES ── */
+[contenteditable="true"] p:hover,
+[contenteditable="true"] td:hover,
+[contenteditable="true"] th:hover,
+[contenteditable="true"] h1:hover,
+[contenteditable="true"] h2:hover,
+[contenteditable="true"] h3:hover,
+[contenteditable="true"] li:hover,
+[contenteditable="true"] .org-name:hover,
+[contenteditable="true"] .address:hover {
+    outline: 2px dashed var(--accent, #3b82f6);
+    background-color: rgba(59, 130, 246, 0.05);
+    border-radius: 4px;
+    cursor: text;
+    transition: outline 0.1s ease, background-color 0.1s ease;
+}
+
+[contenteditable="true"]:focus {
+    outline: none;
+}

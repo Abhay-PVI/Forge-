@@ -79,7 +79,21 @@ function DocRow({ k, v }) {
   );
 }
 
-export default function BessReportDoc({ values = {}, files = {}, showStamp = false }) {
+export default function BessReportDoc({ values = {}, files = {}, showStamp = false, isEditMode = false, customHtml = null, onHtmlChange = null }) {
+  const htmlToRender = customHtml || values.custom_html;
+
+  if (htmlToRender) {
+    return (
+      <div 
+        id="bess-report" 
+        contentEditable={isEditMode}
+        suppressContentEditableWarning={true}
+        onBlur={onHtmlChange ? (e) => onHtmlChange(e.currentTarget.innerHTML) : undefined}
+        dangerouslySetInnerHTML={{ __html: htmlToRender }} 
+      />
+    );
+  }
+
   const safeValues = values;
   const safeFiles = files;
 
@@ -179,7 +193,13 @@ export default function BessReportDoc({ values = {}, files = {}, showStamp = fal
 
   return (
 
-    <div id="bess-report" dangerouslySetInnerHTML={{ __html: reportHtml }} />
+    <div 
+      id="bess-report" 
+      contentEditable={isEditMode}
+      suppressContentEditableWarning={true}
+      onBlur={onHtmlChange ? (e) => onHtmlChange(e.currentTarget.innerHTML) : undefined}
+      dangerouslySetInnerHTML={{ __html: reportHtml }} 
+    />
 
   );
 }

@@ -88,7 +88,21 @@ function renderAshraeTableHtml(rawHtml, values) {
   }
 }
 
-export default function ReportDoc({ values = {}, calc = {}, files = {}, solarCalcValues = null, showStamp = false }) {
+export default function ReportDoc({ values = {}, calc = {}, files = {}, solarCalcValues = null, showStamp = false, isEditMode = false, customHtml = null, onHtmlChange = null }) {
+  const htmlToRender = customHtml || values.custom_html;
+
+  if (htmlToRender) {
+    return (
+      <div 
+        id="PV_DBR-report" 
+        contentEditable={isEditMode}
+        suppressContentEditableWarning={true}
+        onBlur={onHtmlChange ? (e) => onHtmlChange(e.currentTarget.innerHTML) : undefined}
+        dangerouslySetInnerHTML={{ __html: htmlToRender }} 
+      />
+    );
+  }
+
   const safeValues = values;
   const safeFiles = files;
 
@@ -312,7 +326,13 @@ export default function ReportDoc({ values = {}, calc = {}, files = {}, solarCal
 
   return (
 
-    <div id="PV_DBR-report" dangerouslySetInnerHTML={{ __html: reportHtml }} />
+    <div 
+      id="PV_DBR-report" 
+      contentEditable={isEditMode}
+      suppressContentEditableWarning={true}
+      onBlur={onHtmlChange ? (e) => onHtmlChange(e.currentTarget.innerHTML) : undefined}
+      dangerouslySetInnerHTML={{ __html: reportHtml }} 
+    />
 
   );
 }

@@ -12,7 +12,21 @@ import { buildReportMeta } from "../../../../../shared/reports/buildReportMeta";
 
 const TODAY = new Date().toLocaleDateString("en-GB");
 
-export default function HvDbrReportDoc({ values = {}, files = {}, showStamp = false }) {
+export default function HvDbrReportDoc({ values = {}, files = {}, showStamp = false, isEditMode = false, customHtml = null, onHtmlChange = null }) {
+  const htmlToRender = customHtml || values.custom_html;
+
+  if (htmlToRender) {
+    return (
+      <div 
+        id="hv-dbr-report" 
+        contentEditable={isEditMode}
+        suppressContentEditableWarning={true}
+        onBlur={onHtmlChange ? (e) => onHtmlChange(e.currentTarget.innerHTML) : undefined}
+        dangerouslySetInnerHTML={{ __html: htmlToRender }} 
+      />
+    );
+  }
+
   const reportMeta = buildReportMeta(values, {
     name: "HV Design Basis Report",
     vertical: "hv",
@@ -54,6 +68,12 @@ export default function HvDbrReportDoc({ values = {}, files = {}, showStamp = fa
   const reportHtml = fillTemplate(completeTemplate, finalValues);
 
   return (
-    <div id="hv-dbr-report" dangerouslySetInnerHTML={{ __html: reportHtml }} />
+    <div 
+      id="hv-dbr-report" 
+      contentEditable={isEditMode}
+      suppressContentEditableWarning={true}
+      onBlur={onHtmlChange ? (e) => onHtmlChange(e.currentTarget.innerHTML) : undefined}
+      dangerouslySetInnerHTML={{ __html: reportHtml }} 
+    />
   );
 }

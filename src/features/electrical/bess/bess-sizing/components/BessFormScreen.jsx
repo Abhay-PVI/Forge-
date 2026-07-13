@@ -4,8 +4,8 @@ import Field from "../../../../../shared/components/Field";
 import { BESS_TABS } from "../forms/bessTabs";
 import { fetchLastReportApi } from "../../../pv/pv-design/api/reportsApi";
 // import CalcPanel from "./CalcPanel";
-import BessStepper from "./BessStepper";
-import UploadZone from "../../../pv/pv-design/components/UploadZone.jsx";
+import BessStepper from "../../../../../shared/components/Stepper";
+import UploadZone from "../../../../../shared/components/UploadZone";
 // import ReportDoc from "../reports/ReportDoc";
 
 // export default function FormScreen() {
@@ -409,7 +409,7 @@ export default function BessFormScreen({ report, vertical, sub, values, setValue
         <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1.05fr 1fr', minHeight: 0 }}>
           {/* form */}
           <div style={{ display: 'flex', flexDirection: 'column', minHeight: 0, borderRight: '1px solid var(--border)' }}>
-            <BessStepper step={step} setStep={setStep} values={values} files={files} />
+            <BessStepper step={step} setStep={setStep} values={values} files={files} tabs={BESS_TABS} />
             <div style={{ flex: 1, overflowY: 'auto', padding: '22px 28px 24px' }} ref={scrollRef}>
               <SectionTitle tab={tab} />
               <TabBody tab={tab} values={values} setValue={setValue} files={files} setFile={setFile} showErrors={showErrors} />
@@ -439,7 +439,7 @@ export default function BessFormScreen({ report, vertical, sub, values, setValue
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
       <FormHeader report={report} vertical={vertical} values={values} status={status} onGenerate={onGenerate} onSaveDraft={onSaveDraft} onLoadLastEntry={loadLastEntry} onClearAll={onClearAll} />
       {banner && <Banner banner={banner} onClose={() => setBanner(null)} />}
-      <BessStepper step={step} setStep={setStep} values={values} files={files} />
+      <BessStepper step={step} setStep={setStep} values={values} files={files} tabs={BESS_TABS} />
       <div style={{ flex: 1, overflowY: 'auto' }} ref={scrollRef}>
         <div style={{ maxWidth: 980, margin: '0 auto', padding: '24px 32px 40px', display: 'grid', gridTemplateColumns: '1fr 256px', gap: 28, alignItems: 'start' }}>
           <div className="card fade-in" key={tab.id} style={{ padding: 24, minWidth: 0 }}>

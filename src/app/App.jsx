@@ -108,6 +108,7 @@ export default function App() {
   const [screen, setScreen] = useState("app");
   const [currentReportId, setCurrentReportId] = useState(null);
   const [sourceReportId, setSourceReportId] = useState(null);
+  const [loadedReportMeta, setLoadedReportMeta] = useState(null);
   const [draftSync, setDraftSync] = useState({
     dirty: false,
     saving: false,
@@ -221,6 +222,7 @@ export default function App() {
 
     setCurrentReportId(null); // Clear active report context
     setSourceReportId(null);
+    setLoadedReportMeta(null);
     resetDraftSync();
     setPhase("form");
   };
@@ -239,6 +241,7 @@ export default function App() {
     });
     setCurrentReportId(null);
     setSourceReportId(null);
+    setLoadedReportMeta(null);
     resetDraftSync();
   };
 
@@ -309,17 +312,18 @@ export default function App() {
     // Extract nested details if returned in single RPC json structure
     const details = inputs.details || inputs;
 
+    const metadata = detail.metadata || {};
+    const metadata_json = metadata.metadata_json || {};
+
     if (recentMeta.report_type === "grounding") {
-      setBessGroundingValues(prev => ({ ...prev, ...details }));
+      setBessGroundingValues(prev => ({ ...prev, ...metadata_json, ...details }));
     } else if (recentMeta.report_type === "cable") {
-      setBessAmpacityValues(prev => ({ ...prev, ...details }));
+      setBessAmpacityValues(prev => ({ ...prev, ...metadata_json, ...details }));
     } else if (recentMeta.report_type === "battery") {
-      setBessValues(prev => ({ ...prev, ...details }));
+      setBessValues(prev => ({ ...prev, ...metadata_json, ...details }));
     } else if (recentMeta.report_type === "hv-dbr") {
-      setHvDbrValues(prev => ({ ...prev, ...details }));
+      setHvDbrValues(prev => ({ ...prev, ...metadata_json, ...details }));
     } else {
-      const metadata = detail.metadata || {};
-      const metadata_json = metadata.metadata_json || {};
       const flatPv = flattenPvReport(details);
       setPvValues(prev => ({ ...prev, ...metadata_json, ...flatPv }));
     }
@@ -331,6 +335,11 @@ export default function App() {
     loadReportIntoForm(recentMeta, detail);
 
     setCurrentReportId(recentMeta.report_id);
+    setLoadedReportMeta({
+      document_no: recentMeta.document_no || "",
+      revision: recentMeta.revision || "",
+      report_title: recentMeta.report_title || "",
+    });
     setSourceReportId(null);
     setDraftSync({
       dirty: false,
@@ -344,6 +353,7 @@ export default function App() {
     loadReportIntoForm(recentMeta, detail);
 
     setCurrentReportId(null);
+    setLoadedReportMeta(null);
     setSourceReportId(recentMeta.report_id);
     setDraftSync({
       dirty: true,
@@ -372,13 +382,26 @@ export default function App() {
 
       const reportType = typeMap[sel.report?.id] || "pv";
 
+      const currentDocNo = values.DOCUMENT_NO || values.grounding_analysis_report_no || "PVI-GEN-001";
+      const currentRev = values.REVISION || values.grounding_layout_drawing_no || "A";
+      const currentTitle = values.REPORT_TITLE || sel.report?.name || "Engineering Report";
+
+      const isVersionChanged = loadedReportMeta && (
+        loadedReportMeta.document_no !== currentDocNo ||
+        loadedReportMeta.revision !== currentRev ||
+        loadedReportMeta.report_title !== currentTitle
+      );
+
+      // If version details changed, save as a new report
+      const targetReportId = isVersionChanged ? null : currentReportId;
+
       const payload = {
-        report_id: currentReportId,
+        report_id: targetReportId,
         report_type: reportType,
-        document_no: values.DOCUMENT_NO || values.grounding_analysis_report_no || "PVI-GEN-001",
-        revision: values.REVISION || values.grounding_layout_drawing_no || "A",
+        document_no: currentDocNo,
+        revision: currentRev,
         prepared_date: values.PREPARATION_DATE || new Date().toISOString().split("T")[0],
-        report_title: values.REPORT_TITLE || sel.report?.name || "Engineering Report",
+        report_title: currentTitle,
         status,
         values: values
       };
@@ -388,6 +411,11 @@ export default function App() {
       const res = await saveReportApi(payload, accessToken);
       if (res.success && res.report_id) {
         setCurrentReportId(res.report_id);
+        setLoadedReportMeta({
+          document_no: currentDocNo,
+          revision: currentRev,
+          report_title: currentTitle,
+        });
         setDraftSync({
           dirty: false,
           saving: false,
@@ -421,19 +449,15 @@ export default function App() {
     }
   };
 
-  const handleGenerate = async (values) => {
-    try {
-      await persistReportDraft(values, { showSuccessAlert: false, status: "completed" });
-      setPhase("generating");
-    } catch {
-      // Keep the user on the form until the save issue is fixed.
-    }
+  const handleGenerate = (values) => {
+    setPhase("generating");
   };
 
   const handleGoDashboard = () => {
     resetDraftSync();
     setCurrentReportId(null);
     setSourceReportId(null);
+    setLoadedReportMeta(null);
     setSel({
       vertical: null,
       sub: null,
@@ -523,6 +547,10 @@ export default function App() {
                 report: null,
               })
             }
+            onSave={async (updatedValues) => {
+              setBessValues(updatedValues);
+              return await persistReportDraft(updatedValues, { showSuccessAlert: true, status: "completed" });
+            }}
           />
         );
 
@@ -540,6 +568,10 @@ export default function App() {
                 report: null,
               })
             }
+            onSave={async (updatedValues) => {
+              setBessAmpacityValues(updatedValues);
+              return await persistReportDraft(updatedValues, { showSuccessAlert: true, status: "completed" });
+            }}
           />
         );
 
@@ -557,6 +589,10 @@ export default function App() {
                 report: null,
               })
             }
+            onSave={async (updatedValues) => {
+              setBessGroundingValues(updatedValues);
+              return await persistReportDraft(updatedValues, { showSuccessAlert: true, status: "completed" });
+            }}
           />
         );
 
@@ -573,6 +609,10 @@ export default function App() {
                 report: null,
               })
             }
+            onSave={async (updatedValues) => {
+              setHvDbrValues(updatedValues);
+              return await persistReportDraft(updatedValues, { showSuccessAlert: true, status: "completed" });
+            }}
           />
         );
       } else {
@@ -590,6 +630,10 @@ export default function App() {
                 report: null,
               })
             }
+            onSave={async (updatedValues) => {
+              setPvValues(updatedValues);
+              return await persistReportDraft(updatedValues, { showSuccessAlert: true, status: "completed" });
+            }}
           />
         );
       }

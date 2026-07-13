@@ -1,9 +1,4 @@
 import React from 'react';
-import { STRING_SIZE_TABS } from "../forms/stringSizingTabs";
-
-// export default function Stepper() {
-//   return <div>Stepper</div>;
-// }
 
 function tabRequiredKeys(tab) {
   const fields = tab.fields || (tab.groups || []).flatMap((group) => group.fields);
@@ -12,15 +7,14 @@ function tabRequiredKeys(tab) {
   return [...fieldKeys, ...uploadKeys];
 }
 
-function tabStatus(tab, values, files) {
+function tabStatus(tab, values, files = {}) {
   const keys = tabRequiredKeys(tab);
   if (!keys.length) return 'complete';
 
   const filled = keys.filter((key) => {
     if (tab.uploads && tab.uploads.some((upload) => upload.key === key)) {
-      return !!files[key];
+      return files ? !!files[key] : false;
     }
-
     return values[key] != null && String(values[key]).trim() !== '';
   }).length;
 
@@ -29,12 +23,10 @@ function tabStatus(tab, values, files) {
   return 'complete';
 }
 
-// ---- step stepper (horizontal) -----------------------------
-export default function Stepper({ step, setStep, values, files }) {
-  
+export default function Stepper({ step, setStep, values, files = {}, tabs = [] }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '0 32px', height: 52, borderBottom: '1px solid var(--border)', background: 'var(--surface)', overflowX: 'auto' }}>
-      {STRING_SIZE_TABS.map((t, i) => {
+      {tabs.map((t, i) => {
         const st = tabStatus(t, values, files);
         const active = step === i;
         return (

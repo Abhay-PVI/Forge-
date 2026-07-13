@@ -1,23 +1,21 @@
 import React, { useState, useRef } from 'react';
-import Icon from "../../../../../shared/components/Icon";
-// export default function UploadZone() {
-//   return <div>Upload Zone</div>;
-// }
+import Icon from "./Icon";
 
-// ---- Upload zone -------------------------------------------
 export default function UploadZone({ spec, file, onSet, onClear }) {
   const [drag, setDrag] = useState(false);
   const inputRef = useRef(null);
+  
   const pick = (f) => {
-  if (!f) return;
- onSet({
-    name: f.name,
-    size: f.size,
-    type: f.type,
-    lastModified: f.lastModified,
-    file: f,
-  });
-};
+    if (!f) return;
+    onSet({
+      name: f.name,
+      size: f.size,
+      type: f.type,
+      lastModified: f.lastModified,
+      file: f,
+    });
+  };
+
   if (file) {
     return (
       <div className="card" style={{ padding: '12px 14px', display: 'flex', alignItems: 'center', gap: 12, borderColor: 'var(--accent-line)', background: 'var(--accent-soft)' }}>
@@ -36,12 +34,12 @@ export default function UploadZone({ spec, file, onSet, onClear }) {
       </div>
     );
   }
+
   return (
     <div
       onDragOver={e => { e.preventDefault(); setDrag(true); }}
       onDragLeave={() => setDrag(false)}
-      //onDrop={e => { e.preventDefault(); setDrag(false); pick(e.dataTransfer.files && e.dataTransfer.files[0] || { name: spec.label.replace(/[^a-z]/gi,'_') + '.pdf', size: (1.4)*1024*1024 }); }}
-      onDrop={(e) => {e.preventDefault();setDrag(false);const droppedFile = e.dataTransfer.files?.[0];if (droppedFile) {pick(droppedFile);}}}
+      onDrop={(e) => { e.preventDefault(); setDrag(false); const droppedFile = e.dataTransfer.files?.[0]; if (droppedFile) { pick(droppedFile); } }}
       onClick={() => inputRef.current && inputRef.current.click()}
       style={{
         border: `1.5px dashed ${drag ? 'var(--accent)' : 'var(--border-2)'}`,
@@ -65,5 +63,3 @@ export default function UploadZone({ spec, file, onSet, onClear }) {
     </div>
   );
 }
-
-

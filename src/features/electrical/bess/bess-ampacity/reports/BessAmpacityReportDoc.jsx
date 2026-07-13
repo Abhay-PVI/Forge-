@@ -10,7 +10,21 @@ import { scanAndNumberReportContent, renderSimpleList, renderSectionIfNotEmpty, 
 import { fillTemplate } from "../../../../report-engine/templateEngine";
 import { buildReportMeta } from "../../../../../shared/reports/buildReportMeta";
 
-export default function BessAmpacityReportDoc({ values = {}, files = {} }) {
+export default function BessAmpacityReportDoc({ values = {}, files = {}, isEditMode = false, customHtml = null, onHtmlChange = null }) {
+  const htmlToRender = customHtml || values.custom_html;
+
+  if (htmlToRender) {
+    return (
+      <div 
+        id="bess-ampacity-report" 
+        contentEditable={isEditMode}
+        suppressContentEditableWarning={true}
+        onBlur={onHtmlChange ? (e) => onHtmlChange(e.currentTarget.innerHTML) : undefined}
+        dangerouslySetInnerHTML={{ __html: htmlToRender }} 
+      />
+    );
+  }
+
   // 1. Fill the report body template to resolve its placeholders first
   const reportMeta = buildReportMeta(values, { name: values.reportTitle || "Cable Ampacity Calculation Report" });
   const initialValues = {
@@ -36,6 +50,12 @@ export default function BessAmpacityReportDoc({ values = {}, files = {} }) {
   const reportHtml = fillTemplate(completeTemplate, finalValues);
 
   return (
-    <div id="bess-ampacity-report" dangerouslySetInnerHTML={{ __html: reportHtml }} />
+    <div 
+      id="bess-ampacity-report" 
+      contentEditable={isEditMode}
+      suppressContentEditableWarning={true}
+      onBlur={onHtmlChange ? (e) => onHtmlChange(e.currentTarget.innerHTML) : undefined}
+      dangerouslySetInnerHTML={{ __html: reportHtml }} 
+    />
   );
 }

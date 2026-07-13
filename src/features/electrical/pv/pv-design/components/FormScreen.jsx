@@ -4,8 +4,8 @@ import Icon from "../../../../../shared/components/Icon";
 import Field from "../../../../../shared/components/Field";
 import { STRING_SIZE_TABS } from "../forms/stringSizingTabs";
 import CalcPanel from "./CalcPanel";
-import Stepper from "./Stepper";
-import UploadZone from "./UploadZone";
+import Stepper from "../../../../../shared/components/Stepper";
+import UploadZone from "../../../../../shared/components/UploadZone";
 import ReportDoc from "../reports/ReportDoc";
 import Papa from "papaparse";
 import { calculateYearlyVoc, calculateYearlyIsc, prepareTableData } from "../calculations/calculateYearlyVoc&Isc";
@@ -909,7 +909,7 @@ export default function FormScreen({ report, vertical, sub, values, setValue, fi
         <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1.05fr 1fr', minHeight: 0 }}>
           {/* form */}
           <div style={{ display: 'flex', flexDirection: 'column', minHeight: 0, borderRight: '1px solid var(--border)' }}>
-            <Stepper step={step} setStep={setStep} values={values} files={files} />
+            <Stepper step={step} setStep={setStep} values={values} files={files} tabs={STRING_SIZE_TABS} />
             <div style={{ flex: 1, overflowY: 'auto', padding: '22px 28px 24px' }} ref={scrollRef}>
               <AlertBanner banner={banner} onClose={() => setBanner(null)} />
               <SectionTitle tab={tab} />
@@ -939,7 +939,7 @@ export default function FormScreen({ report, vertical, sub, values, setValue, fi
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
       <FormHeader report={report} vertical={vertical} values={values} status={status} onGenerate={onGenerate} onSaveDraft={onSaveDraft} onLoadLastEntry={loadLastEntry} onClearAll={onClearAll} />
-      <Stepper step={step} setStep={setStep} values={values} files={files} />
+      <Stepper step={step} setStep={setStep} values={values} files={files} tabs={STRING_SIZE_TABS} />
       <div style={{ flex: 1, overflowY: 'auto' }} ref={scrollRef}>
         <div style={{ maxWidth: 980, margin: '0 auto', padding: '24px 32px 40px', display: 'grid', gridTemplateColumns: '1fr 256px', gap: 28, alignItems: 'start' }}>
           <div className="card fade-in" key={tab.id} style={{ padding: 24, minWidth: 0 }}>
