@@ -3,16 +3,16 @@ import { getReportNodeById } from "../../../../../data/navigation";
 
 import template from "../templates/pvReportTemplate.html?raw";
 import { buildVocTable, buildIscTable, buildMinVoltageDegradationTable, buildPvsystTables, calculateNMin, buildSolarVocTemplateValues, buildPvsystLossTemplateValues } from "../forms/utils/buildVoc&IscTable";
-import coverPage from "../../../../../shared/reports/copy/coverPage.html?raw";
-import documentControlPage from "../../../../../shared/reports/copy/documentControlPage.html?raw";
-import listOfTables from "../../../../../shared/reports/copy/listOfTables.html?raw";
-import listOfAbbreviations from "../../../../../shared/reports/copy/listOfAbbreviations.html?raw";
+import coverPage from "../../../../../shared/reports/coverPage.html?raw";
+import documentControlPage from "../../../../../shared/reports/documentControlPage.html?raw";
+import listOfTables from "../../../../../shared/reports/listOfTables.html?raw";
+import listOfAbbreviations from "../../../../../shared/reports/listOfAbbreviations.html?raw";
 import { fillTemplate } from "../../../../report-engine/templateEngine";
-import tableOfContents from "../../../../../shared/reports/copy/tableOfContents.html?raw";
+import tableOfContents from "../../../../../shared/reports/tableOfContents.html?raw";
 import { scanAndNumberReportContent, renderSimpleList, renderSectionIfNotEmpty, renderAbbreviationsTable } from "../../../../../shared/reports/utils/tocScanner";
 //C:\Users\AbhayPratapSingh\work\June\260605\HV DBR\Forge\forge-react\src\backend\Ashrae
 import ashraeTableTemplate from "../../../../../backend/Ashrae/ASHARE.html?raw";
-import { buildReportMeta } from "../../../../../shared/reports/copy/buildReportMeta";
+import { buildReportMeta } from "../../../../../shared/reports/buildReportMeta";
 // console.log(ashraeTableTemplate);
 // import { prepareTableData } from '../calculations/calculateYearlyVoc&Isc';
 

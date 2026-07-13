@@ -10,8 +10,8 @@ export const NAV = [
         name: 'PV',
         icon: 'sun',
         reports: [
+          { id: 'pv-design', name: 'PV Design Basis Report', code: 'PVD', status: 'coded', reportTitle: 'PV Design Basis Report' },
           { id: 'string-size', name: 'String Size Design Basis', code: 'STR', status: 'soon', reportTitle: 'String Size Design Basis Report' },
-          { id: 'pv-design', name: 'PV Design Basis', code: 'PVD', status: 'coded', reportTitle: 'PV Design Basis Report' },
           { id: 'energy-yield', name: 'Energy Yield Design Basis', code: 'EYD', status: 'soon', reportTitle: 'Energy Yield Design Basis Report' },
           { id: 'gcr-opt', name: 'GCR Optimization Design Basis', code: 'GCR', status: 'soon', reportTitle: 'GCR Optimization Design Basis Report' },
           { id: 'cable-sizing', name: 'DC Cable Sizing Design Basis', code: 'DCC', status: 'soon', reportTitle: 'DC Cable Sizing Design Basis Report' },
@@ -23,9 +23,9 @@ export const NAV = [
         name: 'BESS',
         icon: 'battery',
         reports: [
-          { id: 'bess-sizing', name: 'BESS Sizing Design Basis', code: 'BSZ', status: 'coded', reportTitle: 'BESS Sizing Design Basis Report' },
-          { id: 'bess-ampacity', name: 'BESS Cable Ampacity', code: 'AMP', status: 'coded', reportTitle: 'BESS Cable Ampacity Report' },
-          { id: 'bess-grounding', name: 'BESS Grounding Design Basis', code: 'GRN', status: 'coded', reportTitle: 'BESS Grounding Design Basis Report' },
+          { id: 'bess-sizing', name: 'BESS Design Basis Report', code: 'BSZ', status: 'coded', reportTitle: 'BESS Sizing Design Basis Report' },
+          { id: 'bess-ampacity', name: 'BESS Cable Ampacity', code: 'AMP', status: 'soon', reportTitle: 'BESS Cable Ampacity Report' },
+          { id: 'bess-grounding', name: 'BESS Grounding Design Basis', code: 'GRN', status: 'soon', reportTitle: 'BESS Grounding Design Basis Report' },
           { id: 'pcs-sizing', name: 'PCS Sizing Design Basis', code: 'PCS', status: 'soon', reportTitle: 'PCS Sizing Design Basis Report' }
         ]
       },
@@ -34,7 +34,7 @@ export const NAV = [
         name: 'HV & Substation',
         icon: 'tower',
         reports: [
-          { id: 'hv-dbr', name: 'HV Design Basis', code: 'HVD', status: 'coded', reportTitle: 'HV Design Basis Report' },
+          { id: 'hv-dbr', name: 'HV Design Basis Report', code: 'HVD', status: 'coded', reportTitle: 'HV Design Basis Report' },
           { id: 'xfmr', name: 'Transformer Sizing Design Basis', code: 'XFR', status: 'soon', reportTitle: 'Transformer Sizing Design Basis Report' },
           { id: 'sld', name: 'SLD Basis Report', code: 'SLD', status: 'soon', reportTitle: 'SLD Basis Report' }
         ]

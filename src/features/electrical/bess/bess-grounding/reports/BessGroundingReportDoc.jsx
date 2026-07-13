@@ -4,7 +4,7 @@ import template from "../templates/bessGroundingReportTemplate.html?raw";
 import coverPage from "../../../../../shared/reports/coverPage.html?raw";
 import documentControlPage from "../../../../../shared/reports/documentControlPage.html?raw";
 import listOfTables from "../../../../../shared/reports/listOfTables.html?raw";
-import listOfAbbreviations from "../../../../../shared/reports/copy/listOfAbbreviations.html?raw";
+import listOfAbbreviations from "../../../../../shared/reports/listOfAbbreviations.html?raw";
 import tableOfContents from "../../../../../shared/reports/tableOfContents.html?raw";
 import { scanAndNumberReportContent, renderSimpleList, renderSectionIfNotEmpty, renderAbbreviationsTable } from "../../../../../shared/reports/utils/tocScanner";
 import { fillTemplate } from "../../../../report-engine/templateEngine";
