@@ -648,12 +648,14 @@ def save_report(payload: ReportSaveRequest, current_user: dict = Depends(get_cur
 def get_reports_list(current_user: dict = Depends(get_current_user)):
     try:
         org_id = current_user.get("organization_id")
+        user_id = current_user["id"]
         if not org_id:
             return JSONResponse(status_code=400, content={"success": False, "error": "Authenticated user is missing an organization."})
 
         res = supabase_admin.table("reports") \
             .select("id, report_title, document_no, revision, report_type, created_at, status") \
             .eq("organization_id", org_id) \
+            .eq("created_by", user_id) \
             .order("created_at", desc=True) \
             .execute()
         return {"success": True, "reports": res.data}
@@ -665,6 +667,7 @@ def get_reports_list(current_user: dict = Depends(get_current_user)):
 def get_last_pv_report(current_user: dict = Depends(get_current_user)):
     try:
         org_id = current_user.get("organization_id")
+        user_id = current_user["id"]
         if not org_id:
             return {"success": True, "data": None}
 
@@ -672,6 +675,7 @@ def get_last_pv_report(current_user: dict = Depends(get_current_user)):
             .select("id") \
             .eq("report_type", "pv") \
             .eq("organization_id", org_id) \
+            .eq("created_by", user_id) \
             .order("created_at", desc=True) \
             .limit(1) \
             .execute()
@@ -690,6 +694,7 @@ def get_last_pv_report(current_user: dict = Depends(get_current_user)):
 def get_last_report(report_type: str, current_user: dict = Depends(get_current_user)):
     try:
         org_id = current_user.get("organization_id")
+        user_id = current_user["id"]
         if not org_id:
             return {"success": True, "data": None}
 
@@ -697,6 +702,7 @@ def get_last_report(report_type: str, current_user: dict = Depends(get_current_u
             .select("id") \
             .eq("report_type", report_type) \
             .eq("organization_id", org_id) \
+            .eq("created_by", user_id) \
             .order("created_at", desc=True) \
             .limit(1) \
             .execute()
@@ -715,11 +721,12 @@ def get_last_report(report_type: str, current_user: dict = Depends(get_current_u
 def get_report_detail(report_id: str, current_user: dict = Depends(get_current_user)):
     try:
         org_id = current_user.get("organization_id")
+        user_id = current_user["id"]
         if not org_id:
             return JSONResponse(status_code=404, content={"success": False, "error": "Report not found"})
 
-        owner_check = supabase_admin.table("reports").select("organization_id").eq("id", report_id).execute()
-        if not owner_check.data or owner_check.data[0]["organization_id"] != org_id:
+        owner_check = supabase_admin.table("reports").select("organization_id, created_by").eq("id", report_id).execute()
+        if not owner_check.data or owner_check.data[0]["organization_id"] != org_id or owner_check.data[0]["created_by"] != user_id:
             return JSONResponse(status_code=404, content={"success": False, "error": "Report not found"})
 
         res = supabase_admin.rpc("get_complete_report_data", {"target_report_id": report_id}).execute()
