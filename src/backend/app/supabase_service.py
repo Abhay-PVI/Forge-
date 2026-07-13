@@ -62,17 +62,25 @@ security = HTTPBearer()
 DEFAULT_ORGANIZATION_NAME = os.getenv("DEFAULT_ORGANIZATION_NAME", "PV-Insight")
 
 
-def get_default_organization_id() -> str | None:
-    orgs = supabase_admin.table("organizations").select("id").ilike("name", DEFAULT_ORGANIZATION_NAME).limit(1).execute()
-    if orgs.data:
-        return orgs.data[0]["id"]
+_cached_default_org_id = None
 
+def get_default_organization_id() -> str | None:
+    global _cached_default_org_id
+    if _cached_default_org_id:
+        return _cached_default_org_id
+        
     try:
+        orgs = supabase_admin.table("organizations").select("id").ilike("name", DEFAULT_ORGANIZATION_NAME).limit(1).execute()
+        if orgs.data:
+            _cached_default_org_id = orgs.data[0]["id"]
+            return _cached_default_org_id
+
         new_org = supabase_admin.table("organizations").insert({"name": DEFAULT_ORGANIZATION_NAME}).execute()
         if new_org.data:
-            return new_org.data[0]["id"]
+            _cached_default_org_id = new_org.data[0]["id"]
+            return _cached_default_org_id
     except Exception as e:
-        print(f"Error creating default organization: {e}")
+        print(f"Error finding/creating default organization: {e}")
 
     return None
 

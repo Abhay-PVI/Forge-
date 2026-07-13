@@ -352,20 +352,27 @@ def auth_sign_up(payload: AuthSignUpRequest):
         if not org_id:
             raise Exception("Failed to retrieve or create default organization.")
 
-        auth_res = supabase_admin.auth.sign_up({
+        # Create and auto-confirm user immediately using admin API (bypasses slow SMTP email confirmations)
+        auth_res = supabase_admin.auth.admin.create_user({
             "email": normalized_email,
             "password": payload.password,
-            "options": {
-                "data": {
-                    "full_name": normalized_full_name,
-                    "department": normalized_department,
-                }
+            "email_confirm": True,
+            "user_metadata": {
+                "full_name": normalized_full_name,
+                "department": normalized_department,
             }
         })
 
         user = auth_res.user
         if not user:
             return JSONResponse(status_code=500, content={"success": False, "error": "Supabase did not return a created auth user."})
+
+        # Log in the user right away to acquire the session token
+        signin_res = supabase_admin.auth.sign_in_with_password({
+            "email": normalized_email,
+            "password": payload.password,
+        })
+        session = signin_res.session
 
         try:
             profile_payload = {
@@ -382,7 +389,7 @@ def auth_sign_up(payload: AuthSignUpRequest):
 
         return {
             "success": True,
-            "session": _serialize_supabase_value(auth_res.session),
+            "session": _serialize_supabase_value(session),
             "user": _serialize_supabase_value(user),
             "profile": {
                 "id": user.id,
