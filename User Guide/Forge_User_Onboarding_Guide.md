@@ -66,7 +66,7 @@ graph TD
 
 Forge features a secure, corporate authentication interface built on top of **Supabase Auth**.
 
-![Forge sign-in screen](images/login.png)
+![Forge sign-in screen](./login.png)
 *The Forge sign-in screen, split between the branded intro panel and the workspace login form.*
 
 ### Creating an Account
@@ -103,7 +103,7 @@ Vertical (e.g., Electrical)
          └── Report Template (e.g., PV Design Basis)
 ```
 
-![Forge sidebar navigation tree](images/sidebar.png)
+![Forge sidebar navigation tree](./sidebar.png)
 *The sidebar tree expanded to show Electrical > PV/BESS/HV & Substation disciplines and their individual report templates. Greyed-out rows marked "Soon" are not yet coded.*
 
 ### Moving Between Departments and Reports
@@ -129,7 +129,7 @@ Each report in the navigation tree is tagged with a status indicator:
 
 Once a report template is loaded, you enter the input screen. To ensure consistency, calculations are separated from the layout design.
 
-![PV Design Basis - Client Information tab](images/client-info-form.png)
+![PV Design Basis - Client Information tab](./client-info-form.png)
 *The Client Information tab of the PV Design Basis form, showing required fields, the tabbed layout across the top, and the live completion checklist on the right.*
 
 ### Data Entry Form Structure
@@ -138,7 +138,7 @@ Forms are divided into logically categorized **Tabs** (e.g., *Client Information
 - Input validation prevents submitting incorrect units or blank values.
 - Hover over inline helper icons or read the hints below fields for specific input standards (e.g., *POI Voltage must be inputted in kV*).
 
-![PV Design Basis - Technical Inputs tab](images/technical-inputs.png)
+![PV Design Basis - Technical Inputs tab](./technical-inputs.png)
 *The Technical Inputs tab, where values like Performance Ratio and DC CUF Ratio feed the live auto-calculated string sizing panel.*
 
 ### Technical Datasheet & File Uploads
@@ -179,7 +179,7 @@ Click the **Generate Basis Report** (or **Generate**) button located at the bott
 
 The Preview Screen displays the finalized document formatted to engineering standards, including the Cover Page, Table of Contents, Revision History, and Calculation Appendix.
 
-![Generated PV Design Basis report and download panel](images/report-generated.png)
+![Generated PV Design Basis report and download panel](./report-generated.png)
 *The Preview Screen after a successful generation, showing the cover page, the browser's download confirmation, and the right-hand options panel for format, page size, and stamp settings.*
 
 ### Selecting Formats (PDF / Word)
@@ -199,7 +199,7 @@ In the right rail panel, you can adjust the document format before downloading:
 
 All saved drafts and generated documents are tracked on the primary Dashboard screen.
 
-![Forge dashboard with submitted reports](images/dashboard.png)
+![Forge dashboard with submitted reports](./dashboard.png)
 *The Home / Dashboard screen listing submitted reports, each with Clone and Delete actions.*
 
 ### Cloning Reports (Drafting Variations)
