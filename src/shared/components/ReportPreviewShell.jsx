@@ -33,6 +33,7 @@ export default function ReportPreviewShell({
   const [isSaving, setIsSaving] = useState(false);
   const [isSavingToDb, setIsSavingToDb] = useState(false);
   const [isSavedToDb, setIsSavedToDb] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   // Collapse state for the right download rail panel
   const [railCollapsed, setRailCollapsed] = useState(() => {
@@ -80,17 +81,22 @@ export default function ReportPreviewShell({
   };
 
   const handleDownload = async () => {
-    if (!isSavedToDb) {
-      try {
-        await handleSaveToDatabase();
-      } catch (err) {
-        console.warn("Background auto-save failed before download:", err);
+    setIsDownloading(true);
+    try {
+      if (!isSavedToDb) {
+        try {
+          await handleSaveToDatabase();
+        } catch (err) {
+          console.warn("Background auto-save failed before download:", err);
+        }
       }
-    }
-    if (selectedFormat === "pdf") {
-      exportPdfWithToc(reportElementId, fname.replace(".docx", ".pdf"), selectedPageSize);
-    } else {
-      exportDocx(reportElementId, fname);
+      if (selectedFormat === "pdf") {
+        await exportPdfWithToc(reportElementId, fname.replace(".docx", ".pdf"), selectedPageSize);
+      } else {
+        await exportDocx(reportElementId, fname);
+      }
+    } finally {
+      setIsDownloading(false);
     }
   };
 
@@ -137,7 +143,37 @@ export default function ReportPreviewShell({
   };
 
   return (
-    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, position: 'relative' }}>
+      <style>{`
+        @keyframes loadingBarProgress {
+          0% { transform: translateX(-100%); }
+          50% { transform: translateX(0); }
+          100% { transform: translateX(100%); }
+        }
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
+      
+      {isDownloading && (
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: 4,
+          background: 'rgba(14, 165, 233, 0.1)',
+          overflow: 'hidden',
+          zIndex: 9999
+        }}>
+          <div style={{
+            width: '100%',
+            height: '100%',
+            background: 'var(--accent, #0ea5e9)',
+            animation: 'loadingBarProgress 2s infinite ease-in-out'
+          }} />
+        </div>
+      )}
       {/* success banner */}
       <div style={{ padding: '14px 28px', borderBottom: '1px solid var(--border)', background: 'var(--surface)', display: 'flex', alignItems: 'center', gap: 14 }}>
         <button className="btn btn-ghost btn-sm" onClick={onBack} disabled={isEditMode}>
@@ -178,8 +214,26 @@ export default function ReportPreviewShell({
               <button className="btn btn-soft btn-sm" onClick={onNew} disabled={isSaving}>
                 <Icon name="plus" size={14} />New report
               </button>
-              <button className="btn btn-primary btn-sm" onClick={handleDownload} disabled={isSaving}>
-                <Icon name="download" size={14} />Download .{selectedFormat}
+              <button className="btn btn-primary btn-sm" onClick={handleDownload} disabled={isSaving || isDownloading}>
+                {isDownloading ? (
+                  <>
+                    <span style={{
+                      display: 'inline-block',
+                      width: 12,
+                      height: 12,
+                      border: '2px solid currentColor',
+                      borderRightColor: 'transparent',
+                      borderRadius: '50%',
+                      animation: 'spin 0.75s linear infinite',
+                      marginRight: 6
+                    }} />
+                    Generating PDF...
+                  </>
+                ) : (
+                  <>
+                    <Icon name="download" size={14} />Download .{selectedFormat}
+                  </>
+                )}
               </button>
             </>
           )}
@@ -252,10 +306,23 @@ export default function ReportPreviewShell({
               <button
                 className="btn btn-soft"
                 onClick={handleDownload}
-                title={`Download standard document: ${fname}`}
+                disabled={isSaving || isDownloading}
+                title={isDownloading ? "Downloading..." : `Download standard document: ${fname}`}
                 style={{ width: 40, height: 40, padding: 0, display: 'grid', placeItems: 'center', borderRadius: 8 }}
               >
-                <Icon name="download" size={16} />
+                {isDownloading ? (
+                  <span style={{
+                    display: 'inline-block',
+                    width: 14,
+                    height: 14,
+                    border: '2px solid var(--accent, #0ea5e9)',
+                    borderRightColor: 'transparent',
+                    borderRadius: '50%',
+                    animation: 'spin 0.75s linear infinite'
+                  }} />
+                ) : (
+                  <Icon name="download" size={16} />
+                )}
               </button>
 
               <div
@@ -303,8 +370,27 @@ export default function ReportPreviewShell({
                     marginTop: 8 
                   }} 
                   onClick={handleDownload}
+                  disabled={isSaving || isDownloading}
                 >
-                  <Icon name="download" size={15} />Download
+                  {isDownloading ? (
+                    <>
+                      <span style={{
+                        display: 'inline-block',
+                        width: 12,
+                        height: 12,
+                        border: '2px solid var(--accent, #0ea5e9)',
+                        borderRightColor: 'transparent',
+                        borderRadius: '50%',
+                        animation: 'spin 0.75s linear infinite',
+                        marginRight: 6
+                      }} />
+                      Downloading...
+                    </>
+                  ) : (
+                    <>
+                      <Icon name="download" size={15} />Download
+                    </>
+                  )}
                 </button>
 
                 {/* Dynamic Page Size Control */}
