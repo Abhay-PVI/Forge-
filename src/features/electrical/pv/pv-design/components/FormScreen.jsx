@@ -15,6 +15,37 @@ import { API_BASE_URL } from "../api/apiConfig";
 import { parseModuleExcel } from "../forms/utils/parseModuleExcel";
 import { fetchLastPvReportApi } from "../api/reportsApi";
 
+function compressImage(dataUrl, maxDim = 1200, quality = 0.8) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      let width = img.width;
+      let height = img.height;
+
+      // Limit longest side to maxDim, preserving aspect ratio
+      if (width > maxDim || height > maxDim) {
+        if (width > height) {
+          height = Math.round((height * maxDim) / width);
+          width = maxDim;
+        } else {
+          width = Math.round((width * maxDim) / height);
+          height = maxDim;
+        }
+      }
+
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, width, height);
+
+      resolve(canvas.toDataURL("image/jpeg", quality));
+    };
+    img.onerror = () => resolve(dataUrl); // Fallback to original
+    img.src = dataUrl;
+  });
+}
+
 async function convertPdfToImages(pdfBlob) {
   return new Promise((resolve, reject) => {
     if (window.pdfjsLib) {
@@ -55,7 +86,10 @@ async function processPdf(pdfjsLib, pdfBlob, resolve, reject) {
       };
 
       await page.render(renderContext).promise;
-      images.push(canvas.toDataURL("image/png"));
+      const pngDataUrl = canvas.toDataURL("image/png");
+      const jpegDataUrl = canvas.toDataURL("image/jpeg", 0.8);
+      console.log(`[FormScreen] Appendix Page ${pageNum} compressed from PNG (${(pngDataUrl.length / 1024).toFixed(1)} KB) to JPEG (${(jpegDataUrl.length / 1024).toFixed(1)} KB)`);
+      images.push(jpegDataUrl);
     }
 
     resolve(images);
@@ -184,6 +218,12 @@ function TabBody({ tab, values, setValue, files, setFile, showErrors }) {
 
     // Uploading the Pvsyst File 
     const handleFileUpload = async (key, value) => {
+      // Safety file size check (20MB limit)
+      const maxFileSize = 20 * 1024 * 1024; // 20 MB
+      if (value && value.file && value.file.size > maxFileSize) {
+        alert(`File size exceeds 20MB limit. Please upload a smaller file.`);
+        return;
+      }
 
       setFile(key, value);
 
@@ -193,10 +233,16 @@ function TabBody({ tab, values, setValue, files, setFile, showErrors }) {
       if (key === "Results_of_26-year_voltage" || key === "Results_of_26-year_current") {
         if (value && value.file) {
           const reader = new FileReader();
-          reader.onloadend = () => {
-            const dataUrl = reader.result;
-            console.log(`[FormScreen] Converted ${key} to Base64, length: ${dataUrl.length}`);
-            setValue(key, `src="${dataUrl}"`);
+          reader.onloadend = async () => {
+            const originalDataUrl = reader.result;
+            const originalLength = originalDataUrl.length;
+            console.log(`[FormScreen] Converted ${key} to Base64, original size: ${(originalLength / 1024).toFixed(1)} KB`);
+
+            const compressedDataUrl = await compressImage(originalDataUrl, 1200, 0.8);
+            const compressedLength = compressedDataUrl.length;
+            console.log(`[FormScreen] Compressed ${key} Base64 size: ${(compressedLength / 1024).toFixed(1)} KB (Reduced by ${((originalLength - compressedLength) / originalLength * 100).toFixed(1)}%)`);
+
+            setValue(key, `src="${compressedDataUrl}"`);
           };
           reader.readAsDataURL(value.file);
         } else {

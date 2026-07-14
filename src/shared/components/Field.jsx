@@ -5,6 +5,37 @@ const errStyle = {
   boxShadow: '0 0 0 3px oklch(0.58 0.17 25 / 0.13)',
 };
 
+function compressImage(dataUrl, maxDim = 1200, quality = 0.8) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      let width = img.width;
+      let height = img.height;
+
+      // Limit longest side to maxDim, preserving aspect ratio
+      if (width > maxDim || height > maxDim) {
+        if (width > height) {
+          height = Math.round((height * maxDim) / width);
+          width = maxDim;
+        } else {
+          width = Math.round((width * maxDim) / height);
+          height = maxDim;
+        }
+      }
+
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, width, height);
+
+      resolve(canvas.toDataURL("image/jpeg", quality));
+    };
+    img.onerror = () => resolve(dataUrl); // Fallback to original
+    img.src = dataUrl;
+  });
+}
+
 export default function Field({ field, value, onChange, error }) {
   const id = 'f_' + field.key;
 
@@ -71,9 +102,23 @@ export default function Field({ field, value, onChange, error }) {
           onChange={(event) => {
             const file = event.target.files[0];
             if (file) {
+              // Safety size limit (20MB)
+              const maxFileSize = 20 * 1024 * 1024;
+              if (file.size > maxFileSize) {
+                alert(`File size exceeds 20MB limit. Please upload a smaller image.`);
+                return;
+              }
               const reader = new FileReader();
-              reader.onloadend = () => {
-                onChange(reader.result);
+              reader.onloadend = async () => {
+                const originalDataUrl = reader.result;
+                const originalLength = originalDataUrl.length;
+                console.log(`[Field] Logo uploaded, original size: ${(originalLength / 1024).toFixed(1)} KB`);
+
+                const compressedDataUrl = await compressImage(originalDataUrl, 1200, 0.8);
+                const compressedLength = compressedDataUrl.length;
+                console.log(`[Field] Compressed logo size: ${(compressedLength / 1024).toFixed(1)} KB (Reduced by ${((originalLength - compressedLength) / originalLength * 100).toFixed(1)}%)`);
+
+                onChange(compressedDataUrl);
               };
               reader.readAsDataURL(file);
             }
