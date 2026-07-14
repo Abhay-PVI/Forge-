@@ -10,6 +10,7 @@ from bs4 import BeautifulSoup
 from playwright.async_api import async_playwright
 import asyncio
 import time
+import gc
 
 
 async def generate_pdf_from_html(html: str, browser=None, *, format: str = "A4") -> bytes:
@@ -207,6 +208,9 @@ def render_toc_html(entries: list) -> str:
 
 
 # pdf_utils.py
+pdf_generation_semaphore = asyncio.Semaphore(1)
+
+
 async def generate_pdf_with_toc(html: str, browser=None, *, format: str = "Letter") -> bytes:
     t_start = time.time()
     
@@ -253,63 +257,66 @@ async def generate_pdf_with_toc(html: str, browser=None, *, format: str = "Lette
     t1 = time.time()
     print(f"[PROFILE] BS4 collect headings took: {t1 - t_init:.3f}s (Count: {len(headings)})")
     
-    context = None
-    page = None
-    try:
-        context = await browser.new_context()
-        page = await context.new_page()
-        t2 = time.time()
-        print(f"[PROFILE] Page open took: {t2 - t1:.3f}s")
-        
-        # Pass 1 Render (use original html string)
-        print("[PROFILE] Starting Pass 1 Render...")
-        await page.set_content(html, wait_until="networkidle")
-        pass1_pdf = await page.pdf(format=format, print_background=True)
-        t3 = time.time()
-        print(f"[PROFILE] Pass 1 Render complete: {t3 - t2:.3f}s")
-        
-        # PyMuPDF scan
-        print("[PROFILE] Starting PyMuPDF scan...")
-        toc_entries = extract_toc_entries(pass1_pdf, headings)
-        t4 = time.time()
-        print(f"[PROFILE] PyMuPDF scan complete: {t4 - t3:.3f}s (Entries matched: {len(toc_entries)})")
-        
-        # BS4 Injection on the existing parsed soup
-        print("[PROFILE] Starting BS4 Injection...")
-        page_num_spans = soup.select(".toc-page-num")
-        page_lookup = {entry["title"]: entry["page"] for entry in toc_entries}
-        matched_count = 0
-        for span in page_num_spans:
-            row = span.find_parent(class_="toc-row")
-            if not row:
-                continue
-            title_span = row.select_one(".toc-title")
-            if not title_span:
-                continue
-            title_text = title_span.get_text(strip=True)
-            if title_text in page_lookup:
-                span.string = str(page_lookup[title_text])
-                matched_count += 1
-        final_html = str(soup)
-        t5 = time.time()
-        print(f"[PROFILE] BS4 Injection complete: {t5 - t4:.3f}s (Injected spans: {matched_count})")
-        
-        # Pass 2 Render on SAME page
-        print("[PROFILE] Starting Pass 2 Render on reused page...")
-        await page.set_content(final_html, wait_until="networkidle")
-        final_pdf = await page.pdf(format=format, print_background=True)
-        t6 = time.time()
-        print(f"[PROFILE] Pass 2 Render complete: {t6 - t5:.3f}s")
-        return final_pdf
-    finally:
-        del soup
-        if page:
-            await page.close()
-        if context:
-            await context.close()
-        if close_browser_needed:
-            await browser.close()
-            if p:
-                await p.stop()
-        t7 = time.time()
-        print(f"[PROFILE] generate_pdf_with_toc grand total time: {t7 - t_start:.3f}s")
+    async with pdf_generation_semaphore:
+        context = None
+        page = None
+        try:
+            context = await browser.new_context()
+            page = await context.new_page()
+            t2 = time.time()
+            print(f"[PROFILE] Page open took: {t2 - t1:.3f}s")
+            
+            # Pass 1 Render (use original html string)
+            print("[PROFILE] Starting Pass 1 Render...")
+            await page.set_content(html, wait_until="networkidle")
+            pass1_pdf = await page.pdf(format=format, print_background=True)
+            t3 = time.time()
+            print(f"[PROFILE] Pass 1 Render complete: {t3 - t2:.3f}s")
+            
+            # PyMuPDF scan
+            print("[PROFILE] Starting PyMuPDF scan...")
+            toc_entries = extract_toc_entries(pass1_pdf, headings)
+            t4 = time.time()
+            print(f"[PROFILE] PyMuPDF scan complete: {t4 - t3:.3f}s (Entries matched: {len(toc_entries)})")
+            del pass1_pdf
+            
+            # BS4 Injection on the existing parsed soup
+            print("[PROFILE] Starting BS4 Injection...")
+            page_num_spans = soup.select(".toc-page-num")
+            page_lookup = {entry["title"]: entry["page"] for entry in toc_entries}
+            matched_count = 0
+            for span in page_num_spans:
+                row = span.find_parent(class_="toc-row")
+                if not row:
+                    continue
+                title_span = row.select_one(".toc-title")
+                if not title_span:
+                    continue
+                title_text = title_span.get_text(strip=True)
+                if title_text in page_lookup:
+                    span.string = str(page_lookup[title_text])
+                    matched_count += 1
+            final_html = str(soup)
+            del soup
+            t5 = time.time()
+            print(f"[PROFILE] BS4 Injection complete: {t5 - t4:.3f}s (Injected spans: {matched_count})")
+            
+            # Pass 2 Render on SAME page
+            print("[PROFILE] Starting Pass 2 Render on reused page...")
+            await page.set_content(final_html, wait_until="networkidle")
+            final_pdf = await page.pdf(format=format, print_background=True)
+            t6 = time.time()
+            print(f"[PROFILE] Pass 2 Render complete: {t6 - t5:.3f}s")
+            return final_pdf
+        finally:
+            if page:
+                await page.close()
+            if context:
+                await context.close()
+            if close_browser_needed:
+                await browser.close()
+                if p:
+                    await p.stop()
+            gc.collect()
+            t7 = time.time()
+            print(f"[PROFILE] generate_pdf_with_toc grand total time: {t7 - t_start:.3f}s")
