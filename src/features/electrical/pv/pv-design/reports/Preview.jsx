@@ -3,7 +3,7 @@ import ReportPreviewShell from "../../../../../shared/components/ReportPreviewSh
 import { docNumber } from "../forms/utils/docNumber.js";
 import ReportDoc from "./ReportDoc.jsx";
 
-export default function Preview({ values, calc, files, onBack, onNew, onSave }) {
+export default function Preview({ values, calc, files, onBack, onNew, onCloneToRevision, onSave }) {
   const fname = docNumber(values) + '.docx';
   
   const TODAY = new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
@@ -25,6 +25,7 @@ export default function Preview({ values, calc, files, onBack, onNew, onSave }) 
       files={files}
       onBack={onBack}
       onNew={onNew}
+      onCloneToRevision={onCloneToRevision}
       onSave={onSave}
       fname={fname}
       documentDetails={documentDetails}

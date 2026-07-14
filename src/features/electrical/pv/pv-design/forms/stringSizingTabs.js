@@ -50,6 +50,15 @@ export const STRING_SIZE_TABS = [{
   }]
 },
 {
+  id: 'revisionHistory',
+  name: 'Revision History',
+  icon: 'clock',
+  blurb: 'Revision table shown on the cover page / document control page.',
+  fields: [
+    { key: 'revisions', label: 'Revisions', type: 'revision-table', required: false }
+  ]
+},
+{
   id: 'project',
   name: 'Project Information',
   icon: 'map',

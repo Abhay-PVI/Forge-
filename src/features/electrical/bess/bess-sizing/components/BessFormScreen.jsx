@@ -134,7 +134,7 @@ function TabBody({ tab, values, setValue, files, setFile, showErrors }) {
                   );
                 }
                 return (
-                  <div key={field.key} style={{ gridColumn: field.type === 'textarea' ? '1 / -1' : 'auto' }}>
+                  <div key={field.key} style={{ gridColumn: (field.type === 'textarea' || field.type === 'revision-table') ? '1 / -1' : 'auto' }}>
                     <Field field={field} value={values[field.key]} onChange={(value) => setValue(field.key, value)} error={errFor(field)} />
                   </div>
                 );
@@ -158,7 +158,7 @@ function TabBody({ tab, values, setValue, files, setFile, showErrors }) {
             );
           }
           return (
-            <div key={field.key} style={{ gridColumn: field.type === 'textarea' ? '1 / -1' : 'auto' }}>
+            <div key={field.key} style={{ gridColumn: (field.type === 'textarea' || field.type === 'revision-table') ? '1 / -1' : 'auto' }}>
               <Field field={field} value={values[field.key]} onChange={(value) => setValue(field.key, value)} error={errFor(field)} />
             </div>
           );

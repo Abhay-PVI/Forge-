@@ -3,7 +3,7 @@ import ReportPreviewShell from "../../../../../shared/components/ReportPreviewSh
 import { bessAmpacityDocNumber } from "../forms/utils/bessAmpacityDocNumber.js";
 import BessAmpacityReportDoc from "./BessAmpacityReportDoc.jsx";
 
-export default function BessAmpacityPreview({ values, files, onBack, onNew, onSave }) {
+export default function BessAmpacityPreview({ values, files, onBack, onNew, onCloneToRevision, onSave }) {
     const fname = bessAmpacityDocNumber(values) + '.docx';
     
     const TODAY = new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
@@ -24,6 +24,7 @@ export default function BessAmpacityPreview({ values, files, onBack, onNew, onSa
             files={files}
             onBack={onBack}
             onNew={onNew}
+            onCloneToRevision={onCloneToRevision}
             onSave={onSave}
             fname={fname}
             documentDetails={documentDetails}

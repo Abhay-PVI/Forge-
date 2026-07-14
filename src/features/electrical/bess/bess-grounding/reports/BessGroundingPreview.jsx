@@ -3,7 +3,7 @@ import ReportPreviewShell from "../../../../../shared/components/ReportPreviewSh
 import { bessGroundingDocNumber } from "../forms/utils/bessGroundingDocNumber.js";
 import BessGroundingReportDoc from "./BessGroundingReportDoc.jsx";
 
-export default function BessGroundingPreview({ values, files, onBack, onNew, onSave }) {
+export default function BessGroundingPreview({ values, files, onBack, onNew, onCloneToRevision, onSave }) {
     const fname = bessGroundingDocNumber(values) + '.docx';
     
     const TODAY = new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
@@ -24,6 +24,7 @@ export default function BessGroundingPreview({ values, files, onBack, onNew, onS
             files={files}
             onBack={onBack}
             onNew={onNew}
+            onCloneToRevision={onCloneToRevision}
             onSave={onSave}
             fname={fname}
             documentDetails={documentDetails}

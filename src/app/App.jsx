@@ -364,6 +364,72 @@ export default function App() {
     });
   };
 
+  const handleCloneToRevision = (newRev, description) => {
+    const currentValues = {
+      "bess-sizing": bessValues,
+      "bess-ampacity": bessAmpacityValues,
+      "bess-grounding": bessGroundingValues,
+      "hv-dbr": hvDbrValues,
+      "string-sizing": pvValues
+    }[sel.report.id] || pvValues;
+
+    const todayStr = new Date().toLocaleDateString("en-GB").replaceAll("/", ".");
+    const reportTitle = currentValues.reportTitle || currentValues.reportName || sel.report?.name || "Engineering Report";
+    const newRow = {
+      revision: newRev,
+      issueDate: todayStr,
+      documentName: reportTitle,
+      description: description
+    };
+
+    const oldHistory = Array.isArray(currentValues.revisions) ? currentValues.revisions : [];
+    const currentRev = currentValues.revision || "0";
+    const hasCurrentInHistory = oldHistory.some(r => r.revision === currentRev);
+    const updatedHistory = [...oldHistory];
+
+    if (!hasCurrentInHistory && oldHistory.length === 0) {
+      updatedHistory.push({
+        revision: currentRev,
+        issueDate: currentValues.issueDate || todayStr,
+        documentName: reportTitle,
+        description: "Initial Release"
+      });
+    }
+
+    updatedHistory.push(newRow);
+
+    const newValues = {
+      ...currentValues,
+      revision: newRev,
+      issueDate: todayStr,
+      revisions: updatedHistory,
+      custom_html: null
+    };
+
+    if (sel.report.id === "bess-sizing") {
+      setBessValues(newValues);
+    } else if (sel.report.id === "bess-ampacity") {
+      setBessAmpacityValues(newValues);
+    } else if (sel.report.id === "bess-grounding") {
+      setBessGroundingValues(newValues);
+    } else if (sel.report.id === "hv-dbr") {
+      setHvDbrValues(newValues);
+    } else {
+      setPvValues(newValues);
+    }
+
+    setSourceReportId(currentReportId);
+    setCurrentReportId(null);
+    setLoadedReportMeta(null);
+    setPhase("form");
+    setDraftSync({
+      dirty: true,
+      saving: false,
+      lastSavedAt: null,
+      error: null,
+    });
+  };
+
   const persistReportDraft = async (values, { showSuccessAlert = true, status } = {}) => {
     try {
       setDraftSync((prev) => ({
@@ -548,6 +614,7 @@ export default function App() {
                 report: null,
               })
             }
+            onCloneToRevision={handleCloneToRevision}
             onSave={async (updatedValues) => {
               setBessValues(updatedValues);
               return await persistReportDraft(updatedValues, { showSuccessAlert: true, status: "completed" });
@@ -569,6 +636,7 @@ export default function App() {
                 report: null,
               })
             }
+            onCloneToRevision={handleCloneToRevision}
             onSave={async (updatedValues) => {
               setBessAmpacityValues(updatedValues);
               return await persistReportDraft(updatedValues, { showSuccessAlert: true, status: "completed" });
@@ -590,6 +658,7 @@ export default function App() {
                 report: null,
               })
             }
+            onCloneToRevision={handleCloneToRevision}
             onSave={async (updatedValues) => {
               setBessGroundingValues(updatedValues);
               return await persistReportDraft(updatedValues, { showSuccessAlert: true, status: "completed" });
@@ -610,6 +679,7 @@ export default function App() {
                 report: null,
               })
             }
+            onCloneToRevision={handleCloneToRevision}
             onSave={async (updatedValues) => {
               setHvDbrValues(updatedValues);
               return await persistReportDraft(updatedValues, { showSuccessAlert: true, status: "completed" });
@@ -631,6 +701,7 @@ export default function App() {
                 report: null,
               })
             }
+            onCloneToRevision={handleCloneToRevision}
             onSave={async (updatedValues) => {
               setPvValues(updatedValues);
               return await persistReportDraft(updatedValues, { showSuccessAlert: true, status: "completed" });

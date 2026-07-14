@@ -2,7 +2,7 @@ import React from "react";
 import ReportPreviewShell from "../../../../../shared/components/ReportPreviewShell";
 import HvDbrReportDoc from "./HvDbrReportDoc.jsx";
 
-export default function HvDbrPreview({ values, files, onBack, onNew, onSave }) {
+export default function HvDbrPreview({ values, files, onBack, onNew, onCloneToRevision, onSave }) {
     const docNo = values.documentNo || "PVI-HV-DBR-001";
     const fname = docNo + '.docx';
     
@@ -25,6 +25,7 @@ export default function HvDbrPreview({ values, files, onBack, onNew, onSave }) {
             files={files}
             onBack={onBack}
             onNew={onNew}
+            onCloneToRevision={onCloneToRevision}
             onSave={onSave}
             fname={fname}
             documentDetails={documentDetails}

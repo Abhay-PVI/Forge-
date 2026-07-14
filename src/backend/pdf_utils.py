@@ -64,6 +64,7 @@ async def generate_pdf_from_html(html: str, browser=None, *, format: str = "A4")
         pdf_bytes = await page.pdf(
             format=format, 
             print_background=True,
+            prefer_css_page_size=True,
         )
         t4 = time.time()
         print(f"[PROFILE] Playwright page.pdf print took: {t4 - t3:.3f}s")
@@ -327,7 +328,11 @@ async def generate_pdf_with_toc(html: str, browser=None, *, format: str = "Lette
             await page.set_content(final_html, wait_until="networkidle")
             log_memory("After Pass 2 set_content")
             
-            final_pdf = await page.pdf(format=format, print_background=True)
+            final_pdf = await page.pdf(
+                format=format,
+                print_background=True,
+                prefer_css_page_size=True,
+            )
             t6 = time.time()
             print(f"[PROFILE] Pass 2 Render complete: {t6 - t5:.3f}s")
             log_memory("After Pass 2 page.pdf()")

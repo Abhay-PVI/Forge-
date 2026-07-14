@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from './Icon';
 
 const errStyle = {
   borderColor: 'var(--red)',
@@ -161,6 +162,115 @@ export default function Field({ field, value, onChange, error }) {
           </option>
         ))}
       </select>
+    );
+  } else if (field.type === 'revision-table') {
+    const list = Array.isArray(value) ? value : [];
+
+    const updateRow = (index, key, val) => {
+      const newList = [...list];
+      newList[index] = { ...newList[index], [key]: val };
+      onChange(newList);
+    };
+
+    const addRow = () => {
+      const nextRev = list.length.toString();
+      const todayStr = new Date().toLocaleDateString("en-GB").replaceAll("/", ".");
+      onChange([...list, { revision: nextRev, issueDate: todayStr, documentName: '', description: '' }]);
+    };
+
+    const removeRow = (index) => {
+      const newList = list.filter((_, i) => i !== index);
+      onChange(newList);
+    };
+
+    control = (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: '100%' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13, textAlign: 'left', border: '1px solid var(--border)', borderRadius: 'var(--r-sm)', overflow: 'hidden' }}>
+          <thead>
+            <tr style={{ background: 'var(--surface-2)', borderBottom: '1px solid var(--border)' }}>
+              <th style={{ padding: '8px 12px', fontWeight: 600, width: '15%', color: 'var(--text-1)' }}>Revision</th>
+              <th style={{ padding: '8px 12px', fontWeight: 600, width: '20%', color: 'var(--text-1)' }}>Issue Date</th>
+              <th style={{ padding: '8px 12px', fontWeight: 600, width: '35%', color: 'var(--text-1)' }}>Document Name</th>
+              <th style={{ padding: '8px 12px', fontWeight: 600, width: '25%', color: 'var(--text-1)' }}>Description</th>
+              <th style={{ padding: '8px 12px', width: '5%' }}></th>
+            </tr>
+          </thead>
+          <tbody>
+            {list.map((row, idx) => (
+              <tr key={idx} style={{ borderBottom: '1px solid var(--border)' }}>
+                <td style={{ padding: '6px 8px' }}>
+                  <input
+                    type="text"
+                    className="input"
+                    style={{ padding: '4px 8px', fontSize: 13, height: 'auto' }}
+                    value={row.revision || ''}
+                    onChange={(e) => updateRow(idx, 'revision', e.target.value)}
+                    placeholder="e.g. 0 or A"
+                  />
+                </td>
+                <td style={{ padding: '6px 8px' }}>
+                  <input
+                    type="text"
+                    className="input"
+                    style={{ padding: '4px 8px', fontSize: 13, height: 'auto' }}
+                    value={row.issueDate || ''}
+                    onChange={(e) => updateRow(idx, 'issueDate', e.target.value)}
+                    placeholder="e.g. DD.MM.YYYY"
+                  />
+                </td>
+                <td style={{ padding: '6px 8px' }}>
+                  <input
+                    type="text"
+                    className="input"
+                    style={{ padding: '4px 8px', fontSize: 13, height: 'auto' }}
+                    value={row.documentName || ''}
+                    onChange={(e) => updateRow(idx, 'documentName', e.target.value)}
+                    placeholder="e.g. DBR Report"
+                  />
+                </td>
+                <td style={{ padding: '6px 8px' }}>
+                  <input
+                    type="text"
+                    className="input"
+                    style={{ padding: '4px 8px', fontSize: 13, height: 'auto' }}
+                    value={row.description || ''}
+                    onChange={(e) => updateRow(idx, 'description', e.target.value)}
+                    placeholder="e.g. Initial Release"
+                  />
+                </td>
+                <td style={{ padding: '6px 8px', textAlign: 'center' }}>
+                  <button
+                    type="button"
+                    className="btn btn-ghost"
+                    style={{ padding: 4, height: 'auto', color: 'var(--red)' }}
+                    onClick={() => removeRow(idx)}
+                  >
+                    <Icon name="trash" size={14} />
+                  </button>
+                </td>
+              </tr>
+            ))}
+            {list.length === 0 && (
+              <tr>
+                <td colSpan="5" style={{ padding: '12px', textAlign: 'center', color: 'var(--text-3)' }}>
+                  No revision records. Click "Add Revision Row" to start.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+        <div>
+          <button
+            type="button"
+            className="btn btn-soft btn-sm"
+            onClick={addRow}
+            style={{ display: 'flex', alignItems: 'center', gap: 4 }}
+          >
+            <Icon name="plus" size={13} />
+            Add Revision Row
+          </button>
+        </div>
+      </div>
     );
   } else if (field.unit) {
     control = (

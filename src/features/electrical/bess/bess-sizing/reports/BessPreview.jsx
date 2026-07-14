@@ -3,7 +3,7 @@ import ReportPreviewShell from "../../../../../shared/components/ReportPreviewSh
 import { bessDocNumber } from "../forms/utils/bessDocNumber.js";
 import BessReportDoc from "./BessReportDoc.jsx";
 
-export default function BessPreview({ values, calc, files, bessFiles, onBack, onNew, onSave }) {
+export default function BessPreview({ values, calc, files, bessFiles, onBack, onNew, onCloneToRevision, onSave }) {
     const fname = bessDocNumber(values) + '.docx';
     const activeFiles = files || bessFiles;
 
@@ -25,6 +25,7 @@ export default function BessPreview({ values, calc, files, bessFiles, onBack, on
             files={activeFiles}
             onBack={onBack}
             onNew={onNew}
+            onCloneToRevision={onCloneToRevision}
             onSave={onSave}
             fname={fname}
             documentDetails={documentDetails}

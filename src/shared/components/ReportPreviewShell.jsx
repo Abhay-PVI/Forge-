@@ -13,11 +13,28 @@ function V(value) {
   return value;
 }
 
+function getNextRevision(currentRev) {
+  if (!currentRev) return "1";
+  const num = parseInt(currentRev, 10);
+  if (!isNaN(num)) {
+    return (num + 1).toString();
+  }
+  // Try character increment (e.g. A -> B, B -> C)
+  if (currentRev.length === 1) {
+    const charCode = currentRev.charCodeAt(0);
+    if ((charCode >= 65 && charCode < 90) || (charCode >= 97 && charCode < 122)) {
+      return String.fromCharCode(charCode + 1);
+    }
+  }
+  return currentRev + "_New";
+}
+
 export default function ReportPreviewShell({
   reportElementId,
   values,
   onBack,
   onNew,
+  onCloneToRevision,
   onSave,
   fname,
   documentDetails = [],
@@ -285,6 +302,25 @@ export default function ReportPreviewShell({
               <button className="btn btn-soft btn-sm" onClick={onNew} disabled={isSaving}>
                 <Icon name="plus" size={14} />New report
               </button>
+              {onCloneToRevision && (
+                <button
+                  className="btn btn-soft btn-sm"
+                  onClick={() => {
+                    const currentRev = values.revision || values.REVISION || "0";
+                    const suggestedRev = getNextRevision(currentRev);
+                    const newRev = prompt(`Enter new revision code (current is ${currentRev}):`, suggestedRev);
+                    if (newRev === null) return;
+                    
+                    const desc = prompt("Enter description for the new revision:", "Revised Version");
+                    if (desc === null) return;
+                    
+                    onCloneToRevision(newRev.trim(), desc.trim());
+                  }}
+                  disabled={isSaving}
+                >
+                  <Icon name="copy" size={14} />New Revision
+                </button>
+              )}
               <button className="btn btn-primary btn-sm" onClick={handleDownload} disabled={isSaving || isDownloading}>
                 {isDownloading ? (
                   <>

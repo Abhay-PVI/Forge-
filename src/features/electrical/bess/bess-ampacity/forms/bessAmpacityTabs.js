@@ -13,6 +13,15 @@ export const CABLE_AMPACITY_TABS = [
       { key: 'preparedDate', label: 'Prepared Date', type: 'text', required: true },
     ]
   },
+  {
+    id: 'revisionHistory',
+    name: 'Revision History',
+    icon: 'clock',
+    blurb: 'Revision table shown on the cover page / document control page.',
+    fields: [
+      { key: 'revisions', label: 'Revisions', type: 'revision-table', required: false }
+    ]
+  },
 
   // ─── PROJECT INFORMATION ───────────────────────────────────────────────────
   {

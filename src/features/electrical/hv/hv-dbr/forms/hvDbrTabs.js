@@ -23,17 +23,9 @@ export const SUBSTATION_DBR_TABS = [
     id: 'revisionHistory',
     name: 'Revision History',
     icon: 'clock',
-    blurb: 'Revision table shown on the cover page.',
+    blurb: 'Revision table shown on the cover page / document control page.',
     fields: [
-      { key: 'rev0Number', label: 'Rev 0 – Number', type: 'text', required: false, placeholder: '0' },
-      { key: 'rev0Date', label: 'Rev 0 – Issue Date', type: 'text', required: false },
-      { key: 'rev0Description', label: 'Rev 0 – Description', type: 'text', required: false, placeholder: 'IFC Design' },
-      { key: 'rev1Number', label: 'Rev 1 – Number', type: 'text', required: false, placeholder: '1' },
-      { key: 'rev1Date', label: 'Rev 1 – Issue Date', type: 'text', required: false },
-      { key: 'rev1Description', label: 'Rev 1 – Description', type: 'text', required: false, placeholder: 'IFC Design' },
-      { key: 'rev2Number', label: 'Rev 2 – Number', type: 'text', required: false, placeholder: '2' },
-      { key: 'rev2Date', label: 'Rev 2 – Issue Date', type: 'text', required: false },
-      { key: 'rev2Description', label: 'Rev 2 – Description', type: 'text', required: false, placeholder: 'IFC Design' },
+      { key: 'revisions', label: 'Revisions', type: 'revision-table', required: false }
     ]
   },
 

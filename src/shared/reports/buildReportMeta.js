@@ -8,16 +8,77 @@ function formatIssueDate(date = new Date()) {
   return new Intl.DateTimeFormat("en-GB").format(date).replaceAll("/", ".");
 }
 
+function renderRevisionHistoryRows(values, reportName, issueDate, revision) {
+  const rows = [];
+
+  // 1. Check if values has a structured list of revisions (array of objects)
+  if (Array.isArray(values.revisions) && values.revisions.length > 0) {
+    values.revisions.forEach((rev) => {
+      rows.push(`
+        <tr class="tr">
+          <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4;">${rev.revision ?? ""}</td>
+          <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4;">${rev.issueDate ?? ""}</td>
+          <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4;">${rev.documentName ?? reportName}</td>
+          <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4;">${rev.description ?? ""}</td>
+        </tr>
+      `);
+    });
+  }
+  // 2. Check if we have the legacy/rigid HV-DBR fields
+  else if (
+    values.rev0Number || values.rev0Date || values.rev0Description ||
+    values.rev1Number || values.rev1Date || values.rev1Description ||
+    values.rev2Number || values.rev2Date || values.rev2Description
+  ) {
+    const legacyRevs = [
+      { num: values.rev0Number, date: values.rev0Date, desc: values.rev0Description },
+      { num: values.rev1Number, date: values.rev1Date, desc: values.rev1Description },
+      { num: values.rev2Number, date: values.rev2Date, desc: values.rev2Description }
+    ];
+    legacyRevs.forEach((rev, idx) => {
+      if (rev.num || rev.date || rev.desc) {
+        rows.push(`
+          <tr class="tr">
+            <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4;">${rev.num ?? idx}</td>
+            <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4;">${rev.date ?? issueDate}</td>
+            <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4;">${reportName}</td>
+            <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4;">${rev.desc ?? ""}</td>
+          </tr>
+        `);
+      }
+    });
+  }
+
+  // 3. Fallback: current revision details as a single row
+  if (rows.length === 0) {
+    rows.push(`
+      <tr class="tr">
+        <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4;">${revision ?? "0"}</td>
+        <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4;">${issueDate}</td>
+        <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4;">${reportName}</td>
+        <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4;">Initial Release</td>
+      </tr>
+    `);
+  }
+
+  return rows.join("");
+}
+
 export function buildReportMeta(values = {}, report = {}) {
+  const reportTitle =
+    values.reportTitle ||
+    values.reportName ||
+    report?.name ||
+    "";
+
+  const revision = values.revision || "R0";
+  const issueDate = values.issueDate || formatIssueDate();
+
   return {
     PROJECT_NAME:
       values.projectName || values.plant_name || "",
 
-    REPORT_TITLE:
-      values.reportTitle ||
-      values.reportName ||
-      report?.name ||
-      "",
+    REPORT_TITLE: reportTitle,
 
     CLIENT_NAME:
       values.clientName || values.submittedToCompany || "",
@@ -26,15 +87,12 @@ export function buildReportMeta(values = {}, report = {}) {
       values.preparedBy ||
       "PVinsight Inc",
 
-    REVISION:
-      values.revision || "R0",
+    REVISION: revision,
 
-    ISSUE_DATE:
-      values.issueDate ||
-      formatIssueDate(),
+    ISSUE_DATE: issueDate,
 
     DOCUMENT_NUMBER:
-      values.documentNumber || "",
+      values.documentNumber || values.documentNo || "",
 
     COVER_IMAGE:
       values.coverImage ||
@@ -60,5 +118,8 @@ export function buildReportMeta(values = {}, report = {}) {
       (values.submittedToAddress ||
       values.clientAddress ||
       "2034 Hamilton Place BLVD. Suite 100 Chattanooga, TN 37421").replace(/\r?\n/g, '<br>'),
+
+    REVISION_HISTORY_ROWS:
+      renderRevisionHistoryRows(values, reportTitle, issueDate, revision),
   };
 }

@@ -51,16 +51,45 @@ export async function exportPdfWithToc(elementId, fileName = "Design Basis Repor
   const docTitle = fileName.replace(".pdf", "");
   const sizeValue = pageSize.toLowerCase() === "a4" ? "A4" : "Letter";
 
+  // Parse HTML and extract styles to avoid preceding text nodes or wrappers in body
+  const parser = new DOMParser();
+  const tempDoc = parser.parseFromString(element.innerHTML, "text/html");
+  const styleTags = Array.from(tempDoc.querySelectorAll("style"));
+  let stylesText = "";
+  styleTags.forEach((style) => {
+    stylesText += style.textContent + "\n";
+    style.remove();
+  });
+  const bodyContent = tempDoc.body.innerHTML.trim();
+
   const htmlContent = `
     <!DOCTYPE html>
     <html>
       <head>
         <title>${docTitle}</title>
         <style>
+          /* Styles collected from the report templates. Print rules below are
+             deliberately declared afterward so template-level @page rules
+             cannot override the PDF export layout. */
+          ${stylesText}
+
           @page {
-            size: ${sizeValue}; margin: 10mm;
+            size: ${sizeValue};
+            width: auto;
+            height: auto;
+            margin: 10mm;
           }
+
+          @page cover {
+            size: ${sizeValue};
+            width: auto;
+            height: auto;
+            margin: 0;
+          }
+
+          html,
           body {
+            width: 100%;
             font-family: "Segoe UI", sans-serif;
             margin: 0;
             padding: 0;
@@ -92,23 +121,12 @@ export async function exportPdfWithToc(elementId, fileName = "Design Basis Repor
               page-break-inside: auto;
             }
           }
-        </style>
-      </head>
-      <body>
-        ${element.outerHTML}
-        <style>
-          @page {
-            size: ${sizeValue} !important;
-            margin: 10mm !important;
-          }
-          @page :first {
-            margin: 0 !important;
-          }
           .cover-page {
+            page: cover;
             width: 100% !important;
             max-width: 100% !important;
-            height: 100% !important;
-            min-height: 100% !important;
+            height: 100vh !important;
+            min-height: 100vh !important;
             margin: 0 !important;
             padding: 0 !important;
             border: none !important;
@@ -152,6 +170,9 @@ export async function exportPdfWithToc(elementId, fileName = "Design Basis Repor
             margin-right: auto !important;
           }
         </style>
+      </head>
+      <body>
+        ${bodyContent}
       </body>
     </html>
   `;
