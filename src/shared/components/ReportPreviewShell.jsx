@@ -560,6 +560,7 @@ export default function ReportPreviewShell({
         progress={loaderProgress}
         loadingText={loaderText}
         visible={showLoader}
+        fname={fname}
       />
     </div>
   );
