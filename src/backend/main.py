@@ -25,7 +25,12 @@ from Ashrae.ashrae_service import process_and_populate_report
 
 from parsers.pvsyst_parser import extract_pvsyst_data
 
-from pdf_utils import generate_pdf_from_html, generate_pdf_with_toc
+from pdf_utils import (
+    generate_pdf_from_html,
+    generate_pdf_with_toc,
+    log_memory,
+    merge_pdf_documents,
+)
 
 
 @asynccontextmanager
@@ -241,7 +246,7 @@ async def generate_pdf_endpoint(payload: dict, request: Request):
 
 @app.post("/api/generate-pdf-with-toc")
 async def generate_pdf_with_toc_endpoint(payload: dict, request: Request):
-    """Two-pass PDF: discover page numbers, inject into TOC, re-render."""
+    """Render once, patch TOC numbers, then merge an optional native appendix."""
     html = payload.get("html")
     if not html:
         return JSONResponse(
@@ -249,6 +254,17 @@ async def generate_pdf_with_toc_endpoint(payload: dict, request: Request):
             content={"status": "error", "message": "Missing html content"},
         )
     pdf_bytes = await generate_pdf_with_toc(html, browser=None, format="Letter")
+
+    solar_appendix_values = payload.get("solar_appendix_values")
+    if isinstance(solar_appendix_values, dict) and solar_appendix_values:
+        log_memory("Before native appendix generation")
+        report_data = build_solar_report_data(solar_appendix_values)
+        appendix_buffer = io.BytesIO()
+        build_solar_report_pdf(report_data, appendix_buffer)
+        pdf_bytes = merge_pdf_documents(pdf_bytes, appendix_buffer.getvalue())
+        appendix_buffer.close()
+        log_memory("After native appendix merge")
+
     return StreamingResponse(
         io.BytesIO(pdf_bytes),
         media_type="application/pdf",

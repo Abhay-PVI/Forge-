@@ -46,59 +46,6 @@ function compressImage(dataUrl, maxDim = 1200, quality = 0.8) {
   });
 }
 
-async function convertPdfToImages(pdfBlob) {
-  return new Promise((resolve, reject) => {
-    if (window.pdfjsLib) {
-      processPdf(window.pdfjsLib, pdfBlob, resolve, reject);
-      return;
-    }
-
-    const script = document.createElement("script");
-    script.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js";
-    script.onload = () => {
-      const pdfjsLib = window.pdfjsLib;
-      pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js";
-      processPdf(pdfjsLib, pdfBlob, resolve, reject);
-    };
-    script.onerror = () => reject(new Error("Failed to load PDF.js library"));
-    document.head.appendChild(script);
-  });
-}
-
-async function processPdf(pdfjsLib, pdfBlob, resolve, reject) {
-  try {
-    const arrayBuffer = await pdfBlob.arrayBuffer();
-    const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
-    const pdf = await loadingTask.promise;
-    const images = [];
-
-    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-      const page = await pdf.getPage(pageNum);
-      const viewport = page.getViewport({ scale: 2.0 });
-      const canvas = document.createElement("canvas");
-      const context = canvas.getContext("2d");
-      canvas.height = viewport.height;
-      canvas.width = viewport.width;
-
-      const renderContext = {
-        canvasContext: context,
-        viewport: viewport
-      };
-
-      await page.render(renderContext).promise;
-      const pngDataUrl = canvas.toDataURL("image/png");
-      const jpegDataUrl = canvas.toDataURL("image/jpeg", 0.8);
-      console.log(`[FormScreen] Appendix Page ${pageNum} compressed from PNG (${(pngDataUrl.length / 1024).toFixed(1)} KB) to JPEG (${(jpegDataUrl.length / 1024).toFixed(1)} KB)`);
-      images.push(jpegDataUrl);
-    }
-
-    resolve(images);
-  } catch (error) {
-    reject(error);
-  }
-}
-
-
 // export default function FormScreen() {
 //   return <div>Form Screen</div>;
 // }
@@ -295,9 +242,10 @@ function TabBody({ tab, values, setValue, files, setFile, showErrors }) {
           if (!result.values || Object.keys(result.values).length === 0) {
             console.warn("parseModuleExcel returned an empty or missing values object:", result);
           }
-          async function triggerPdfCompilation(excelMetrics) {
+          async function syncSolarReportData(excelMetrics) {
             try {
-              // --- STEP 1: FETCH CALCULATION VALUES & TABLES (JSON) ---
+              // Fetch calculation values now; build the native appendix only
+              // during final PDF export so it never becomes base64 HTML images.
               console.log("Fetching structured metrics data...");
               const dataResponse = await fetch(
                 `${API_BASE_URL}/generate-solar-report-data`,
@@ -343,43 +291,12 @@ function TabBody({ tab, values, setValue, files, setFile, showErrors }) {
                 setSolarCalcTable(calcTable);
               }
 
-
-              // --- STEP 2: FETCH APPENDIX FILE (BINARY BLOB) ---
-              console.log("Compiling appendix document structure...");
-              const pdfResponse = await fetch(
-                `${API_BASE_URL}/generate-solar-report-pdf`,
-                {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({
-                    values: excelMetrics,
-                  }),
-                }
-              );
-
-              if (!pdfResponse.ok) {
-                throw new Error(`PDF generation failed: ${pdfResponse.status}`);
-              }
-
-              // Extracted cleanly as an isolated binary object assignment
-              const pdfBlob = await pdfResponse.blob();
-              console.log("Appendix document asset successfully compiled:", pdfBlob);
-
-              // Convert PDF pages to high-resolution base64 images and store in state
-              try {
-                console.log("Converting appendix PDF pages to images...");
-                const images = await convertPdfToImages(pdfBlob);
-                setValue("appendixPages", images);
-                console.log("Appendix PDF successfully converted. Total pages:", images.length);
-              } catch (convErr) {
-                console.error("Failed to convert PDF pages to images:", convErr);
-              }
-
-            } catch (pdfError) {
-              console.error("Solar Report Processing Error:", pdfError);
-              alert(`Failed to sync calculations or compile appendix: ${pdfError.message}`);
+              setValue("solarAppendixValues", excelMetrics);
+              setValue("hasSolarAppendix", true);
+              setValue("appendixPages", []);
+            } catch (dataError) {
+              console.error("Solar Report Processing Error:", dataError);
+              alert(`Failed to sync solar calculations: ${dataError.message}`);
             }
           }
 
@@ -389,8 +306,8 @@ function TabBody({ tab, values, setValue, files, setFile, showErrors }) {
             setValue(parsedKey, val);
           });
 
-          // Send the full parsed payload to the backend once
-          await triggerPdfCompilation(result.values);
+          // Send the parsed payload to the backend once for calculation data.
+          await syncSolarReportData(result.values);
 
           // 3. Fallback/Safeguard check for complex split layout variables 
           const templateFallbacks = [
@@ -427,6 +344,11 @@ function TabBody({ tab, values, setValue, files, setFile, showErrors }) {
                 setFile(upload.key, null);
                 if (upload.key === "Results_of_26-year_voltage" || upload.key === "Results_of_26-year_current") {
                   setValue(upload.key, "");
+                }
+                if (upload.key === "moduleExcel") {
+                  setValue("solarAppendixValues", null);
+                  setValue("hasSolarAppendix", false);
+                  setValue("appendixPages", []);
                 }
               }}
             />

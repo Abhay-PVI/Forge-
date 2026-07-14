@@ -31,6 +31,14 @@ export default function Preview({ values, calc, files, onBack, onNew, onCloneToR
       documentDetails={documentDetails}
       showStampOption={true}
       railCollapsible={true}
+      pdfExportOptions={{
+        includeSolarAppendix: Boolean(
+          values.hasSolarAppendix ||
+          values.solarAppendixValues ||
+          values.appendixPages?.length
+        ),
+        solarAppendixValues: values,
+      }}
     >
       {({ showStamp, isEditMode, tempHtml, setTempHtml }) => (
         <ReportDoc 

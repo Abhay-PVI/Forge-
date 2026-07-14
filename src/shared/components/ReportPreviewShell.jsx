@@ -40,6 +40,7 @@ export default function ReportPreviewShell({
   documentDetails = [],
   showStampOption = false,
   railCollapsible = false,
+  pdfExportOptions = {},
   children
 }) {
   const [selectedFormat, setSelectedFormat] = useState("pdf");
@@ -140,11 +141,15 @@ export default function ReportPreviewShell({
       if (currentProgress < 25) {
         setLoaderText("Rendering document layout...");
       } else if (currentProgress < 50) {
-        setLoaderText("Generating Table of Contents (Pass 1)...");
+        setLoaderText("Generating the PDF in one pass...");
       } else if (currentProgress < 75) {
-        setLoaderText("Injecting page numbers (Pass 2)...");
+        setLoaderText("Adding Table of Contents page numbers...");
       } else {
-        setLoaderText("Finalizing document pages...");
+        setLoaderText(
+          pdfExportOptions.includeSolarAppendix
+            ? "Merging native appendix pages..."
+            : "Finalizing document pages..."
+        );
       }
     }, intervalTime);
 
@@ -158,7 +163,12 @@ export default function ReportPreviewShell({
       }
 
       // Fetch the PDF blob from the backend helper
-      const blob = await exportPdfWithToc(reportElementId, fname.replace(".docx", ".pdf"), selectedPageSize);
+      const blob = await exportPdfWithToc(
+        reportElementId,
+        fname.replace(".docx", ".pdf"),
+        selectedPageSize,
+        pdfExportOptions
+      );
 
       // Stop simulated timer and snap to 100%
       clearInterval(timer);

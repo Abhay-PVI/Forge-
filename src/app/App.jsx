@@ -462,6 +462,16 @@ export default function App() {
       // If version details changed, save as a new report
       const targetReportId = isVersionChanged ? null : currentReportId;
 
+      // Legacy PV reports stored every appendix page as a base64 image. Keep
+      // only the small source values needed to regenerate the native PDF.
+      const valuesToPersist = { ...values };
+      if (Array.isArray(valuesToPersist.appendixPages)) {
+        if (valuesToPersist.appendixPages.length > 0) {
+          valuesToPersist.hasSolarAppendix = true;
+        }
+        delete valuesToPersist.appendixPages;
+      }
+
       const payload = {
         report_id: targetReportId,
         report_type: reportType,
@@ -470,7 +480,7 @@ export default function App() {
         prepared_date: values.PREPARATION_DATE || new Date().toISOString().split("T")[0],
         report_title: currentTitle,
         status,
-        values: values
+        values: valuesToPersist
       };
 
       console.log("Saving report draft to database:", payload);

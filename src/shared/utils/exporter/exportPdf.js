@@ -37,9 +37,38 @@ async function inlineImages(htmlString) {
 }
 
 
+function buildSolarAppendixValues(values = {}) {
+  const storedValues = values.solarAppendixValues || {};
+  const variantPrefixes = ["wp", "pstc", "voc", "vmp", "isc", "imp"];
+  const keys = variantPrefixes.flatMap((prefix) =>
+    Array.from({ length: 6 }, (_, index) => `${prefix}_${index + 1}`)
+  );
+  keys.push("temp_coeff_voc", "temp_coeff_pm", "temp_coeff_isc");
+
+  const appendixValues = {};
+  keys.forEach((key) => {
+    const value = storedValues[key] ?? values[key];
+    if (value !== undefined && value !== null && value !== "") {
+      appendixValues[key] = value;
+    }
+  });
+
+  appendixValues.tempMin =
+    values.tempMin ?? storedValues.tempMin ?? values.temp_min ?? -5;
+  appendixValues.tempMax =
+    values.tempMax ?? storedValues.tempMax ?? values.temp_max ?? 32;
+  return appendixValues;
+}
 
 
-export async function exportPdfWithToc(elementId, fileName = "Design Basis Report", pageSize = "letter") {
+
+
+export async function exportPdfWithToc(
+  elementId,
+  fileName = "Design Basis Report",
+  pageSize = "letter",
+  options = {}
+) {
   const startTotal = performance.now();
   const element = document.getElementById(elementId);
 
@@ -60,6 +89,16 @@ export async function exportPdfWithToc(elementId, fileName = "Design Basis Repor
     stylesText += style.textContent + "\n";
     style.remove();
   });
+
+  // Preview-only placeholders and legacy rasterized appendix pages must never
+  // enter Chromium. The native appendix PDF is merged by the backend instead.
+  tempDoc
+    .querySelectorAll('[data-pdf-export-exclude="true"]')
+    .forEach((node) => node.remove());
+  tempDoc
+    .querySelectorAll(".appendix-page ~ .page")
+    .forEach((node) => node.remove());
+
   const bodyContent = tempDoc.body.innerHTML.trim();
 
   const htmlContent = `
@@ -180,7 +219,14 @@ export async function exportPdfWithToc(elementId, fileName = "Design Basis Repor
   const inlinedHtml = await inlineImages(htmlContent);
 
   try {
-    const payloadSizeMB = (new Blob([JSON.stringify({ html: inlinedHtml })]).size / (1024 * 1024)).toFixed(2);
+    const requestPayload = { html: inlinedHtml };
+    if (options.includeSolarAppendix) {
+      requestPayload.solar_appendix_values = buildSolarAppendixValues(
+        options.solarAppendixValues || {}
+      );
+    }
+
+    const payloadSizeMB = (new Blob([JSON.stringify(requestPayload)]).size / (1024 * 1024)).toFixed(2);
     console.log(`[PROFILE] POST Payload size: ${payloadSizeMB} MB`);
 
     const startPost = performance.now();
@@ -191,7 +237,7 @@ export async function exportPdfWithToc(elementId, fileName = "Design Basis Repor
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ html: inlinedHtml }),
+      body: JSON.stringify(requestPayload),
     });
 
     if (!response.ok) {

@@ -1,6 +1,7 @@
 import asyncio
 import os
 import sys
+import fitz
 
 # Add current folder to sys.path so we can import pdf_utils
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -33,23 +34,23 @@ async def main():
     with open(pv_template_path, "r", encoding="utf-8") as f:
         body_template = f.read()
 
-    cover_path = os.path.join(project_dir, "shared", "reports", "copy", "coverPage.html")
+    cover_path = os.path.join(project_dir, "shared", "reports", "coverPage.html")
     with open(cover_path, "r", encoding="utf-8") as f:
         cover = f.read()
         
-    doc_control_path = os.path.join(project_dir, "shared", "reports", "copy", "documentControlPage.html")
+    doc_control_path = os.path.join(project_dir, "shared", "reports", "documentControlPage.html")
     with open(doc_control_path, "r", encoding="utf-8") as f:
         doc_control = f.read()
         
-    toc_path = os.path.join(project_dir, "shared", "reports", "copy", "tableOfContents.html")
+    toc_path = os.path.join(project_dir, "shared", "reports", "tableOfContents.html")
     with open(toc_path, "r", encoding="utf-8") as f:
         toc = f.read()
         
-    lot_path = os.path.join(project_dir, "shared", "reports", "copy", "listOfTables.html")
+    lot_path = os.path.join(project_dir, "shared", "reports", "listOfTables.html")
     with open(lot_path, "r", encoding="utf-8") as f:
         lot = f.read()
         
-    loa_path = os.path.join(project_dir, "shared", "reports", "copy", "listOfAbbreviations.html")
+    loa_path = os.path.join(project_dir, "shared", "reports", "listOfAbbreviations.html")
     with open(loa_path, "r", encoding="utf-8") as f:
         loa = f.read()
 
@@ -63,28 +64,44 @@ async def main():
         for h in soup_numbered.select(".toc-heading")
     ]
     
-    toc_rows = []
-    for h in headings:
-        level_class = f"toc-level-{h['level']}"
-        toc_rows.append(
-            f'<div class="toc-row {level_class}">'
-            f'<span class="toc-title">{h["title"]}</span>'
-            f'<span class="toc-dots"></span>'
-            f'<span class="toc-page-num"></span>'
-            f'</div>'
-        )
-    toc_placeholder = "\n".join(toc_rows)
+    def render_rows(entries):
+        rows = []
+        for entry in entries:
+            level_class = f"toc-level-{entry.get('level', 1)}"
+            rows.append(
+                f'<div class="toc-row {level_class}">'
+                f'<span class="toc-title">{entry["title"]}</span>'
+                f'<span class="toc-dots"></span>'
+                f'<span class="toc-page-num"></span>'
+                f'</div>'
+            )
+        return "\n".join(rows)
+
+    tables = [
+        {"title": caption.get_text(strip=True), "level": 1}
+        for caption in soup_numbered.select(".toc-table-caption")
+    ]
+    figures = [
+        {"title": caption.get_text(strip=True), "level": 1}
+        for caption in soup_numbered.select(".toc-figure-caption")
+    ]
+    toc_placeholder = render_rows(headings)
 
     # Assemble HTML
     complete_html = f"{cover}\n{doc_control}\n{toc}\n{lot}\n{loa}\n{numbered_body}"
     complete_html = complete_html.replace("{{TOC_PLACEHOLDER}}", toc_placeholder)
-    complete_html = complete_html.replace("{{LIST_OF_TABLES_PLACEHOLDER}}", "")
-    complete_html = complete_html.replace("{{LIST_OF_FIGURES_PLACEHOLDER}}", "")
+    complete_html = complete_html.replace("{{LIST_OF_TABLES_PLACEHOLDER}}", render_rows(tables))
+    complete_html = complete_html.replace("{{LIST_OF_FIGURES_PLACEHOLDER}}", render_rows(figures))
     complete_html = complete_html.replace("{{LIST_OF_ABBREVIATIONS_PLACEHOLDER}}", "")
 
-    # Run two-pass pdf generator
+    # Run the single-render PDF generator with in-place TOC patching.
     print("Starting generation...")
     pdf_bytes = await generate_pdf_with_toc(complete_html, format="Letter")
+    pdf = fitz.open(stream=pdf_bytes, filetype="pdf")
+    try:
+        assert "@@" not in "".join(page.get_text() for page in pdf)
+    finally:
+        pdf.close()
     print(f"Finished. Generated PDF bytes: {len(pdf_bytes)}")
 
 if __name__ == "__main__":

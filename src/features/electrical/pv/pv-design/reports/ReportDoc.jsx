@@ -277,20 +277,20 @@ export default function ReportDoc({ values = {}, calc = {}, files = {}, solarCal
 
 
   const appendixPages = values.appendixPages || [];
+  const hasSolarAppendix = Boolean(
+    values.hasSolarAppendix || values.solarAppendixValues || appendixPages.length
+  );
   let appendixTemplate = "";
 
-  if (appendixPages.length > 0) {
+  if (hasSolarAppendix) {
     appendixTemplate = `
       <div class="report-page appendix-page" style="page-break-before: always; page-break-after: always; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; box-sizing: border-box;">
         <h1 style="font-size: 36pt; color: #163c7a; font-weight: 700; margin-top: 250px;">Appendix</h1>
         <p style="font-size: 14pt; color: #64748b; margin-top: 15px;">Solar String Sizing Calculations & Specs</p>
       </div>
-      
-      ${appendixPages.map((imgData, index) => `
-        <div class="page" style="page-break-before: always; padding: 0 !important; display: flex; justify-content: center; align-items: center;">
-          <img src="${imgData}" style="width: 100%; height: 100%; object-fit: contain; display: block;" alt="Appendix Page ${index + 1}" />
-        </div>
-      `).join('')}
+      <div class="page appendix-native-preview" data-pdf-export-exclude="true" style="page-break-before: always; min-height: 180px; padding: 40px !important; display: flex; justify-content: center; align-items: center; text-align: center; color: #64748b;">
+        Native appendix pages will be merged into the downloaded PDF.
+      </div>
     `;
   }
 
