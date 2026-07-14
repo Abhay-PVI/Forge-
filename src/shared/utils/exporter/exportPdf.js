@@ -185,19 +185,12 @@ export async function exportPdfWithToc(elementId, fileName = "Design Basis Repor
     const endBlob = performance.now();
     console.log(`[PROFILE] Converting response to blob took ${(endBlob - startBlob).toFixed(2)}ms`);
 
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = docTitle.endsWith(".pdf") ? docTitle : `${docTitle}.pdf`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    window.URL.revokeObjectURL(url);
-
     const endTotal = performance.now();
     console.log(`[PROFILE] exportPdfWithToc GRAND TOTAL: ${(endTotal - startTotal).toFixed(2)}ms`);
+    return blob;
   } catch (err) {
     console.error("PDF generation with TOC failed:", err);
     alert("Failed to generate PDF with TOC. Please try again.");
+    throw err;
   }
 }

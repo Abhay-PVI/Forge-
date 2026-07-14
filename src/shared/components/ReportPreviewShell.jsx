@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Icon from "./Icon";
 import { exportPdfWithToc } from "../utils/exporter/exportPdf";
 import { exportDocx } from "../utils/exporter/exportDocx";
+import CircularProgressLoader from "./CircularProgressLoader";
 
 const TODAY = new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
 
@@ -34,6 +35,9 @@ export default function ReportPreviewShell({
   const [isSavingToDb, setIsSavingToDb] = useState(false);
   const [isSavedToDb, setIsSavedToDb] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [showLoader, setShowLoader] = useState(false);
+  const [loaderProgress, setLoaderProgress] = useState(0);
+  const [loaderText, setLoaderText] = useState("Preparing document...");
 
   // Collapse state for the right download rail panel
   const [railCollapsed, setRailCollapsed] = useState(() => {
@@ -81,7 +85,52 @@ export default function ReportPreviewShell({
   };
 
   const handleDownload = async () => {
+    if (selectedFormat !== "pdf") {
+      setIsDownloading(true);
+      try {
+        if (!isSavedToDb) {
+          try {
+            await handleSaveToDatabase();
+          } catch (err) {
+            console.warn("Background auto-save failed before download:", err);
+          }
+        }
+        await exportDocx(reportElementId, fname);
+      } finally {
+        setIsDownloading(false);
+      }
+      return;
+    }
+
+    // PDF Download - Start Circular Progress Loader
     setIsDownloading(true);
+    setShowLoader(true);
+    setLoaderProgress(0);
+    setLoaderText("Initializing PDF engine...");
+
+    // Start simulated progress timer (8 seconds to reach 90%)
+    let currentProgress = 0;
+    const intervalTime = 100; // ms
+    const totalSimulatedTime = 8000; // 8s
+    const steps = totalSimulatedTime / intervalTime;
+    const increment = 90 / steps;
+
+    const timer = setInterval(() => {
+      currentProgress = Math.min(currentProgress + increment, 90);
+      setLoaderProgress(Math.round(currentProgress));
+
+      // Premium text status updates
+      if (currentProgress < 25) {
+        setLoaderText("Rendering document layout...");
+      } else if (currentProgress < 50) {
+        setLoaderText("Generating Table of Contents (Pass 1)...");
+      } else if (currentProgress < 75) {
+        setLoaderText("Injecting page numbers (Pass 2)...");
+      } else {
+        setLoaderText("Finalizing document pages...");
+      }
+    }, intervalTime);
+
     try {
       if (!isSavedToDb) {
         try {
@@ -90,11 +139,33 @@ export default function ReportPreviewShell({
           console.warn("Background auto-save failed before download:", err);
         }
       }
-      if (selectedFormat === "pdf") {
-        await exportPdfWithToc(reportElementId, fname.replace(".docx", ".pdf"), selectedPageSize);
-      } else {
-        await exportDocx(reportElementId, fname);
-      }
+
+      // Fetch the PDF blob from the backend helper
+      const blob = await exportPdfWithToc(reportElementId, fname.replace(".docx", ".pdf"), selectedPageSize);
+
+      // Stop simulated timer and snap to 100%
+      clearInterval(timer);
+      setLoaderProgress(100);
+      setLoaderText("Download starting!");
+
+      // Hold briefly to show completed state
+      await new Promise((resolve) => setTimeout(resolve, 600));
+      setShowLoader(false);
+
+      // Trigger the file download in the browser
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      const docTitle = fname.replace(".docx", ".pdf");
+      a.download = docTitle.endsWith(".pdf") ? docTitle : `${docTitle}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      clearInterval(timer);
+      setShowLoader(false);
+      console.error("PDF generation failed:", err);
     } finally {
       setIsDownloading(false);
     }
@@ -484,6 +555,12 @@ export default function ReportPreviewShell({
           )}
         </div>
       </div>
+
+      <CircularProgressLoader
+        progress={loaderProgress}
+        loadingText={loaderText}
+        visible={showLoader}
+      />
     </div>
   );
 }
