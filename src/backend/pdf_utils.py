@@ -283,7 +283,7 @@ async def generate_pdf_with_toc(html: str, browser=None, *, format: str = "Lette
             # BS4 Injection on the existing parsed soup
             print("[PROFILE] Starting BS4 Injection...")
             page_num_spans = soup.select(".toc-page-num")
-            page_lookup = {entry["title"]: entry["page"] for entry in toc_entries}
+            page_lookup = {clean_text(entry["title"]): entry["page"] for entry in toc_entries}
             matched_count = 0
             for span in page_num_spans:
                 row = span.find_parent(class_="toc-row")
@@ -292,7 +292,7 @@ async def generate_pdf_with_toc(html: str, browser=None, *, format: str = "Lette
                 title_span = row.select_one(".toc-title")
                 if not title_span:
                     continue
-                title_text = title_span.get_text(strip=True)
+                title_text = clean_text(title_span.get_text())
                 if title_text in page_lookup:
                     span.string = str(page_lookup[title_text])
                     matched_count += 1
