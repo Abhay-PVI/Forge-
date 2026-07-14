@@ -11,6 +11,16 @@ from playwright.async_api import async_playwright
 import asyncio
 import time
 import gc
+import psutil
+import os
+
+python_process = psutil.Process(os.getpid())
+_process = python_process
+
+def log_memory(label: str):
+    mem_mb = _process.memory_info().rss / 1024 / 1024
+    print(f"[MEMORY] {label}: {mem_mb:.1f} MB")
+    return mem_mb
 
 
 async def generate_pdf_from_html(html: str, browser=None, *, format: str = "A4") -> bytes:
@@ -213,6 +223,7 @@ pdf_generation_semaphore = asyncio.Semaphore(1)
 
 async def generate_pdf_with_toc(html: str, browser=None, *, format: str = "Letter") -> bytes:
     t_start = time.time()
+    log_memory("Function start")
     
     close_browser_needed = False
     p = None
@@ -235,6 +246,7 @@ async def generate_pdf_with_toc(html: str, browser=None, *, format: str = "Lette
         print(f"[PROFILE] Playwright context setup + browser launch took: {t_init - t_start:.3f}s")
     else:
         print(f"[PROFILE] Using global browser instance. Setup overhead: {t_init - t_start:.3f}s")
+    log_memory("After browser launch")
         
     # Parse BeautifulSoup once to get headings and reuse the soup object
     soup = BeautifulSoup(html, "html.parser")
@@ -256,6 +268,7 @@ async def generate_pdf_with_toc(html: str, browser=None, *, format: str = "Lette
     
     t1 = time.time()
     print(f"[PROFILE] BS4 collect headings took: {t1 - t_init:.3f}s (Count: {len(headings)})")
+    log_memory("After BS4 parse")
     
     async with pdf_generation_semaphore:
         context = None
@@ -265,20 +278,27 @@ async def generate_pdf_with_toc(html: str, browser=None, *, format: str = "Lette
             page = await context.new_page()
             t2 = time.time()
             print(f"[PROFILE] Page open took: {t2 - t1:.3f}s")
+            log_memory("After page/context creation")
             
             # Pass 1 Render (use original html string)
             print("[PROFILE] Starting Pass 1 Render...")
             await page.set_content(html, wait_until="networkidle")
+            log_memory("After Pass 1 set_content")
+            
             pass1_pdf = await page.pdf(format=format, print_background=True)
             t3 = time.time()
             print(f"[PROFILE] Pass 1 Render complete: {t3 - t2:.3f}s")
+            log_memory("After Pass 1 page.pdf()")
             
             # PyMuPDF scan
             print("[PROFILE] Starting PyMuPDF scan...")
             toc_entries = extract_toc_entries(pass1_pdf, headings)
             t4 = time.time()
             print(f"[PROFILE] PyMuPDF scan complete: {t4 - t3:.3f}s (Entries matched: {len(toc_entries)})")
+            log_memory("After PyMuPDF scan")
+            
             del pass1_pdf
+            log_memory("After del pass1_pdf")
             
             # BS4 Injection on the existing parsed soup
             print("[PROFILE] Starting BS4 Injection...")
@@ -300,13 +320,18 @@ async def generate_pdf_with_toc(html: str, browser=None, *, format: str = "Lette
             del soup
             t5 = time.time()
             print(f"[PROFILE] BS4 Injection complete: {t5 - t4:.3f}s (Injected spans: {matched_count})")
+            log_memory("After BS4 injection + del soup")
             
             # Pass 2 Render on SAME page
             print("[PROFILE] Starting Pass 2 Render on reused page...")
             await page.set_content(final_html, wait_until="networkidle")
+            log_memory("After Pass 2 set_content")
+            
             final_pdf = await page.pdf(format=format, print_background=True)
             t6 = time.time()
             print(f"[PROFILE] Pass 2 Render complete: {t6 - t5:.3f}s")
+            log_memory("After Pass 2 page.pdf()")
+            
             return final_pdf
         finally:
             if page:
@@ -318,5 +343,6 @@ async def generate_pdf_with_toc(html: str, browser=None, *, format: str = "Lette
                 if p:
                     await p.stop()
             gc.collect()
+            log_memory("After final cleanup + gc.collect()")
             t7 = time.time()
             print(f"[PROFILE] generate_pdf_with_toc grand total time: {t7 - t_start:.3f}s")
