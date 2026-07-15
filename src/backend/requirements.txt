@@ -13,7 +13,7 @@ scikit-learn
 lxml
 reportlab
 llmwhisperer-client==2.7.0
-playwright===1.44.0
+playwright==1.44.0
 PyMuPDF
 beautifulsoup4
 sqlalchemy
