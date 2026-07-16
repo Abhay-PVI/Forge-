@@ -11,12 +11,18 @@ from google import genai
 from unstract.llmwhisperer import LLMWhispererClientV2
 from database import SessionLocal, PVModule, PVVariant
 
-# Initialize Clients
+# Initialize clients from environment variables. Never store credentials in source.
+LLMWHISPERER_API_KEY = os.getenv("LLMWHISPERER_API_KEY")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
+if not LLMWHISPERER_API_KEY:
+    raise ValueError("Missing LLMWHISPERER_API_KEY environment variable")
+
 LLM_WHISPERER = LLMWhispererClientV2(
-    base_url="https://llmwhisperer-api.us-central.unstract.com/api/v2", 
-    api_key='api key need to uplaod ')
-# Update with your Gemini API key or set via env variable
-GEMINI_CLIENT = genai.Client(api_key="pi key need to uplaod")
+    base_url="https://llmwhisperer-api.us-central.unstract.com/api/v2",
+    api_key=LLMWHISPERER_API_KEY,
+)
+GEMINI_CLIENT = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
 
 PROMPT_TEMPLATE = """
 You are an expert solar PV engineer and datasheet parser. Analyze this raw text data extracted from a PV datasheet.
@@ -150,11 +156,10 @@ async def execute_extraction_pipeline(file_path: str, page_no: int = 2) -> dict:
     raw_text = await get_pdf_text_via_whisperer(file_path, page_no)
     formatted_prompt = PROMPT_TEMPLATE.format(extracted_text=raw_text)
     
-    print(clean_and_parse_json(response.text))
-    
-
     # 2. Strategy A: Try primary Gemini parsing engine
     try:
+        if GEMINI_CLIENT is None:
+            raise RuntimeError("Missing GEMINI_API_KEY environment variable")
         print("🤖 Running primary extraction via Gemini 2.5 Flash...")
         response = GEMINI_CLIENT.models.generate_content(model='gemini-2.5-flash', contents=formatted_prompt)
         parsed = clean_and_parse_json(response.text)

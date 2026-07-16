@@ -45,8 +45,6 @@ def extract_pvsyst_data(pdf_path, page_no=1):
     print("=" * 50)
     print("PDF PATH:", pdf_path)
     print("FILE EXISTS:", os.path.exists(pdf_path))
-    print("API KEY:", API_KEY)
-    print("API KEY TYPE:", type(API_KEY))
     print("=" * 50)
 
     if not os.path.exists(pdf_path):
@@ -56,7 +54,7 @@ def extract_pvsyst_data(pdf_path, page_no=1):
 
     client = LLMWhispererClientV2(
         base_url=BASE_URL,
-        api_key="9FNwn6xdd6TCJfIh8U4MUKBlvkufKGETEGKisfcHU_Q",
+        api_key=API_KEY,
     )
 
     result = client.whisper(
