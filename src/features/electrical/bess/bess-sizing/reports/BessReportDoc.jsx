@@ -97,6 +97,36 @@ export default function BessReportDoc({ values = {}, files = {}, showStamp = fal
   const safeValues = values;
   const safeFiles = files;
 
+  // Cache for object URLs to prevent memory leaks from creating them on every render
+  const objectUrlsRef = React.useRef({});
+
+  // Clean up object URLs on unmount
+  React.useEffect(() => {
+    const currentUrls = objectUrlsRef.current;
+    return () => {
+      Object.values(currentUrls).forEach(url => {
+        if (url && url.startsWith('blob:')) {
+          URL.revokeObjectURL(url);
+        }
+      });
+    };
+  }, []);
+
+  const getFileUrl = (fileObj) => {
+    if (!fileObj || !fileObj.file) return null;
+    const cacheKey = fileObj.name + '_' + fileObj.size + '_' + fileObj.lastModified;
+    if (objectUrlsRef.current[cacheKey]) {
+      return objectUrlsRef.current[cacheKey];
+    }
+    const url = URL.createObjectURL(fileObj.file);
+    objectUrlsRef.current[cacheKey] = url;
+    return url;
+  };
+
+  const sldUrl = getFileUrl(files?.singleLineDiagram);
+  const loadProfileUrl = getFileUrl(files?.loadProfileChart);
+  const sitePhotoUrl = getFileUrl(files?.sitePhoto);
+  const siteMapUrl = getFileUrl(files?.siteMap);
 
   // Combine aux cable parts (Core No, Size, Material) into single fields for the report template
   const compiledAuxCables = {};
@@ -142,6 +172,18 @@ export default function BessReportDoc({ values = {}, files = {}, showStamp = fal
     groundConductorMisc: "#6 AWG Cu",
     ASHRAE_TABLE: ashraeTableTemplate,
     REPORT_NAME: " Design Basis Report - Bess Electrical",
+    singleLineDiagram: sldUrl
+      ? `<img src="${sldUrl}" alt="Single Line Diagram" />`
+      : `<div style="border: 1px dashed #cbd5e1; padding: 20px; color: #64748b; font-style: italic; background: #f8fafc; border-radius: 4px; text-align: center;">No Single Line Diagram uploaded</div>`,
+    loadProfileChart: loadProfileUrl
+      ? `<img src="${loadProfileUrl}" alt="Load Profile Chart" />`
+      : `<div style="border: 1px dashed #cbd5e1; padding: 20px; color: #64748b; font-style: italic; background: #f8fafc; border-radius: 4px; text-align: center;">No Load Profile Chart uploaded</div>`,
+    sitePhoto: sitePhotoUrl
+      ? `<img src="${sitePhotoUrl}" alt="Site Layout / Aerial Photo" />`
+      : `<div style="border: 1px dashed #cbd5e1; padding: 20px; color: #64748b; font-style: italic; background: #f8fafc; border-radius: 4px; text-align: center;">No Site Layout / Aerial Photo uploaded</div>`,
+    siteMap: siteMapUrl
+      ? `<img src="${siteMapUrl}" alt="Site Location Map" />`
+      : `<div style="border: 1px dashed #cbd5e1; padding: 20px; color: #64748b; font-style: italic; background: #f8fafc; border-radius: 4px; text-align: center;">No Site Location Map uploaded</div>`,
   };
   const bodyHtml = fillTemplate(template, initialValues);
 

@@ -81,7 +81,13 @@ function renderAshraeTableHtml(rawHtml, values) {
       }
     });
 
-    return doc.body.innerHTML;
+    // DOMParser moves top-level <style> tags into <head>. Preserve them when
+    // returning the populated fragment so ASHRAE print sizing is not lost.
+    const templateStyles = Array.from(doc.head.querySelectorAll("style"))
+      .map((style) => style.outerHTML)
+      .join("");
+
+    return `${templateStyles}${doc.body.innerHTML}`;
   } catch (err) {
     console.error("Failed to dynamically populate ASHRAE table:", err);
     return rawHtml;
