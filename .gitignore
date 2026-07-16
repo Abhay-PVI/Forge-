@@ -25,3 +25,19 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Python environments and generated caches
+__pycache__/
+*.py[cod]
+src/backend/venv312/
+pdf-venv/
+
+# Local environment secrets
+.env
+!.env.example
+
+# Generated PDF artifacts
+src/test_output.pdf
+
+# Obsolete standalone PDF renderer
+pdf-render-service/

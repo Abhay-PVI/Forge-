@@ -1,18 +1,73 @@
-
-"""Common PDF generation helper using Playwright.
+"""Common PDF generation helper using WeasyPrint layout engine.
 
 The front‑end `exportPdf` function POSTs JSON `{ html: "<full html>" }` to
-`/api/generate-pdf`.  This module provides a reusable async function that
-creates a Chromium instance, renders the HTML, and returns the PDF bytes.
+`/api/generate-pdf`. This module renders PDF bytes locally using WeasyPrint.
 """
 import fitz  # PyMuPDF
 from bs4 import BeautifulSoup
-from playwright.async_api import async_playwright
 import asyncio
 import time
 import gc
 import psutil
 import os
+import json
+from dotenv import load_dotenv
+
+# Conditional WeasyPrint and xhtml2pdf imports to prevent startup crashes when running locally on Windows without GTK
+try:
+    from weasyprint import HTML, CSS
+    WEASYPRINT_AVAILABLE = True
+except (ImportError, OSError) as e:
+    WEASYPRINT_AVAILABLE = False
+    print(f"[WARNING] WeasyPrint could not be loaded (missing GTK libraries on Windows?): {e}")
+
+try:
+    from xhtml2pdf import pisa
+    XHTML2PDF_AVAILABLE = True
+except ImportError:
+    XHTML2PDF_AVAILABLE = False
+    print("[WARNING] xhtml2pdf could not be imported.")
+
+# Load local environment variables from the absolute path of the root .env file
+current_dir = os.path.dirname(os.path.abspath(__file__))
+root_dir = os.path.dirname(os.path.dirname(current_dir))
+dotenv_path = os.path.join(root_dir, ".env")
+load_dotenv(dotenv_path=dotenv_path)
+
+def _render_pdf_locally_sync(html: str, fmt: str) -> bytes:
+    """
+    Synchronous WeasyPrint layout and rendering.
+    Falls back to xhtml2pdf if WeasyPrint C-libraries (GTK/Pango/Cairo) are not loaded locally.
+    Executed in a worker thread to keep the event loop non-blocking.
+    """
+    # 1. Prefer WeasyPrint (Production/Dockerized or local with GTK)
+    if WEASYPRINT_AVAILABLE:
+        if not fmt:
+            fmt = "A4"
+        css_string = f"@page {{ size: {fmt}; }}"
+        stylesheets = [CSS(string=css_string)]
+        return HTML(string=html).write_pdf(stylesheets=stylesheets)
+
+    # 2. Fall back to pure-Python xhtml2pdf (Local development without GTK)
+    if XHTML2PDF_AVAILABLE:
+        print("[INFO] WeasyPrint GTK system libraries not found. Rendering locally via xhtml2pdf...")
+        import io
+        result_stream = io.BytesIO()
+        pdf = pisa.pisaDocument(io.BytesIO(html.encode("utf-8")), result_stream)
+        if not pdf.err:
+            return result_stream.getvalue()
+        else:
+            raise RuntimeError(f"xhtml2pdf rendering failed with error code: {pdf.err}")
+
+    # 3. Last Resort Fallback (neither WeasyPrint nor xhtml2pdf is available)
+    raise RuntimeError(
+        "No PDF rendering library (WeasyPrint or xhtml2pdf) is available. "
+        "Please run 'pip install xhtml2pdf' inside your virtual environment to enable local fallback."
+    )
+
+async def render_html_to_pdf_locally(html: str, format: str = "A4") -> bytes:
+    """Render HTML string to PDF bytes locally using WeasyPrint or xhtml2pdf in a worker thread."""
+    return await asyncio.to_thread(_render_pdf_locally_sync, html, format)
 
 
 def _container_memory_mb():
@@ -74,62 +129,16 @@ def log_memory(label: str):
 
 
 async def generate_pdf_from_html(html: str, browser=None, *, format: str = "A4") -> bytes:
-    """Render *html* in headless Chromium and return a PDF."""
+    """Render *html* locally using WeasyPrint layout engine."""
     t0 = time.time()
-    
-    close_browser_needed = False
-    p = None
-    if browser is None:
-        p = await async_playwright().start()
-        browser = await p.chromium.launch(
-            args=[
-                "--proxy-server=direct://",
-                "--proxy-bypass-list=*",
-                "--disable-gpu",
-                "--disable-dev-shm-usage",
-                "--no-first-run",
-                "--no-sandbox",
-            ]
-        )
-        close_browser_needed = True
-        
-    t1 = time.time()
-    if close_browser_needed:
-        print(f"[PROFILE] Playwright context setup + browser launch took: {t1 - t0:.3f}s")
-    else:
-        print(f"[PROFILE] Using global browser instance. Setup overhead: {t1 - t0:.3f}s")
-        
-    context = None
-    page = None
     try:
-        context = await browser.new_context()
-        page = await context.new_page()
-        t2 = time.time()
-        print(f"[PROFILE] Page open took: {t2 - t1:.3f}s")
-        
-        await page.set_content(html, wait_until="networkidle")
-        t3 = time.time()
-        print(f"[PROFILE] Load content (networkidle) took: {t3 - t2:.3f}s")
-        
-        pdf_bytes = await page.pdf(
-            format=format, 
-            print_background=True,
-            prefer_css_page_size=True,
-        )
-        t4 = time.time()
-        print(f"[PROFILE] Playwright page.pdf print took: {t4 - t3:.3f}s")
+        pdf_bytes = await render_html_to_pdf_locally(html, format=format)
+        t1 = time.time()
+        print(f"[PROFILE] generate_pdf_from_html (locally via WeasyPrint) took: {t1 - t0:.3f}s")
         return pdf_bytes
-    finally:
-        if page:
-            await page.close()
-        if context:
-            await context.close()
-        if close_browser_needed:
-            await browser.close()
-            if p:
-                await p.stop()
-        t5 = time.time()
-        print(f"[PROFILE] generate_pdf_from_html total time: {t5 - t0:.3f}s")
+    except Exception as e:
+        print(f"[ERROR] generate_pdf_from_html failed: {e}")
+        raise
 
 
 # Helper for synchronous contexts (e.g., test scripts)
@@ -355,8 +364,16 @@ def _patch_toc_page_numbers(
                     overlay=True,
                 )
                 if spare_height < 0:
+                    print(
+                        f"[DEBUG ERROR] page.insert_textbox failed: "
+                        f"text='{page_number}', "
+                        f"rect=({text_rect.x0:.2f}, {text_rect.y0:.2f}, {text_rect.x1:.2f}, {text_rect.y1:.2f}), "
+                        f"width={text_rect.width:.2f}, height={text_rect.height:.2f}, "
+                        f"fontname='helv', fontsize=9, "
+                        f"returned spare_height={spare_height}"
+                    )
                     raise RuntimeError(
-                        f"TOC page number {page_number} did not fit its marker cell"
+                        f"TOC page number {page_number} did not fit its marker cell (spare_height={spare_height})"
                     )
                 injected_count += 1
 
@@ -439,72 +456,22 @@ async def _generate_pdf_with_toc_unlocked(
     )
     log_memory("After BS4 parse + marker injection")
 
-    close_browser_needed = False
-    p = None
-    context = None
-    page = None
     rendered_pdf = None
+    t_render_start = time.time()
     try:
-        if browser is None:
-            p = await async_playwright().start()
-            browser = await p.chromium.launch(
-                args=[
-                    "--proxy-server=direct://",
-                    "--proxy-bypass-list=*",
-                    "--disable-gpu",
-                    "--disable-dev-shm-usage",
-                    "--no-first-run",
-                    "--no-sandbox",
-                ]
-            )
-            close_browser_needed = True
-
-        t_init = time.time()
-        if close_browser_needed:
-            print(
-                f"[PROFILE] Playwright context setup + browser launch took: "
-                f"{t_init - t_parse:.3f}s"
-            )
-        else:
-            print(
-                f"[PROFILE] Using global browser instance. Setup overhead: "
-                f"{t_init - t_parse:.3f}s"
-            )
-        log_memory("After browser launch")
-
-        context = await browser.new_context()
-        page = await context.new_page()
-        t_page = time.time()
-        print(f"[PROFILE] Page open took: {t_page - t_init:.3f}s")
-        log_memory("After page/context creation")
-
-        print("[PROFILE] Starting single Chromium render...")
-        await page.set_content(render_html, wait_until="networkidle")
+        rendered_pdf = await render_html_to_pdf_locally(render_html, format=format)
         del render_html
-        log_memory("After single-pass set_content")
-
-        rendered_pdf = await page.pdf(
-            format=format,
-            print_background=True,
-            prefer_css_page_size=True,
-        )
         t_render = time.time()
-        print(f"[PROFILE] Single Chromium render complete: {t_render - t_page:.3f}s")
-        log_memory("After single-pass page.pdf()")
+        print(f"[PROFILE] WeasyPrint render complete: {t_render - t_render_start:.3f}s")
+    except Exception as e:
+        print(f"[ERROR] WeasyPrint render failed: {e}")
+        raise RuntimeError(f"WeasyPrint render failed: {e}") from e
     finally:
-        if page:
-            await page.close()
-        if context:
-            await context.close()
-        if close_browser_needed and browser:
-            await browser.close()
-        if p:
-            await p.stop()
         gc.collect()
-        log_memory("After Chromium cleanup + gc.collect()")
+        log_memory("After WeasyPrint rendering + gc.collect()")
 
     if rendered_pdf is None:
-        raise RuntimeError("Chromium did not produce a PDF")
+        raise RuntimeError("WeasyPrint did not produce a PDF")
 
     print("[PROFILE] Starting PyMuPDF TOC scan and in-place patch...")
     t_scan = time.time()
