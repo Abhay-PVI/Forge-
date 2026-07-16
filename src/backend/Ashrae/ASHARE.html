@@ -1,33 +1,41 @@
 <style>
-/* 1. Page Print Configurations (Your Originals) */
+/* ASHRAE table layout shared by the report preview and print/PDF export. */
 @page { 
     size: A4; 
     margin: 12mm; 
 }
 
 #ashrae_table {
-    width: 100mm;
-    max-width: 100mm;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
     table-layout: fixed;
-    border-collapse: collapse; /* Combined with grid outlines below */
+    border-collapse: collapse;
     font-size: 8px;
-    page-break-inside: avoid;
-    
-    /* Green background and explicit outer white border */
-    
-    
+    line-height: 1.15;
+    page-break-inside: auto;
+    break-inside: auto;
 }
 
-/* 2. Cell Sizing & Text Protection (Your Originals + White Borders) */
 #ashrae_table td, #ashrae_table th {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    padding: 0%;
-    
-    /* Ensures background is green, text is white, and grid lines are visible */
-    
+    overflow-wrap: anywhere;
+    word-break: normal;
+    padding: 2px;
+    vertical-align: middle;
     color: #000000 !important;
     border: 1px solid #050303 !important; 
+}
+
+#ashrae_table tbody {
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+#ashrae_table .greentext td {
+    background-color: #2e7d32 !important;
+    color: #ffffff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
 }
 
 /* 3. Deep Target Cleanup for Nested Tags */
@@ -44,9 +52,24 @@
     filter: brightness(0) invert(1);
 }
 </style>
-<table id="ashrae_table" style="width:20mm; table-layout:fixed; border-collapse:collapse; font-size:11px;">
+<table id="ashrae_table" width="100%">
 <colgroup>
-<col span="16" width="42"/>
+<col width="40"/>
+<col width="40"/>
+<col width="40"/>
+<col width="40"/>
+<col width="40"/>
+<col width="40"/>
+<col width="40"/>
+<col width="40"/>
+<col width="40"/>
+<col width="40"/>
+<col width="40"/>
+<col width="40"/>
+<col width="40"/>
+<col width="40"/>
+<col width="40"/>
+<col width="40"/>
 </colgroup>
 <tbody>
 <tr class="brd2">
@@ -54,8 +77,7 @@
 </tr>
 <tr class="brd2">
 <td colspan="15" style="text-align:left;">2025 ASHRAE Handbook - Foundamentals (IP)</td>
-<td class="compare-btn-anchor" colspan="1" id="compare_btn_428750_0_anchor" style="text-align: right; min-height: 24
-16px;">
+<td class="compare-btn-anchor" colspan="1" id="compare_btn_428750_0_anchor" style="text-align: right; min-height: 24px;">
 </td>
 </tr>
 <tr class="brd2">
@@ -114,7 +136,7 @@
 <td style="text-align:center;"><span class="tooltip">PCWD</span></td>
 </tr>
 <tr class="brd5" height="2">
-<td></td>
+<td colspan="16"></td>
 </tr>
 <tr class="brd2">
 <td data-key="coldest_month" style="text-align:center;"><b>12</b></td>
@@ -135,7 +157,7 @@
 <td data-key="WSF" style="text-align:center;"><b>0.442</b></td>
 </tr>
 <tr class="brd2" height="2">
-<td></td>
+<td colspan="16"></td>
 </tr>
 </tbody>
 <tbody>
@@ -182,7 +204,7 @@
 </tbody>
 <tbody align="center">
 <tr class="brd5" height="2">
-<td></td>
+<td colspan="16"></td>
 </tr>
 <tr class="brd2">
 <td data-key="hottest_month" style="text-align:center;"><b>7</b></td>
@@ -203,7 +225,7 @@
 <td data-key="MCWS_PCWD_to_0.4_DB_PCWD" style="text-align:center;"><b>260</b></td>
 </tr>
 <tr class="brd3" height="2">
-<td></td>
+<td colspan="16"></td>
 </tr>
 <tr>
 <td colspan="9" style="text-align:center;">Dehumidification <span class="tooltip">DP</span>/<span class="tooltip">MCDB</span> and <span class="tooltip">HR</span></td>
@@ -236,7 +258,7 @@
 <td style="text-align:center;"><span class="tooltip">MCDB</span></td>
 </tr>
 <tr class="brd5" height="2">
-<td></td>
+<td colspan="16"></td>
 </tr>
 <tr class="brd2">
 <td data-key="dehumidification_DP/MCDB_and_HR_0.4_DP" style="text-align:center;"><b>21.9</b></td>
@@ -257,7 +279,7 @@
 <td data-key="extreme_max_WB" style="text-align:center;"><b>N/A</b></td>
 </tr>
 <tr class="brd2" height="2">
-<td></td>
+<td colspan="16"></td>
 </tr>
 </tbody>
 <tbody>
@@ -266,7 +288,7 @@
 </tr>
 <tr class="brd5" height="2">
 <td colspan="3" style="border-bottom-color:black"></td>
-<td colspan="1" style="border-bottom-color:transparament"></td>
+<td colspan="1" style="border-bottom-color:transparent"></td>
 <td colspan="12" style="border-bottom-color:black"></td>
 </tr>
 </tbody>
@@ -357,7 +379,7 @@
 <td data-key="n-year_return_period_values_of_extreme_WB_50_max" style="text-align:center;"><b>27.6</b></td>
 </tr>
 <tr class="brd2" height="2">
-<td></td>
+<td colspan="16"></td>
 </tr>
 </tbody>
 </table>
