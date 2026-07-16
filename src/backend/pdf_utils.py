@@ -350,9 +350,9 @@ def _patch_toc_page_numbers(
                     continue
                 text_rect = fitz.Rect(
                     marker_rect.x0 - 2,
-                    marker_rect.y0 - 1,
+                    marker_rect.y0 - 2,
                     marker_rect.x1 + 2,
-                    marker_rect.y1 + 2,
+                    marker_rect.y1 + 4,
                 )
                 spare_height = page.insert_textbox(
                     text_rect,

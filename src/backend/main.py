@@ -253,7 +253,20 @@ async def generate_pdf_with_toc_endpoint(payload: dict, request: Request):
             status_code=400,
             content={"status": "error", "message": "Missing html content"},
         )
-    pdf_bytes = await generate_pdf_with_toc(html, browser=None, format="Letter")
+    try:
+        pdf_bytes = await generate_pdf_with_toc(
+            html, browser=None, format="Letter"
+        )
+    except Exception as exc:
+        traceback.print_exc()
+        return JSONResponse(
+            status_code=500,
+            content={
+                "status": "error",
+                "message": "PDF generation failed.",
+                "details": str(exc),
+            },
+        )
 
     solar_appendix_values = payload.get("solar_appendix_values")
     if isinstance(solar_appendix_values, dict) and solar_appendix_values:
