@@ -197,6 +197,7 @@ export async function exportPdfWithToc(
           .report-page.doc-control-page .bottom-layout-group {
             margin-top: 60mm !important; /* Push down without overflowing the page */
           }
+
           .page {
             width: 100% !important;
             max-width: 100% !important;
