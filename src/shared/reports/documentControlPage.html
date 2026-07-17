@@ -7,23 +7,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document Control</title>
   <style>
-    @media print {
-      @page {
-        size: letter;
-        width: 201mm;
-        margin: 10mm;
-        page-break-after: always;
-      }
-
-      body {
-        margin: 0;
-        /* margin-right: 5cm; */
-        padding-right: 5cm;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-    }
-
     .report-page.doc-control-page {
       padding: 3.5rem;
       height: 100vh;
@@ -33,6 +16,7 @@
       color: #1e293b;
       background-color: #ffffff;
       display: flex;
+      flex-direction: column;
       justify-content: space-between;
     }
 
