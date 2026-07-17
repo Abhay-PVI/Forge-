@@ -79,6 +79,8 @@ export async function exportPdfWithToc(
 
   const docTitle = fileName.replace(".pdf", "");
   const sizeValue = pageSize.toLowerCase() === "a4" ? "A4" : "Letter";
+  // Subtract 20mm total margin (10mm top, 10mm bottom) from total page height
+  const innerHeight = sizeValue === "A4" ? "277mm" : "259.4mm";
 
   // Parse HTML and extract styles to avoid preceding text nodes or wrappers in body
   const parser = new DOMParser();
@@ -179,7 +181,6 @@ export async function exportPdfWithToc(
             width: 100% !important;
             max-width: 100% !important;
             height: auto !important;
-            min-height: 100% !important;
             margin: 0 !important;
             padding: 15mm 15mm !important;
             border: none !important;
@@ -187,11 +188,19 @@ export async function exportPdfWithToc(
             box-shadow: none !important;
             box-sizing: border-box !important;
             page-break-after: always !important;
-            page-break-inside: avoid !important;
           }
           .report-page.doc-control-page {
-            height: 100vh !important;
-            min-height: 100vh !important;
+            position: relative !important;
+            height: ${innerHeight} !important;
+            min-height: ${innerHeight} !important;
+            display: block !important; /* Remove flex to avoid WeasyPrint flex bugs */
+          }
+          .report-page.doc-control-page .bottom-layout-group {
+            position: absolute !important;
+            bottom: 15mm !important; /* Pin precisely to bottom margin */
+            left: 15mm !important;
+            right: 15mm !important;
+            width: auto !important;
           }
           .page {
             width: 100% !important;
