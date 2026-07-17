@@ -188,14 +188,10 @@ export async function exportPdfWithToc(
             box-shadow: none !important;
             box-sizing: border-box !important;
             page-break-after: always !important;
-          }
-          .report-page.doc-control-page {
-            height: ${innerHeight} !important;
-            min-height: ${innerHeight} !important;
-            display: block !important;
+            page-break-inside: avoid !important;
           }
           .report-page.doc-control-page .bottom-layout-group {
-            margin-top: 40mm !important; /* Push down without overflowing the page */
+            margin-top: 20mm !important; /* Push down without overflowing the page */
           }
 
           .page {
