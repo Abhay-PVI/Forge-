@@ -16,10 +16,10 @@ function renderRevisionHistoryRows(values, reportName, issueDate, revision) {
     values.revisions.forEach((rev) => {
       rows.push(`
         <tr class="tr">
-          <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4;">${rev.revision ?? ""}</td>
-          <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4;">${rev.issueDate ?? ""}</td>
-          <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4;">${rev.documentName ?? reportName}</td>
-          <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4;">${rev.description ?? ""}</td>
+          <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4; text-align: center;">${rev.revision ?? ""}</td>
+          <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4; text-align: center;">${rev.issueDate ?? ""}</td>
+          <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4; text-align: center;">${rev.documentName ?? reportName}</td>
+          <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4; text-align: center;">${rev.description ?? ""}</td>
         </tr>
       `);
     });
@@ -39,10 +39,10 @@ function renderRevisionHistoryRows(values, reportName, issueDate, revision) {
       if (rev.num || rev.date || rev.desc) {
         rows.push(`
           <tr class="tr">
-            <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4;">${rev.num ?? idx}</td>
-            <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4;">${rev.date ?? issueDate}</td>
-            <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4;">${reportName}</td>
-            <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4;">${rev.desc ?? ""}</td>
+            <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4; text-align: center;">${rev.num ?? idx}</td>
+            <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4; text-align: center;">${rev.date ?? issueDate}</td>
+            <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4; text-align: center;">${reportName}</td>
+            <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4; text-align: center;">${rev.desc ?? ""}</td>
           </tr>
         `);
       }
@@ -53,10 +53,10 @@ function renderRevisionHistoryRows(values, reportName, issueDate, revision) {
   if (rows.length === 0) {
     rows.push(`
       <tr class="tr">
-        <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4;">${revision ?? "0"}</td>
-        <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4;">${issueDate}</td>
-        <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4;">${reportName}</td>
-        <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4;">Initial Release</td>
+        <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4; text-align: center;">${revision ?? "0"}</td>
+        <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4; text-align: center;">${issueDate}</td>
+        <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4; text-align: center;">${reportName}</td>
+        <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4; text-align: center;">Initial Release</td>
       </tr>
     `);
   }
