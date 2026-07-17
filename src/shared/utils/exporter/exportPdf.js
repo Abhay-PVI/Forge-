@@ -195,7 +195,7 @@ export async function exportPdfWithToc(
             display: block !important;
           }
           .report-page.doc-control-page .bottom-layout-group {
-            margin-top: 130mm !important; /* Force WeasyPrint to push this to the bottom half of the page */
+            margin-top: 60mm !important; /* Push down without overflowing the page */
           }
           .page {
             width: 100% !important;
