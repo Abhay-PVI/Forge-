@@ -190,11 +190,12 @@ export async function exportPdfWithToc(
             page-break-after: always !important;
           }
           .report-page.doc-control-page {
-            display: flex !important;
-            flex-direction: column !important;
-            justify-content: space-between !important;
             height: ${innerHeight} !important;
             min-height: ${innerHeight} !important;
+            display: block !important;
+          }
+          .report-page.doc-control-page .bottom-layout-group {
+            margin-top: 130mm !important; /* Force WeasyPrint to push this to the bottom half of the page */
           }
           .page {
             width: 100% !important;
