@@ -100,7 +100,10 @@ export default function HvDbrReportDoc({ values = {}, files = {}, showStamp = fa
     SEAL_CONTENT: sealContent,
   };
 
-  const completeTemplate = `${coverPage} ${documentControlPage} ${tableOfContents} ${listOfTables} ${listOfAbbreviations} ${numberedBodyHtml}`;
+  const lotHtml = tables.length > 0 || figures.length > 0 ? listOfTables : "";
+  const loaHtml = abbreviations.length > 0 ? listOfAbbreviations : "";
+
+  const completeTemplate = `${coverPage} ${documentControlPage} ${tableOfContents} ${lotHtml} ${loaHtml} ${numberedBodyHtml}`;
   const reportHtml = fillTemplate(completeTemplate, finalValues);
 
   return (

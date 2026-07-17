@@ -220,7 +220,10 @@ export default function BessReportDoc({ values = {}, files = {}, showStamp = fal
   }
 
   // 4. Concatenate and fill final template
-  const completeTemplate = `${coverPage} ${documentControlPage} ${tableOfContents} ${listOfTables} ${listOfAbbreviations} ${numberedBodyHtml} ${appendixTemplate}`;
+  const lotHtml = tables.length > 0 || figures.length > 0 ? listOfTables : "";
+  const loaHtml = abbreviations.length > 0 ? listOfAbbreviations : "";
+
+  const completeTemplate = `${coverPage} ${documentControlPage} ${tableOfContents} ${lotHtml} ${loaHtml} ${numberedBodyHtml} ${appendixTemplate}`;
   const reportHtml = fillTemplate(completeTemplate, finalValues);
 
 

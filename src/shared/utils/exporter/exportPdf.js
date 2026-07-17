@@ -189,6 +189,10 @@ export async function exportPdfWithToc(
             page-break-after: always !important;
             page-break-inside: avoid !important;
           }
+          .report-page.doc-control-page {
+            height: 100vh !important;
+            min-height: 100vh !important;
+          }
           .page {
             width: 100% !important;
             max-width: 100% !important;
