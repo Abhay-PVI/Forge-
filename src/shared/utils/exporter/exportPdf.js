@@ -195,7 +195,7 @@ export async function exportPdfWithToc(
             display: block !important;
           }
           .report-page.doc-control-page .bottom-layout-group {
-            margin-top: 60mm !important; /* Push down without overflowing the page */
+            margin-top: 40mm !important; /* Push down without overflowing the page */
           }
 
           .page {
