@@ -13,18 +13,49 @@ async function inlineImages(htmlString) {
     Array.from(images).map(async (img, idx) => {
       const src = img.getAttribute("src");
       if (!src || src.startsWith("data:")) return;
+      
       const startFetch = performance.now();
       try {
         const response = await fetch(src);
         const blob = await response.blob();
-        const base64 = await new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onloadend = () => resolve(reader.result);
-          reader.readAsDataURL(blob);
+
+        const base64 = await new Promise((resolve, reject) => {
+          const image = new Image();
+          image.onload = () => {
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+
+            // Max dimensions to prevent massive base64 strings blocking WeasyPrint
+            const MAX_WIDTH = 1200;
+            const MAX_HEIGHT = 1200;
+            let width = image.width;
+            let height = image.height;
+
+            // Only downscale if the image is too large
+            if (width > MAX_WIDTH || height > MAX_HEIGHT) {
+              const ratio = Math.min(MAX_WIDTH / width, MAX_HEIGHT / height);
+              width = Math.round(width * ratio);
+              height = Math.round(height * ratio);
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            ctx.drawImage(image, 0, 0, width, height);
+
+            // Preserve transparency for PNGs, compress JPEGs for speed
+            if (blob.type === "image/png") {
+              resolve(canvas.toDataURL("image/png"));
+            } else {
+              resolve(canvas.toDataURL("image/jpeg", 0.75));
+            }
+          };
+          image.onerror = reject;
+          image.src = URL.createObjectURL(blob);
         });
+
         img.setAttribute("src", base64);
         const endFetch = performance.now();
-        console.log(`[PROFILE] Image [${idx}] fetch and encode took ${(endFetch - startFetch).toFixed(2)}ms: ${src.substring(0, 80)}`);
+        console.log(`[PROFILE] Image [${idx}] fetch, compress & encode took ${(endFetch - startFetch).toFixed(2)}ms`);
       } catch (err) {
         console.warn(`Failed to inline image: ${src}`, err);
       }
@@ -188,7 +219,11 @@ export async function exportPdfWithToc(
             box-shadow: none !important;
             box-sizing: border-box !important;
             page-break-after: always !important;
-            page-break-inside: avoid !important;
+          }
+          .report-page.doc-control-page {
+            height: ${innerHeight} !important;
+            min-height: ${innerHeight} !important;
+            display: block !important;
           }
           .report-page.doc-control-page .bottom-layout-group {
             margin-top: 20mm !important; /* Push down without overflowing the page */
