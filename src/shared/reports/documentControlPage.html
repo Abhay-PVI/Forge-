@@ -9,8 +9,10 @@
   <style>
     @media print {
       @page {
-        size: A4;
+        size: letter;
+        width: 201mm;
         margin: 10mm;
+        page-break-after: always;
       }
 
       body {
@@ -210,7 +212,8 @@
 <body>
 
   <div class="report-page doc-control-page">
-    <table border="0" style="width: 100%; table-layout: fixed; border: none; border-collapse: collapse; margin-top: 80px; margin-bottom: 3rem;">
+    <table border="0"
+      style="width: 100%; table-layout: fixed; border: none; border-collapse: collapse; margin-top: 80px; margin-bottom: 3rem;">
       <tr>
         <td style="width: 50%; border: none !important; padding: 0 1.25rem 0 0; vertical-align: top; text-align: left;">
           <div class="logo-row-container" style="justify-content: flex-start;">
