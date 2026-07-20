@@ -21,3 +21,4 @@ psycopg2-binary
 supabase
 python-dotenv
 psutil
+nrel-pysam
