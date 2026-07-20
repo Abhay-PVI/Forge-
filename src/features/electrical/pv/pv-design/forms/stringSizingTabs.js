@@ -167,36 +167,36 @@ export const STRING_SIZE_TABS = [{
   }]
 },
 
-{
-  id: "reportInfo",
-  name: "Report Information",
-  icon: "fileText",
-  fields: [
+// {
+//   id: "reportInfo",
+//   name: "Report Information",
+//   icon: "fileText",
+//   fields: [
 
-    // {
-    //   key: "issueDate",
-    //   label: "Issue Date",
-    //   type: "date"
-    // },
-    // {
-    //   key: "documentNumber",
-    //   label: "Document Number",
-    //   type: "text"
-    // },
-    {
-      key: "submittedTo",
-      label: "Submitted To",
-      type: "text",
-      required: true
-    },
-    {
-      key: "submittedToAddress",
-      label: "Submitted To Address",
-      type: "textarea",
-      required: true
-    }
-  ]
-},
+//     // {
+//     //   key: "issueDate",
+//     //   label: "Issue Date",
+//     //   type: "date"
+//     // },
+//     // {
+//     //   key: "documentNumber",
+//     //   label: "Document Number",
+//     //   type: "text"
+//     // },
+//     {
+//       key: "submittedTo",
+//       label: "Submitted To",
+//       type: "text",
+//       required: true
+//     },
+//     {
+//       key: "submittedToAddress",
+//       label: "Submitted To Address",
+//       type: "textarea",
+//       required: true
+//     }
+//   ]
+// },
 
 {
   id: 'technical',
@@ -615,27 +615,28 @@ export const STRING_SIZE_TABS = [{
     //   hint: 'CSV, XLSX · TMY or measured',
     //    required: false
     // },
+    // {
+    //   key: "dhiCsv",
+    //   label: "Hourly DHI CSV",
+    //   hint: "CSV containing yearly hourly Diffuse Horizontal Irradiance data",
+    //   required: false
+    // }, {
+    //   key: "ghiCsv",
+    //   label: "Hourly GHI CSV",
+    //   hint: "CSV containing yearly hourly Global Horizontal Irradiance data",
+    //   required: false
+    // }, {
+    //   key: "vocCsv",
+    //   label: "Hourly Voc CSV",
+    //   hint: "CSV containing yearly hourly voltage data",
+    //   required: false
+    // }, {
+    //   key: "IscCsv",
+    //   label: "Hourly Isc CSV",
+    //   hint: "CSV containing yearly hourly current data",
+    //   required: false
+    // },
     {
-      key: "dhiCsv",
-      label: "Hourly DHI CSV",
-      hint: "CSV containing yearly hourly Diffuse Horizontal Irradiance data",
-      required: true
-    }, {
-      key: "ghiCsv",
-      label: "Hourly GHI CSV",
-      hint: "CSV containing yearly hourly Global Horizontal Irradiance data",
-      required: true
-    }, {
-      key: "vocCsv",
-      label: "Hourly Voc CSV",
-      hint: "CSV containing yearly hourly voltage data",
-      required: true
-    }, {
-      key: "IscCsv",
-      label: "Hourly Isc CSV",
-      hint: "CSV containing yearly hourly current data",
-      required: true
-    }, {
       key: "pvsystReport",
       label: "PVsyst Loss Diagram Report",
       accept: ".pdf",
@@ -649,12 +650,12 @@ export const STRING_SIZE_TABS = [{
       key: "Results_of_26-year_voltage",
       label: "Results of 26-year historical SAM simulation voltage chart",
       hint: "Image file (PNG, JPG) · simulation chart",
-      required: true
+      required: false
     }, {
       key: "Results_of_26-year_current",
       label: "Results of 26-year historical SAM simulation current chart",
       hint: "Image file (PNG, JPG) · simulation chart",
-      required: true
+      required: false
     }
 
   ]
