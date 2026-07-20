@@ -15,6 +15,10 @@ psycopg2-binary
 supabase
 python-dotenv
 psutil
+<<<<<<< HEAD
 google-auth
 weasyprint>=61.0
 xhtml2pdf>=0.2.11
+=======
+nrel-pysam
+>>>>>>> 4209949 (fix(backend): automate NSRDB weather download and resolve PySAM model execution crash)
