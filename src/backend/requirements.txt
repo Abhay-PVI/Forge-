@@ -9,7 +9,8 @@ scikit-learn
 lxml
 reportlab
 llmwhisperer-client
-playwright
+weasyprint
+xhtml2pdf
 PyMuPDF
 sqlalchemy
 psycopg2-binary
