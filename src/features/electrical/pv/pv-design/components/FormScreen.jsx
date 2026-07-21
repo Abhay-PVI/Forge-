@@ -793,8 +793,26 @@ export default function FormScreen({ report, vertical, sub, values, setValue, fi
         const degradationTable = buildMinVoltageDegradationTable(initialVoltage, Number(values.moduleDegradation), 30);
         setValue("minVoltageDegradationTable", degradationTable);
 
-        // Set placeholder for peak table data until implemented from PySAM
-        setValue("peakTableData", []);
+        const max_isc_year_obj = iscSummaryData.find(s => s.avg === max_3hr_isc);
+        if (max_isc_year_obj) {
+          setValue("peakTableData", {
+            t1_datetime: max_isc_year_obj.t1_datetime,
+            t2_datetime: max_isc_year_obj.t2_datetime,
+            t3_datetime: max_isc_year_obj.t3_datetime,
+            t1_ghi: max_isc_year_obj.t1_ghi,
+            t2_ghi: max_isc_year_obj.t2_ghi,
+            t3_ghi: max_isc_year_obj.t3_ghi,
+            t1_dhi: max_isc_year_obj.t1_dhi,
+            t2_dhi: max_isc_year_obj.t2_dhi,
+            t3_dhi: max_isc_year_obj.t3_dhi,
+            t1_isc: max_isc_year_obj.t1_isc,
+            t2_isc: max_isc_year_obj.t2_isc,
+            t3_isc: max_isc_year_obj.t3_isc
+          });
+        } else {
+          setValue("peakTableData", {});
+        }
+
         console.log("PySAM values saved.");
         continueNext();
       } catch (err) {

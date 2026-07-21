@@ -1174,6 +1174,7 @@ def process_all_weather_files_stream(config):
         # Calculate ISC summary (highest 3hr avg around noon)
         max_daily_avg = -float('inf')
         best_h1, best_h2, best_h3 = 0, 0, 0
+        best_day = 0
         days = len(isc_vals) // 24
         for day in range(days):
             base = day * 24
@@ -1185,13 +1186,43 @@ def process_all_weather_files_stream(config):
                 if daily_avg > max_daily_avg:
                     max_daily_avg = daily_avg
                     best_h1, best_h2, best_h3 = v1, v2, v3
+                    best_day = day
         
+        try:
+            best_date = datetime(int(year), 1, 1) + timedelta(days=best_day)
+        except Exception:
+            best_date = datetime.now()
+            
+        def format_dt(dt, hr):
+            return f"{dt.day:02d}/{dt.month:02d}/{dt.year} {hr:02d}:00"
+            
+        b_idx = best_day * 24
+        g1 = ghi_vals[b_idx + 11] if b_idx + 11 < len(ghi_vals) else 0
+        g2 = ghi_vals[b_idx + 12] if b_idx + 12 < len(ghi_vals) else 0
+        g3 = ghi_vals[b_idx + 13] if b_idx + 13 < len(ghi_vals) else 0
+        
+        d1 = dhi_vals[b_idx + 11] if b_idx + 11 < len(dhi_vals) else 0
+        d2 = dhi_vals[b_idx + 12] if b_idx + 12 < len(dhi_vals) else 0
+        d3 = dhi_vals[b_idx + 13] if b_idx + 13 < len(dhi_vals) else 0
+
         isc_summary.append({
             "year": str(year),
             "h1": round(best_h1, 2),
             "h2": round(best_h2, 2),
             "h3": round(best_h3, 2),
-            "avg": round(max_daily_avg, 2)
+            "avg": round(max_daily_avg, 2),
+            "t1_datetime": format_dt(best_date, 11),
+            "t2_datetime": format_dt(best_date, 12),
+            "t3_datetime": format_dt(best_date, 13),
+            "t1_ghi": round(g1, 2),
+            "t2_ghi": round(g2, 2),
+            "t3_ghi": round(g3, 2),
+            "t1_dhi": round(d1, 2),
+            "t2_dhi": round(d2, 2),
+            "t3_dhi": round(d3, 2),
+            "t1_isc": round(best_h1, 2),
+            "t2_isc": round(best_h2, 2),
+            "t3_isc": round(best_h3, 2)
         })
 
     # Cleanup local weather folder to save space on ephemeral filesystems (like Render)
