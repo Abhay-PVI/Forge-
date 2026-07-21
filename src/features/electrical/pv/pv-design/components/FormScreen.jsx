@@ -574,6 +574,9 @@ export default function FormScreen({ report, vertical, sub, values, setValue, fi
   const [showErrors, setShowErrors] = useState(false);
   const [sourceEntityId, setSourceEntityId] = useState(null);
   const [banner, setBanner] = useState(null);
+  const [isProcessingPySAM, setIsProcessingPySAM] = useState(false);
+  const [pySamProgressText, setPySamProgressText] = useState("");
+  const [pySamProgressPct, setPySamProgressPct] = useState(0);
   const status = overallStatus(values, files);
   const scrollRef = useRef(null);
 
@@ -708,109 +711,96 @@ export default function FormScreen({ report, vertical, sub, values, setValue, fi
 
     // Process Voc CSV if uploaded
     if (tab.id === "uploads") {
-
-      if (files?.vocCsv?.file) {
-        Papa.parse(files.vocCsv.file, {
-          header: true, skipEmptyLines: true,
-          complete: (results) => {
-
-            const vocSummary = calculateYearlyVoc(results.data);
-            if (!vocSummary.success) { alert(vocSummary.error); return; }
-            const iscSummary = calculateYearlyIsc(results.data);
-            if (!iscSummary.success) { alert(iscSummary.error); return; }
-
-            // Parse GHI and DHI CSV files for peak table data
-            let ghiRows = [];
-            let dhiRows = [];
-            let ghiParsed = false;
-            let dhiParsed = false;
-
-            const onAllParsed = () => {
-              if (ghiParsed && dhiParsed) {
-                const peakTableData = prepareTableData(ghiRows, dhiRows);
-                if (!peakTableData.success) { console.warn("prepareTableData warning:", peakTableData.errorMessage); }
-
-                console.log("VOC Summary:");
-                console.log(vocSummary.data);
-                console.log("ISC Summary:");
-                console.log(iscSummary.data);
-                console.log("Peak Table Data:");
-                console.log(peakTableData.tableTemplateData);
-
-                setValue("yearlyVocSummary", vocSummary.data);
-                setValue("allTimeMaxVoc", vocSummary.allTimeMax);
-                setValue("yearlyIscSummary", iscSummary.data);
-                setValue("max_3hr_isc", iscSummary.max_3hr_isc);
-                setValue("max_isc_year", iscSummary.max_isc_year);
-                setValue("peakTableData", peakTableData.tableTemplateData);
-
-                console.log("Form values for degradation:", {
-                  moduleVmp: values.moduleVmp,
-                  numberOfModules: values.numberOfModules,
-                  moduleDegradation: values.moduleDegradation,
-                });
-
-                // Generate degradation table from form input
-                const initialVoltage = Number(values.moduleVmp) * Number(values.numberOfModules);
-                const degradationTable = buildMinVoltageDegradationTable(initialVoltage, Number(values.moduleDegradation), 30);
-
-                setValue("minVoltageDegradationTable", degradationTable);
-                console.log("Saved minVoltageDegradationTable:", degradationTable);
-                continueNext();
-              }
-            };
-
-            // Parse GHI CSV if available
-            if (files?.ghiCsv?.file) {
-              Papa.parse(files.ghiCsv.file, {
-                header: true, skipEmptyLines: true,
-                complete: (ghiResults) => {
-                  ghiRows = ghiResults.data;
-                  ghiParsed = true;
-                  onAllParsed();
-                },
-                error: (err) => {
-                  console.warn("GHI CSV parsing warning:", err?.message);
-                  ghiParsed = true;
-                  onAllParsed();
-                }
-              });
-            } else {
-              ghiParsed = true;
-            }
-
-            // Parse DHI CSV if available
-            if (files?.dhiCsv?.file) {
-              Papa.parse(files.dhiCsv.file, {
-                header: true, skipEmptyLines: true,
-                complete: (dhiResults) => {
-                  dhiRows = dhiResults.data;
-                  dhiParsed = true;
-                  onAllParsed();
-                },
-                error: (err) => {
-                  console.warn("DHI CSV parsing warning:", err?.message);
-                  dhiParsed = true;
-                  onAllParsed();
-                }
-              });
-            } else {
-              dhiParsed = true;
-            }
-          },
-
-          error: (err) => {
-            alert(
-              err?.message ||
-              "Failed to parse CSV file."
-            );
-          },
+      try {
+        console.log("Triggering PySAM API stream...");
+        setIsProcessingPySAM(true);
+        setPySamProgressText("Initializing weather download...");
+        setPySamProgressPct(0);
+        
+        const response = await fetch(`${API_BASE_URL}/api/run-pysam-stream`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Accept": "text/event-stream" },
+          body: JSON.stringify({ values: values })
         });
 
-        return;
+        if (!response.body) throw new Error("ReadableStream not supported in this browser.");
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder("utf-8");
+        let resData = null;
+        let doneReading = false;
+        let buffer = "";
+
+        while (!doneReading) {
+          const { value, done } = await reader.read();
+          if (done) {
+            doneReading = true;
+            break;
+          }
+          buffer += decoder.decode(value, { stream: true });
+          
+          const lines = buffer.split('\n');
+          buffer = lines.pop(); // keep the last incomplete line in the buffer
+          
+          for (const line of lines) {
+            if (line.startsWith("data: ")) {
+              const dataStr = line.substring(6).trim();
+              if (dataStr) {
+                try {
+                  const event = JSON.parse(dataStr);
+                  if (event.type === "progress") {
+                    setPySamProgressText(event.message);
+                    if (event.pct !== undefined) setPySamProgressPct(event.pct);
+                  } else if (event.type === "result") {
+                    resData = { success: true, data: event.data };
+                  } else if (event.type === "error") {
+                    throw new Error(event.message);
+                  }
+                } catch (e) {
+                  // ignore JSON parse errors for incomplete chunks
+                }
+              }
+            }
+          }
+        }
+
+        setIsProcessingPySAM(false);
+        
+        if (!resData || !resData.success) {
+          alert("PySAM simulation failed or returned no data.");
+          return;
+        }
+
+        const resultsData = resData.data;
+        
+        // Use the PySAM results directly instead of parsing CSV files!
+        const vocSummaryData = resultsData.summary;
+        const allTimeMaxVoc = Math.max(...vocSummaryData.map(s => s.max_voc));
+        
+        const iscSummaryData = resultsData.summary; // PySAM summary includes both voc and isc
+        const max_3hr_isc = Math.max(...iscSummaryData.map(s => s.max_isc));
+        const max_isc_year = iscSummaryData.find(s => s.max_isc === max_3hr_isc)?.year || "";
+
+        setValue("yearlyVocSummary", vocSummaryData);
+        setValue("allTimeMaxVoc", allTimeMaxVoc);
+        setValue("yearlyIscSummary", iscSummaryData);
+        setValue("max_3hr_isc", max_3hr_isc);
+        setValue("max_isc_year", max_isc_year);
+
+        // Generate degradation table from form input
+        const initialVoltage = Number(values.moduleVmp) * Number(values.numberOfModules);
+        const degradationTable = buildMinVoltageDegradationTable(initialVoltage, Number(values.moduleDegradation), 30);
+        setValue("minVoltageDegradationTable", degradationTable);
+
+        // Set placeholder for peak table data until implemented from PySAM
+        setValue("peakTableData", []);
+        console.log("PySAM values saved.");
+        continueNext();
+      } catch (err) {
+        setIsProcessingPySAM(false);
+        alert("Failed to connect to PySAM backend: " + err.message);
       }
-
-
+      return; // Skip the old Papa parse logic entirely!
     }
 
 
@@ -821,10 +811,44 @@ export default function FormScreen({ report, vertical, sub, values, setValue, fi
     console.log("FormScreen mounted");
   }, []);
 
+  const renderProgressOverlay = () => {
+    if (!isProcessingPySAM) return null;
+    return (
+      <div style={{
+        position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.7)', backdropFilter: 'blur(4px)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        zIndex: 9999, color: 'white'
+      }}>
+        <div className="card" style={{ padding: 40, width: 400, textAlign: 'center', background: '#fff', color: '#111' }}>
+          <Icon name="download" size={32} style={{ marginBottom: 20, color: '#10b981' }} />
+          <h3 style={{ marginBottom: 12, fontSize: 20, fontWeight: 600 }}>Downloading Weather Data</h3>
+          <p style={{ color: 'var(--text-2)', marginBottom: 24, fontSize: 14 }}>
+            {pySamProgressText || "Initializing..."}
+          </p>
+          <div style={{
+            height: 6, width: '100%', backgroundColor: '#e5e7eb',
+            borderRadius: 3, overflow: 'hidden', marginBottom: 8
+          }}>
+            <div style={{
+              height: '100%', width: `${pySamProgressPct}%`,
+              backgroundColor: '#10b981', transition: 'width 0.3s ease'
+            }} />
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'var(--text-3)', fontWeight: 500 }}>
+            <span>Progress</span>
+            <span>{Math.round(pySamProgressPct)}%</span>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   // ---------- SCROLL layout ----------
   if (layout === 'scroll') {
     return (
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+        {renderProgressOverlay()}
         <FormHeader report={report} vertical={vertical} values={values} status={status} onGenerate={onGenerate} onSaveDraft={onSaveDraft} onLoadLastEntry={loadLastEntry} onClearAll={onClearAll} />
         <div style={{ flex: 1, overflowY: 'auto' }} ref={scrollRef}>
           <div style={{ maxWidth: 1080, margin: '0 auto', padding: '26px 32px 80px', display: 'grid', gridTemplateColumns: showCalc ? '186px 1fr 250px' : '186px 1fr', gap: 28, alignItems: 'start' }}>
@@ -906,6 +930,7 @@ export default function FormScreen({ report, vertical, sub, values, setValue, fi
   // ---------- TABBED layout (default) ----------
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+      {renderProgressOverlay()}
       <FormHeader report={report} vertical={vertical} values={values} status={status} onGenerate={onGenerate} onSaveDraft={onSaveDraft} onLoadLastEntry={loadLastEntry} onClearAll={onClearAll} />
       <Stepper step={step} setStep={setStep} values={values} files={files} tabs={STRING_SIZE_TABS} />
       <div style={{ flex: 1, overflowY: 'auto' }} ref={scrollRef}>
