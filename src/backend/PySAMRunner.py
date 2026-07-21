@@ -902,6 +902,13 @@ def process_all_weather_files_stream(config):
             }
         )
 
+    import shutil
+    try:
+        if os.path.exists(weather_folder):
+            shutil.rmtree(weather_folder)
+    except Exception as e:
+        print(f"Warning: Could not clean up weather folder: {e}")
+
     yield {
         "type": "result",
         "data": {
