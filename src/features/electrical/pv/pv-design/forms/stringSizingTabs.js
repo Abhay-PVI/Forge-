@@ -953,20 +953,5 @@ export const STRING_SIZE_TABS = [
     ]
   },
 
-  // {
-  //   id: "performance",
-  //   name: "Performance",
-  //   icon: "bar-chart",
-  //   blurb: "Performance metrics of the PV system based on simulation and modeling.",
-  //   title: "Performance Metrics",
-  //   fields: [
-  //     { key: "annual_energy", label: "Annual Energy", type: "number", unit: "MWh" },
-  //     { key: "specific_yield", label: "Specific Yield", type: "number" },
-  //     { key: "performance_ratio", label: "Performance Ratio", type: "number", unit: "%" },
-  //     { key: "dc_cuf", label: "DC CUF", type: "number", unit: "%" },
-  //     { key: "ac_cuf", label: "AC CUF", type: "number", unit: "%" },
-  //     { key: "degradation", label: "Degradation", type: "number", unit: "%/year" }
-  //   ]
-  // }
 
 ];
