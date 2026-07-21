@@ -302,8 +302,10 @@ function TabBody({ tab, values, setValue, files, setFile, showErrors }) {
 
           // 2. Map all extracted values directly into the template context state
           Object.entries(result.values || {}).forEach(([parsedKey, val]) => {
-            console.log(`Setting parsed module value: ${parsedKey} ->`, val);
-            setValue(parsedKey, val);
+            if (val !== undefined && val !== "") {
+              console.log(`Setting parsed module value: ${parsedKey} ->`, val);
+              setValue(parsedKey, val);
+            }
           });
 
           // Send the parsed payload to the backend once for calculation data.
@@ -318,11 +320,10 @@ function TabBody({ tab, values, setValue, files, setFile, showErrors }) {
           ];
 
           templateFallbacks.forEach((fallbackKey) => {
-            if (result.values && result.values[fallbackKey] !== undefined) {
+            if (result.values && result.values[fallbackKey] !== undefined && result.values[fallbackKey] !== "") {
               setValue(fallbackKey, result.values[fallbackKey]);
             } else {
-              console.warn(`Template field "${fallbackKey}" was not captured from Excel sheet. Initializing as empty.`);
-              setValue(fallbackKey, "");
+              console.warn(`Template field "${fallbackKey}" was not captured from Excel sheet. Keeping user's existing value.`);
             }
           });
 
@@ -774,12 +775,12 @@ export default function FormScreen({ report, vertical, sub, values, setValue, fi
         const resultsData = resData.data;
         
         // Use the PySAM results directly instead of parsing CSV files!
-        const vocSummaryData = resultsData.summary;
-        const allTimeMaxVoc = Math.max(...vocSummaryData.map(s => s.max_voc));
+        const vocSummaryData = resultsData.voc_summary;
+        const allTimeMaxVoc = Math.max(...vocSummaryData.map(s => s.maxVoltage));
         
-        const iscSummaryData = resultsData.summary; // PySAM summary includes both voc and isc
-        const max_3hr_isc = Math.max(...iscSummaryData.map(s => s.max_isc));
-        const max_isc_year = iscSummaryData.find(s => s.max_isc === max_3hr_isc)?.year || "";
+        const iscSummaryData = resultsData.isc_summary;
+        const max_3hr_isc = Math.max(...iscSummaryData.map(s => s.avg));
+        const max_isc_year = iscSummaryData.find(s => s.avg === max_3hr_isc)?.year || "";
 
         setValue("yearlyVocSummary", vocSummaryData);
         setValue("allTimeMaxVoc", allTimeMaxVoc);
@@ -897,6 +898,7 @@ export default function FormScreen({ report, vertical, sub, values, setValue, fi
   if (layout === 'split') {
     return (
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+        {renderProgressOverlay()}
         <FormHeader report={report} vertical={vertical} values={values} status={status} onGenerate={onGenerate} onSaveDraft={onSaveDraft} onLoadLastEntry={loadLastEntry} onClearAll={onClearAll} />
         <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1.05fr 1fr', minHeight: 0 }}>
           {/* form */}
