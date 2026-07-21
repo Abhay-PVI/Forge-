@@ -250,6 +250,93 @@ async def run_pysam_endpoint(payload: PySAMRequest):
             "error": str(e)
         }
 
+@app.post("/api/run-pysam-stream")
+async def run_pysam_stream_endpoint(payload: PySAMRequest):
+    import json
+    try:
+        from PySAMRunner import process_all_weather_files_stream
+        
+        def safe_float(val, default):
+            try:
+                if val is None or str(val).strip() == "": return default
+                return float(val)
+            except: return default
+
+        def safe_int(val, default):
+            try:
+                if val is None or str(val).strip() == "": return default
+                return int(val)
+            except: return default
+
+        values = payload.values
+        nser = safe_int(values.get("nser"), 72)
+        
+        config = {
+            "WeatherFolder": os.path.join(os.path.dirname(__file__), "weather_cache"),
+            "BaselineJson": "",
+            "CellType": values.get("module_type", "monoSi"),
+            "Vmp": safe_float(values.get("moduleVmp"), 40.0),
+            "Imp": safe_float(values.get("moduleImp"), 10.0),
+            "Voc": safe_float(values.get("moduleVoc"), 48.0),
+            "Isc": safe_float(values.get("moduleIsc"), 11.0),
+            "BvocPct": safe_float(values.get("tempCoeffVoc"), -0.3),
+            "AiscPct": 0.05,
+            "GpmpPct": -0.4,
+            "Nser": nser,
+            "Tnoct": 45,
+            "Length": 2.0,
+            "Width": 1.0,
+            "Area": 2.0,
+            "IsBifacial": 0,
+            "Bifaciality": 0.7,
+            "TransmissionFactor": 0.0,
+            "GroundClearance": 1.0,
+            "Mass": 25,
+            "Standoff": "Ground or rack mounted",
+            "Mounting": "One story building height or lower",
+            "ModulesPerString": int(values.get("string_size", 20)),
+            "NStrings": 100,
+            "TrackingMode": "Fixed",
+            "Backtracking": 0,
+            "TiltEqualsLatitude": 0,
+            "Tilt": 20,
+            "Azimuth": 180,
+            "Gcr": 0.4,
+            "RotationLimit": 60,
+            "SelfShading": "None",
+            "RackShading": 0,
+            "ModuleOrientation": "Portrait",
+            "ModulesAlongSide": 2,
+            "ModulesAlongBottom": 20,
+            "SkyModel": "Isotropic",
+            "IrradianceMode": "DNI and DHI",
+            "UseWeatherAlbedo": 0,
+            "UseSpatialAlbedo": 0,
+            "MonthlyAlbedo": "",
+            "NominalAcVoltage": float(values.get("lv_voltage", 400)),
+            "MaximumDcVoltage": 1500,
+            "MaximumDcCurrent": 200,
+            "MinimumMpptVoltage": 500,
+            "NominalDcVoltage": 800,
+            "MaximumMpptVoltage": 1300,
+            "MpptInputs": 1,
+            "Latitude": float(values.get("latitude", 35.0)),
+            "Longitude": float(values.get("longitude", -106.0))
+        }
+
+        def event_generator():
+            try:
+                for event in process_all_weather_files_stream(config):
+                    yield f"data: {json.dumps(event)}\n\n"
+            except Exception as e:
+                traceback.print_exc()
+                yield f"data: {json.dumps({'type': 'error', 'message': str(e)})}\n\n"
+
+        return StreamingResponse(event_generator(), media_type="text/event-stream")
+    except Exception as e:
+        traceback.print_exc()
+        return JSONResponse(status_code=500, content={"success": False, "error": str(e)})
+
 @app.post("/generate-solar-report-data")
 async def generate_solar_report_data_endpoint(payload: SolarReportRequest):
     report_data = build_solar_report_data(payload.values)

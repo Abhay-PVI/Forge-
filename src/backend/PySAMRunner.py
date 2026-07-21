@@ -9,6 +9,11 @@ import requests
 
 import PySAM.Pvsamv1 as pvsam
 
+try:
+    from app.supabase_service import supabase_admin
+except ImportError:
+    supabase_admin = None
+
 
 APP_TITLE = "PV String Voc & Isc Checker (PySAM / PVsAM)"
 SUPPORTED_WEATHER_EXTS = (".csv", ".epw")
@@ -637,7 +642,7 @@ def _find_latest_available_nsrdb_year(api_key: str, email: str, lat: float, lon:
     # in its docs (currently 1998-2024). No need to probe per-request.
     return NSRDB_MAX_KNOWN_YEAR
 
-def ensure_weather_files_downloaded(config: dict) -> str:
+def ensure_weather_files_downloaded_stream(config: dict):
     weather_folder = config["WeatherFolder"]
     os.makedirs(weather_folder, exist_ok=True)
 
@@ -647,27 +652,74 @@ def ensure_weather_files_downloaded(config: dict) -> str:
     lon = config.get("Longitude")
 
     if not api_key or not email or lat is None or lon is None:
-        return weather_folder
+        yield {"type": "progress", "message": "Missing NSRDB credentials or coordinates.", "pct": 100}
+        return
 
     lat = float(lat)
     lon = float(lon)
 
     latest_year = _find_latest_available_nsrdb_year(api_key, email, lat, lon)
     years_needed = list(range(latest_year - 24, latest_year + 1))
+    total_years = len(years_needed)
+    bucket_exists = False
+    if supabase_admin:
+        try:
+            buckets = supabase_admin.storage.list_buckets()
+            bucket_names = [b.name for b in buckets]
+            if "weather_cache" not in bucket_names:
+                supabase_admin.storage.create_bucket("weather_cache", {"public": False})
+            bucket_exists = True
+        except Exception as e:
+            print("Notice: 'weather_cache' bucket not found and could not be created automatically. Please create it manually in your Supabase dashboard to enable weather data caching.")
+            bucket_exists = False
 
-    for year in years_needed:
-        existing = _nsrdb_file_exists_in_folder(weather_folder, lat, lon, year)
-        if existing:
+    for i, year in enumerate(years_needed):
+        pct = int((i / total_years) * 100)
+        yield {"type": "progress", "message": f"Downloading .. {pct}%", "pct": pct}
+
+        existing_local = _nsrdb_file_exists_in_folder(weather_folder, lat, lon, year)
+        if existing_local:
             continue
-        _download_nsrdb_year(weather_folder, api_key, email, lat, lon, year)
-        time.sleep(1)
+            
+        csv_filename = f"nsrdb_{lat:.2f}_{lon:.2f}_{year}.csv"
+        out_path = os.path.join(weather_folder, csv_filename)
+        
+        downloaded = False
+        if bucket_exists:
+            try:
+                res = supabase_admin.storage.from_("weather_cache").download(csv_filename)
+                with open(out_path, "wb") as f:
+                    f.write(res)
+                downloaded = True
+            except Exception:
+                downloaded = False
 
-    return weather_folder
+        if not downloaded:
+            _download_nsrdb_year(weather_folder, api_key, email, lat, lon, year)
+            if bucket_exists:
+                try:
+                    with open(out_path, "rb") as f:
+                        supabase_admin.storage.from_("weather_cache").upload(csv_filename, f)
+                except Exception as e:
+                    print(f"Warning: Failed to upload {csv_filename} to Supabase: {e}")
+            time.sleep(1)
+
+    yield {"type": "progress", "message": "Download complete.", "pct": 100}
+
+def ensure_weather_files_downloaded(config: dict) -> str:
+    for event in ensure_weather_files_downloaded_stream(config):
+        pass
+    return config["WeatherFolder"]
 
 
-def process_all_weather_files(config):
-    weather_folder = ensure_weather_files_downloaded(config)
-    config["WeatherFolder"] = weather_folder
+def process_all_weather_files_stream(config):
+    weather_folder = config["WeatherFolder"]
+    for event in ensure_weather_files_downloaded_stream(config):
+        yield event
+    
+    yield {"type": "progress", "message": "Processing simulations...", "pct": 100}
+
+    baseline_json = config.get("BaselineJson", "")
 
     baseline_json = config.get("BaselineJson", "")
 
@@ -850,13 +902,23 @@ def process_all_weather_files(config):
             }
         )
 
-    return {
-        "summary": summary,
-        "voc_by_year": voc_by_year,
-        "isc_by_year": isc_by_year,
-        "ghi_by_year": ghi_by_year,
-        "dhi_by_year": dhi_by_year,
+    yield {
+        "type": "result",
+        "data": {
+            "summary": summary,
+            "voc_by_year": voc_by_year,
+            "isc_by_year": isc_by_year,
+            "ghi_by_year": ghi_by_year,
+            "dhi_by_year": dhi_by_year,
+        }
     }
+
+def process_all_weather_files(config):
+    result = None
+    for event in process_all_weather_files_stream(config):
+        if event.get("type") == "result":
+            result = event.get("data")
+    return result
 
 def main():
 
