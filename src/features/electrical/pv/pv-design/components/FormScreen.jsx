@@ -778,9 +778,12 @@ export default function FormScreen({ report, vertical, sub, values, setValue, fi
         const vocSummaryData = resultsData.voc_summary;
         const allTimeMaxVoc = Math.max(...vocSummaryData.map(s => s.maxVoltage));
         
-        const iscSummaryData = resultsData.isc_summary;
-        const max_3hr_isc = Math.max(...iscSummaryData.map(s => s.avg));
+        const iscSummaryData = resultsData.isc_summary || [];
+        console.log("[FormScreen] iscSummaryData received from backend:", iscSummaryData);
+        
+        const max_3hr_isc = iscSummaryData.length > 0 ? Math.max(...iscSummaryData.map(s => s.avg)) : 0;
         const max_isc_year = iscSummaryData.find(s => s.avg === max_3hr_isc)?.year || "";
+        console.log("[FormScreen] max_3hr_isc:", max_3hr_isc, "max_isc_year:", max_isc_year);
 
         setValue("yearlyVocSummary", vocSummaryData);
         setValue("allTimeMaxVoc", allTimeMaxVoc);
@@ -794,8 +797,10 @@ export default function FormScreen({ report, vertical, sub, values, setValue, fi
         setValue("minVoltageDegradationTable", degradationTable);
 
         const max_isc_year_obj = iscSummaryData.find(s => s.avg === max_3hr_isc);
+        console.log("[FormScreen] max_isc_year_obj:", max_isc_year_obj);
+
         if (max_isc_year_obj) {
-          setValue("peakTableData", {
+          const peakData = {
             t1_datetime: max_isc_year_obj.t1_datetime,
             t2_datetime: max_isc_year_obj.t2_datetime,
             t3_datetime: max_isc_year_obj.t3_datetime,
@@ -808,10 +813,22 @@ export default function FormScreen({ report, vertical, sub, values, setValue, fi
             t1_isc: max_isc_year_obj.t1_isc,
             t2_isc: max_isc_year_obj.t2_isc,
             t3_isc: max_isc_year_obj.t3_isc
-          });
+          };
+          console.log("[FormScreen] Setting peakTableData to:", peakData);
+          setValue("peakTableData", peakData);
         } else {
+          console.warn("[FormScreen] WARNING: max_isc_year_obj is UNDEFINED! Setting peakTableData to {}");
           setValue("peakTableData", {});
         }
+
+        const rated_isc = Number(values.moduleIsc) || Number(values.isc_1) || 0;
+        let gain_percentage = "0.00%";
+        if (rated_isc > 0) {
+          gain_percentage = (((max_3hr_isc - rated_isc) / rated_isc) * 100).toFixed(2) + "%";
+        }
+        console.log("[FormScreen] Setting rated_isc:", rated_isc.toFixed(2), "gain_percentage:", gain_percentage);
+        setValue("rated_isc", rated_isc.toFixed(2));
+        setValue("gain_percentage", gain_percentage);
 
         console.log("PySAM values saved.");
         continueNext();

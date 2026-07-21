@@ -1205,7 +1205,7 @@ def process_all_weather_files_stream(config):
         d2 = dhi_vals[b_idx + 12] if b_idx + 12 < len(dhi_vals) else 0
         d3 = dhi_vals[b_idx + 13] if b_idx + 13 < len(dhi_vals) else 0
 
-        isc_summary.append({
+        entry = {
             "year": str(year),
             "h1": round(best_h1, 2),
             "h2": round(best_h2, 2),
@@ -1223,7 +1223,9 @@ def process_all_weather_files_stream(config):
             "t1_isc": round(best_h1, 2),
             "t2_isc": round(best_h2, 2),
             "t3_isc": round(best_h3, 2)
-        })
+        }
+        print(f"[PySAMRunner] Year {year}: Peak Day={best_day}, t1_dt={entry['t1_datetime']}, g1={entry['t1_ghi']}, d1={entry['t1_dhi']}, h1={entry['h1']}")
+        isc_summary.append(entry)
 
     # Cleanup local weather folder to save space on ephemeral filesystems (like Render)
     if os.path.exists(weather_folder):
