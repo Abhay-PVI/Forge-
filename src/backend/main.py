@@ -272,7 +272,7 @@ async def run_pysam_stream_endpoint(payload: PySAMRequest):
         nser = safe_int(values.get("nser"), 72)
         
         config = {
-            "WeatherFolder": os.path.join(os.path.dirname(__file__), "weather_cache"),
+            "WeatherFolder": os.path.join(tempfile.gettempdir(), "weather_cache"),
             "BaselineJson": "",
             "CellType": values.get("module_type", "monoSi"),
             "Vmp": safe_float(values.get("moduleVmp"), 40.0),
