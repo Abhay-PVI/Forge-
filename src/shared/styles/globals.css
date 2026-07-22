@@ -505,7 +505,7 @@ textarea.input { height: auto; min-height: 78px; padding: 9px 11px; line-height:
 /* Document Control Page & Revision History Table */
 .report-page.doc-control-page,
 .doc-control-page {
-  padding: 3rem 3.5rem !important;
+  padding: 3rem 2.5rem !important;
   box-sizing: border-box !important;
   width: 100% !important;
   max-width: 100% !important;
@@ -522,6 +522,7 @@ textarea.input { height: auto; min-height: 78px; padding: 9px 11px; line-height:
   display: block !important;
   width: 100% !important;
   box-sizing: border-box !important;
+  padding: 0 1rem !important;
 }
 
 .doc-control-middle {
@@ -529,7 +530,8 @@ textarea.input { height: auto; min-height: 78px; padding: 9px 11px; line-height:
   width: 100% !important;
   text-align: center !important;
   margin: auto 0 !important;
-  padding: 2rem 0 !important;
+  padding: 2rem 1rem !important;
+  box-sizing: border-box !important;
 }
 
 .doc-control-middle .heading {
@@ -548,6 +550,7 @@ textarea.input { height: auto; min-height: 78px; padding: 9px 11px; line-height:
   box-sizing: border-box !important;
   text-align: center !important;
   margin-top: auto !important;
+  padding: 0 1rem !important;
 }
 
 .revision-section {

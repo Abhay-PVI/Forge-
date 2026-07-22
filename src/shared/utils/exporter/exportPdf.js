@@ -227,17 +227,19 @@ export async function exportPdfWithToc(
             flex-direction: column !important;
             justify-content: space-between !important;
             box-sizing: border-box !important;
-            padding: 10mm 10mm !important;
+            padding: 10mm 12mm !important;
           }
           .doc-control-top {
             width: 100% !important;
             box-sizing: border-box !important;
+            padding: 0 4mm !important;
           }
           .doc-control-middle {
             width: 100% !important;
             text-align: center !important;
             margin: auto 0 !important;
-            padding: 10mm 0 !important;
+            padding: 10mm 4mm !important;
+            box-sizing: border-box !important;
           }
           .doc-control-middle .heading {
             font-size: 20pt !important;
@@ -252,6 +254,7 @@ export async function exportPdfWithToc(
             max-width: 100% !important;
             box-sizing: border-box !important;
             margin-top: auto !important;
+            padding: 0 4mm !important;
           }
           .revision-section {
             width: 100% !important;
