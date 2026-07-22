@@ -10,16 +10,17 @@ function formatIssueDate(date = new Date()) {
 
 function renderRevisionHistoryRows(values, reportName, issueDate, revision) {
   const rows = [];
+  const tdStyle = `padding: 6px 8px; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.3; text-align: center; font-size: 8.5pt; word-break: break-word; overflow-wrap: break-word;`;
 
   // 1. Check if values has a structured list of revisions (array of objects)
   if (Array.isArray(values.revisions) && values.revisions.length > 0) {
     values.revisions.forEach((rev) => {
       rows.push(`
         <tr class="tr">
-          <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4; text-align: center;">${rev.revision ?? ""}</td>
-          <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4; text-align: center;">${rev.issueDate ?? ""}</td>
-          <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4; text-align: center;">${rev.documentName ?? reportName}</td>
-          <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4; text-align: center;">${rev.description ?? ""}</td>
+          <td class="td" style="${tdStyle}">${rev.revision ?? ""}</td>
+          <td class="td" style="${tdStyle}">${rev.issueDate ?? ""}</td>
+          <td class="td" style="${tdStyle}">${rev.documentName ?? reportName}</td>
+          <td class="td" style="${tdStyle}">${rev.description ?? ""}</td>
         </tr>
       `);
     });
@@ -39,10 +40,10 @@ function renderRevisionHistoryRows(values, reportName, issueDate, revision) {
       if (rev.num || rev.date || rev.desc) {
         rows.push(`
           <tr class="tr">
-            <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4; text-align: center;">${rev.num ?? idx}</td>
-            <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4; text-align: center;">${rev.date ?? issueDate}</td>
-            <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4; text-align: center;">${reportName}</td>
-            <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4; text-align: center;">${rev.desc ?? ""}</td>
+            <td class="td" style="${tdStyle}">${rev.num ?? idx}</td>
+            <td class="td" style="${tdStyle}">${rev.date ?? issueDate}</td>
+            <td class="td" style="${tdStyle}">${reportName}</td>
+            <td class="td" style="${tdStyle}">${rev.desc ?? ""}</td>
           </tr>
         `);
       }
@@ -53,10 +54,10 @@ function renderRevisionHistoryRows(values, reportName, issueDate, revision) {
   if (rows.length === 0) {
     rows.push(`
       <tr class="tr">
-        <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4; text-align: center;">${revision ?? "0"}</td>
-        <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4; text-align: center;">${issueDate}</td>
-        <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4; text-align: center;">${reportName}</td>
-        <td class="td" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4; text-align: center;">Initial Release</td>
+        <td class="td" style="${tdStyle}">${revision ?? "0"}</td>
+        <td class="td" style="${tdStyle}">${issueDate}</td>
+        <td class="td" style="${tdStyle}">${reportName}</td>
+        <td class="td" style="${tdStyle}">Initial Release</td>
       </tr>
     `);
   }
