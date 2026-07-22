@@ -64,24 +64,53 @@
       line-height: 1.35;
     }
 
+    .toc-row {
+      display: flex !important;
+      align-items: flex-end !important;
+      width: 100% !important;
+      margin: 0 !important;
+      padding: 0.14rem 0 !important;
+      box-sizing: border-box !important;
+    }
+
     .toc-row.toc-level-1 {
       font-weight: bold;
       font-size: 13.5px;
       padding-top: 0.24rem;
+      margin-left: 0 !important;
     }
 
     .toc-row.toc-level-2 {
-      margin-left: 20px;
+      margin-left: 0 !important;
       font-weight: normal;
       font-size: 12.5px;
       padding-top: 0.1rem;
     }
 
+    .toc-row.toc-level-2 .toc-title {
+      padding-left: 20px !important;
+    }
+
     .toc-row.toc-level-3 {
-      margin-left: 40px;
+      margin-left: 0 !important;
       font-weight: normal;
       font-size: 12px;
       padding-top: 0.1rem;
+    }
+
+    .toc-row.toc-level-3 .toc-title {
+      padding-left: 40px !important;
+    }
+
+    .toc-row.toc-level-4 {
+      margin-left: 0 !important;
+      font-weight: normal;
+      font-size: 12px;
+      padding-top: 0.1rem;
+    }
+
+    .toc-row.toc-level-4 .toc-title {
+      padding-left: 60px !important;
     }
 
     .toc-heading[data-toc-level="1"] {
@@ -90,32 +119,37 @@
     }
 
     .toc-heading[data-toc-level="2"] {
-      margin-left: 20px;
+      padding-left: 20px;
       font-weight: normal;
       padding-top: 0.1rem;
     }
 
     .toc-heading[data-toc-level="3"] {
-      margin-left: 40px;
+      padding-left: 40px;
       font-weight: normal;
       padding-top: 0.1rem;
     }
 
     .toc-title {
+      background-color: #fff;
+      padding-right: 0.25rem;
+      z-index: 1;
       white-space: nowrap;
     }
 
     .toc-dots {
       flex: 1;
-      border-bottom: 1px dotted #000;
-      margin: 0 ;
-      transform: translateY(-3px);
+      border-bottom: 1px dotted #94a3b8;
+      margin: 0 0 3px 0;
     }
 
     .toc-page-num {
-      white-space: nowrap;
-      min-width: 20px;
+      background-color: #fff;
+      padding-left: 0.5rem;
+      z-index: 1;
       text-align: right;
+      min-width: 1.5rem;
+      white-space: nowrap;
     }
 
     .title {

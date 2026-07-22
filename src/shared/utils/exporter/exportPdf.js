@@ -159,10 +159,15 @@ export async function exportPdfWithToc(
             margin: 0;
           }
 
+          *,
+          html,
+          body,
+          p, td, th, div, span, h1, h2, h3, h4, h5, h6, table {
+            font-family: "Segoe UI", sans-serif !important;
+          }
           html,
           body {
             width: 100%;
-            font-family: "Segoe UI", sans-serif;
             margin: 0;
             padding: 0;
             background: white;
@@ -328,6 +333,64 @@ export async function exportPdfWithToc(
           .compact-table col:nth-child(9),
           .compact-table col:nth-child(10) { width: 8% !important; }
           .compact-table col:nth-child(11) { width: 5% !important; }
+
+          .toc-row {
+            display: flex !important;
+            align-items: flex-end !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            box-sizing: border-box !important;
+          }
+          .toc-row.toc-level-1 {
+            font-weight: bold !important;
+            font-size: 13.5px !important;
+            margin-left: 0 !important;
+          }
+          .toc-row.toc-level-2 {
+            font-weight: normal !important;
+            font-size: 12.5px !important;
+            margin-left: 0 !important;
+          }
+          .toc-row.toc-level-2 .toc-title {
+            padding-left: 20px !important;
+          }
+          .toc-row.toc-level-3 {
+            font-weight: normal !important;
+            font-size: 12px !important;
+            margin-left: 0 !important;
+          }
+          .toc-row.toc-level-3 .toc-title {
+            padding-left: 40px !important;
+          }
+          .toc-row.toc-level-4 {
+            font-weight: normal !important;
+            font-size: 12px !important;
+            margin-left: 0 !important;
+          }
+          .toc-row.toc-level-4 .toc-title {
+            padding-left: 60px !important;
+          }
+          .toc-title {
+            background-color: #ffffff !important;
+            padding-right: 4px !important;
+            z-index: 1 !important;
+            white-space: nowrap !important;
+          }
+          .toc-dots {
+            flex: 1 !important;
+            border-bottom: 1px dotted #94a3b8 !important;
+            margin: 0 0 3px 0 !important;
+          }
+          .toc-page-num {
+            background-color: #ffffff !important;
+            padding-left: 6px !important;
+            z-index: 1 !important;
+            text-align: right !important;
+            min-width: 20px !important;
+            white-space: nowrap !important;
+          }
 
           .page {
             width: 100% !important;
