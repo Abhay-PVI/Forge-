@@ -392,6 +392,17 @@ export async function exportPdfWithToc(
             white-space: nowrap !important;
           }
 
+          #ashrae_table,
+          table#ashrae_table {
+            width: 100% !important;
+            max-width: 100% !important;
+            table-layout: fixed !important;
+            border-collapse: collapse !important;
+            box-sizing: border-box !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+          }
+
           .page {
             width: 100% !important;
             max-width: 100% !important;

@@ -448,8 +448,13 @@ button:active {
 }
 
 @page { size: A4; margin: 10mm; }
-#ashrae_table { width: 100mm; max-width: 100mm; table-layout: fixed;
-	border-collapse: collapse; font-size: 11px; page-break-inside: avoid;
+#ashrae_table {
+	width: 100% !important;
+	max-width: 100% !important;
+	table-layout: fixed !important;
+	border-collapse: collapse !important;
+	font-size: 11px !important;
+	page-break-inside: avoid !important;
     background-color: lightgray;
 }
 

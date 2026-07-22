@@ -670,4 +670,16 @@ textarea.input { height: auto; min-height: 78px; padding: 9px 11px; line-height:
   text-align: right !important;
   min-width: 20px !important;
   white-space: nowrap !important;
+}
+
+/* Weather Data ASHRAE Table - Full Printable Width */
+#ashrae_table,
+table#ashrae_table {
+  width: 100% !important;
+  max-width: 100% !important;
+  table-layout: fixed !important;
+  border-collapse: collapse !important;
+  box-sizing: border-box !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
