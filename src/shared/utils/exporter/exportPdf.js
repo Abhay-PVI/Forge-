@@ -213,7 +213,7 @@ export async function exportPdfWithToc(
             max-width: 100% !important;
             height: auto !important;
             margin: 0 !important;
-            padding: 15mm 15mm !important;
+            padding: 10mm 10mm !important;
             border: none !important;
             border-radius: 0 !important;
             box-shadow: none !important;
@@ -223,18 +223,115 @@ export async function exportPdfWithToc(
           .report-page.doc-control-page {
             height: ${innerHeight} !important;
             min-height: ${innerHeight} !important;
-            display: block !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: space-between !important;
+            box-sizing: border-box !important;
+            padding: 10mm 10mm !important;
           }
+          .doc-control-top {
+            width: 100% !important;
+            box-sizing: border-box !important;
+          }
+          .doc-control-middle {
+            width: 100% !important;
+            text-align: center !important;
+            margin: auto 0 !important;
+            padding: 10mm 0 !important;
+          }
+          .doc-control-middle .heading {
+            font-size: 20pt !important;
+            font-weight: 700 !important;
+            color: #0f172a !important;
+            margin: 0 !important;
+            text-align: center !important;
+          }
+          .doc-control-bottom,
           .report-page.doc-control-page .bottom-layout-group {
-            margin-top: 20mm !important; /* Push down without overflowing the page */
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            margin-top: auto !important;
           }
+          .revision-section {
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            margin: 5mm 0 !important;
+          }
+          .doc-control-page table.table,
+          .revision-section table {
+            width: 100% !important;
+            max-width: 100% !important;
+            table-layout: fixed !important;
+            border-collapse: collapse !important;
+            box-sizing: border-box !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+          }
+          .doc-control-page table.table th,
+          .revision-section table th {
+            padding: 6px 8px !important;
+            font-size: 8.5pt !important;
+            font-weight: 600 !important;
+            background-color: #163c7a !important;
+            color: #ffffff !important;
+            text-align: center !important;
+            word-break: break-word !important;
+          }
+          .doc-control-page table.table td,
+          .revision-section table td {
+            padding: 6px 8px !important;
+            font-size: 8.5pt !important;
+            color: #475569 !important;
+            text-align: center !important;
+            word-break: break-word !important;
+            overflow-wrap: break-word !important;
+          }
+
+          .compact-table {
+            width: 100% !important;
+            max-width: 100% !important;
+            table-layout: fixed !important;
+            border-collapse: collapse !important;
+            font-size: 7.5pt !important;
+            word-break: break-word !important;
+            overflow-wrap: break-word !important;
+            margin-top: 10px !important;
+            margin-bottom: 15px !important;
+          }
+          .compact-table th,
+          .compact-table td {
+            padding: 3px 2px !important;
+            text-align: center !important;
+            vertical-align: middle !important;
+            line-height: 1.15 !important;
+            border: 1px solid #d0d7e2 !important;
+            font-size: 7.5pt !important;
+          }
+          .compact-table th {
+            font-weight: 600 !important;
+            background-color: #163c7a !important;
+            color: #ffffff !important;
+          }
+          .compact-table col:nth-child(1) { width: 18% !important; }
+          .compact-table col:nth-child(2) { width: 6% !important; }
+          .compact-table col:nth-child(3) { width: 6% !important; }
+          .compact-table col:nth-child(4) { width: 14% !important; }
+          .compact-table col:nth-child(5),
+          .compact-table col:nth-child(6),
+          .compact-table col:nth-child(7),
+          .compact-table col:nth-child(8),
+          .compact-table col:nth-child(9),
+          .compact-table col:nth-child(10) { width: 8% !important; }
+          .compact-table col:nth-child(11) { width: 5% !important; }
 
           .page {
             width: 100% !important;
             max-width: 100% !important;
             height: auto !important;
             margin: 0 !important;
-            padding: 15mm 15mm !important;
+            padding: 10mm 10mm !important;
             border: none !important;
             border-radius: 0 !important;
             box-shadow: none !important;
