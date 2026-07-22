@@ -453,3 +453,51 @@ textarea.input { height: auto; min-height: 78px; padding: 9px 11px; line-height:
   margin-left: auto !important;
   margin-right: auto !important;
 }
+
+/* Compact Table Styling for PV DBR Reports */
+#PV_DBR-report .compact-table,
+.compact-table {
+  width: 100% !important;
+  max-width: 100% !important;
+  table-layout: fixed !important;
+  border-collapse: collapse !important;
+  font-size: 7.5pt !important;
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+  margin-top: 12px !important;
+  margin-bottom: 20px !important;
+}
+
+#PV_DBR-report .compact-table th,
+#PV_DBR-report .compact-table td,
+.compact-table th,
+.compact-table td {
+  padding: 3px 2px !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+  line-height: 1.15 !important;
+  border: 1px solid #d0d7e2 !important;
+  font-size: 7.5pt !important;
+}
+
+#PV_DBR-report .compact-table th,
+.compact-table th {
+  font-weight: 600 !important;
+  background-color: #163c7a !important;
+  color: #ffffff !important;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* Explicit column width distribution for 11-column compact tables */
+.compact-table col:nth-child(1) { width: 18% !important; }
+.compact-table col:nth-child(2) { width: 6% !important; }
+.compact-table col:nth-child(3) { width: 6% !important; }
+.compact-table col:nth-child(4) { width: 14% !important; }
+.compact-table col:nth-child(5),
+.compact-table col:nth-child(6),
+.compact-table col:nth-child(7),
+.compact-table col:nth-child(8),
+.compact-table col:nth-child(9),
+.compact-table col:nth-child(10) { width: 8% !important; }
+.compact-table col:nth-child(11) { width: 5% !important; }
