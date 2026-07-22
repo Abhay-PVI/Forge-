@@ -203,6 +203,7 @@
       box-sizing: border-box !important;
       width: 100% !important;
       max-width: 100% !important;
+      min-height: 297mm !important;
       page-break-inside: avoid !important;
       page-break-after: always !important;
       break-inside: avoid !important;
@@ -211,26 +212,50 @@
       justify-content: space-between !important;
     }
 
+    .doc-control-top {
+      display: block !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    .doc-control-middle {
+      display: block !important;
+      width: 100% !important;
+      text-align: center !important;
+      margin: auto 0 !important;
+      padding: 2rem 0 !important;
+    }
+
+    .doc-control-middle .heading {
+      font-size: 2.2rem !important;
+      font-weight: 700 !important;
+      color: #0f172a !important;
+      margin: 0 !important;
+      text-align: center !important;
+    }
+
+    .doc-control-bottom,
     .bottom-layout-group {
+      display: block !important;
       width: 100% !important;
       max-width: 100% !important;
       box-sizing: border-box !important;
-      display: flex !important;
-      flex-direction: column !important;
-      align-items: center !important;
-      gap: 28px !important;
+      text-align: center !important;
       margin-top: auto !important;
     }
 
     .revision-section {
+      display: block !important;
       width: 100% !important;
       max-width: 100% !important;
       box-sizing: border-box !important;
-      margin: 1.5rem 0 !important;
+      margin: 1rem 0 1.5rem 0 !important;
+      clear: both !important;
     }
 
     .revision-section table,
     .doc-control-page table.table {
+      display: table !important;
       width: 100% !important;
       max-width: 100% !important;
       margin-left: 0 !important;
@@ -268,34 +293,37 @@
   </style>
 
   <div class="report-page doc-control-page">
-    <table border="0"
-      style="width: 100%; table-layout: fixed; border: none; border-collapse: collapse; margin-top: 80px; margin-bottom: 3rem;">
-      <tr>
-        <td style="width: 50%; border: none !important; padding: 0 1.25rem 0 0; vertical-align: top; text-align: left;">
-          <div class="logo-row-container" style="justify-content: flex-start;">
-            <img src="{{PV_LOGO}}" alt="PVinsight Logo" class="logo-element" />
-          </div>
+    <div class="doc-control-top">
+      <table border="0"
+        style="width: 100%; table-layout: fixed; border: none; border-collapse: collapse; margin-top: 40px; margin-bottom: 1.5rem;">
+        <tr>
+          <td style="width: 50%; border: none !important; padding: 0 1.25rem 0 0; vertical-align: top; text-align: left;">
+            <div class="logo-row-container" style="justify-content: flex-start;">
+              <img src="{{PV_LOGO}}" alt="PVinsight Logo" class="logo-element" />
+            </div>
 
-          <h3 class="sub-heading">Prepared By</h3>
-          <p class="org-name">PVinsight Inc</p>
-          <p class="address">5717 Legacy Dr Suite 250, Plano, Texas, 75024</p>
-        </td>
-        <td style="width: 50%; border: none !important; padding: 0 0 0 1.25rem; vertical-align: top; text-align: left;">
-          <div class="logo-row-container" style="justify-content: flex-start;">
-            <img src="{{CLIENT_LOGO}}" alt="Client Logo" class="logo-element" />
-          </div>
+            <h3 class="sub-heading">Prepared By</h3>
+            <p class="org-name">PVinsight Inc</p>
+            <p class="address">5717 Legacy Dr Suite 250, Plano, Texas, 75024</p>
+          </td>
+          <td style="width: 50%; border: none !important; padding: 0 0 0 1.25rem; vertical-align: top; text-align: left;">
+            <div class="logo-row-container" style="justify-content: flex-start;">
+              <img src="{{CLIENT_LOGO}}" alt="Client Logo" class="logo-element" />
+            </div>
 
-          <h3 class="sub-heading">Submitted To</h3>
-          <p class="org-name">{{submittedTo}}</p>
-          <p class="address">{{submittedToAddress}}</p>
-        </td>
-      </tr>
-    </table>
+            <h3 class="sub-heading">Submitted To</h3>
+            <p class="org-name">{{submittedTo}}</p>
+            <p class="address">{{submittedToAddress}}</p>
+          </td>
+        </tr>
+      </table>
+    </div>
 
-
-    <div class="bottom-layout-group">
+    <div class="doc-control-middle">
       <h2 class="heading">{{REPORT_NAME}}</h2>
+    </div>
 
+    <div class="doc-control-bottom bottom-layout-group">
       <div class="revision-section">
         <!-- <h3 class="sub-heading">Revision History</h3> -->
         <table class="table">
@@ -319,7 +347,6 @@
           {{SEAL_CONTENT}}
         </div>
       </div>
-
     </div>
   </div>
 

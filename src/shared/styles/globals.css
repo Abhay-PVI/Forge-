@@ -509,6 +509,7 @@ textarea.input { height: auto; min-height: 78px; padding: 9px 11px; line-height:
   box-sizing: border-box !important;
   width: 100% !important;
   max-width: 100% !important;
+  min-height: 297mm !important;
   page-break-inside: avoid !important;
   page-break-after: always !important;
   break-inside: avoid !important;
@@ -517,26 +518,50 @@ textarea.input { height: auto; min-height: 78px; padding: 9px 11px; line-height:
   justify-content: space-between !important;
 }
 
+.doc-control-top {
+  display: block !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.doc-control-middle {
+  display: block !important;
+  width: 100% !important;
+  text-align: center !important;
+  margin: auto 0 !important;
+  padding: 2rem 0 !important;
+}
+
+.doc-control-middle .heading {
+  font-size: 2.2rem !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  margin: 0 !important;
+  text-align: center !important;
+}
+
+.doc-control-bottom,
 .bottom-layout-group {
+  display: block !important;
   width: 100% !important;
   max-width: 100% !important;
   box-sizing: border-box !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  gap: 28px !important;
+  text-align: center !important;
   margin-top: auto !important;
 }
 
 .revision-section {
+  display: block !important;
   width: 100% !important;
   max-width: 100% !important;
   box-sizing: border-box !important;
-  margin: 1.5rem 0 !important;
+  margin: 1rem 0 1.5rem 0 !important;
+  clear: both !important;
 }
 
 .doc-control-page table,
 .revision-section table {
+  display: table !important;
   width: 100% !important;
   max-width: 100% !important;
   margin-left: 0 !important;
