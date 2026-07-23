@@ -10,11 +10,8 @@ import listOfAbbreviations from "../../../../../shared/reports/listOfAbbreviatio
 import { fillTemplate } from "../../../../report-engine/templateEngine";
 import tableOfContents from "../../../../../shared/reports/tableOfContents.html?raw";
 import { scanAndNumberReportContent, renderSimpleList, renderSectionIfNotEmpty, renderAbbreviationsTable } from "../../../../../shared/reports/utils/tocScanner";
-//C:\Users\AbhayPratapSingh\work\June\260605\HV DBR\Forge\forge-react\src\backend\Ashrae
 import ashraeTableTemplate from "../../../../../backend/Ashrae/ASHARE.html?raw";
 import { buildReportMeta } from "../../../../../shared/reports/buildReportMeta";
-// console.log(ashraeTableTemplate);
-// import { prepareTableData } from '../calculations/calculateYearlyVoc&Isc';
 
 
 
@@ -68,7 +65,7 @@ function renderAshraeTableHtml(rawHtml, values) {
       const state = values.weather_station_state ? `, ${values.weather_station_state}` : "";
       const country = values.weather_station_country ? `, ${values.weather_station_country}` : ", USA";
       const wmo = values.weather_station_id || "722780";
-      
+
       headerTitle.innerHTML = `<div class="baloon_icon" style="display:inline-block;background-position:0px 0px;position: relative;right: 10;"></div><b>${city}${state}${country} (WMO: ${wmo})</b>`;
     }
 
@@ -99,12 +96,12 @@ export default function ReportDoc({ values = {}, calc = {}, files = {}, solarCal
 
   if (htmlToRender) {
     return (
-      <div 
-        id="PV_DBR-report" 
+      <div
+        id="PV_DBR-report"
         contentEditable={isEditMode}
         suppressContentEditableWarning={true}
         onBlur={onHtmlChange ? (e) => onHtmlChange(e.currentTarget.innerHTML) : undefined}
-        dangerouslySetInnerHTML={{ __html: htmlToRender }} 
+        dangerouslySetInnerHTML={{ __html: htmlToRender }}
       />
     );
   }
@@ -149,8 +146,8 @@ export default function ReportDoc({ values = {}, calc = {}, files = {}, solarCal
     tempMin: values?.tempMin,
     tempCellMax: values?.tempCellMax,
   });
-  const vmpMaxTempVal = calc.VmpHot 
-    ? Number(calc.VmpHot) 
+  const vmpMaxTempVal = calc.VmpHot
+    ? Number(calc.VmpHot)
     : (safeSolarCalcValues?.Vmp_Tmax?.[0] || 36.9);
   const nMin = calculateNMin(values.PCS_Min_PV_Input_Voltage, vmpMaxTempVal);
   const { irradiationTable, energyTable } = buildPvsystTables(values.pvsystData || {});
@@ -199,8 +196,8 @@ export default function ReportDoc({ values = {}, calc = {}, files = {}, solarCal
   const allTimeMaxVocVal = values.allTimeMaxVoc
     ? values.allTimeMaxVoc
     : (summary.length > 0
-        ? summary.reduce((max, row) => (row.maxVoltage > max ? row.maxVoltage : max), -Infinity)
-        : 1441.33);
+      ? summary.reduce((max, row) => (row.maxVoltage > max ? row.maxVoltage : max), -Infinity)
+      : 1441.33);
 
   const degradationYear30After = degradationData ? degradationData.year30_after : 1031.42;
 
@@ -235,7 +232,7 @@ export default function ReportDoc({ values = {}, calc = {}, files = {}, solarCal
     REPORT_NAME: (
       (() => {
         const node = getReportNodeById(values?.report?.id || values?.reportId);
-        return node?.reportTitle || values.reportName || values?.report?.name || "Design Basis Report";
+        return node?.reportTitle || values.reportName || values?.report?.name || "Design Basis Report – PV Electrical";
       })()
     ),
     YEARLY_VOC_TABLE: buildVocTable(values.yearlyVocSummary || []),
@@ -332,12 +329,12 @@ export default function ReportDoc({ values = {}, calc = {}, files = {}, solarCal
 
   return (
 
-    <div 
-      id="PV_DBR-report" 
+    <div
+      id="PV_DBR-report"
       contentEditable={isEditMode}
       suppressContentEditableWarning={true}
       onBlur={onHtmlChange ? (e) => onHtmlChange(e.currentTarget.innerHTML) : undefined}
-      dangerouslySetInnerHTML={{ __html: reportHtml }} 
+      dangerouslySetInnerHTML={{ __html: reportHtml }}
     />
 
   );

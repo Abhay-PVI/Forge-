@@ -12,6 +12,8 @@ function renderRevisionHistoryRows(values, reportName, issueDate, revision) {
   const rows = [];
   const tdStyle = `padding: 10px 12px; border-bottom: 1px solid #e2e8f0; color: #475569; line-height: 1.4; text-align: center; font-size: 9pt; word-break: break-word; overflow-wrap: break-word;`;
 
+  const defaultDocNo = values.documentNumber || values.documentNo || (values.projectCode ? `${values.projectCode}-STR-${revision || values.revision || "R0"}` : "—");
+
   // 1. Check if values has a structured list of revisions (array of objects)
   if (Array.isArray(values.revisions) && values.revisions.length > 0) {
     values.revisions.forEach((rev) => {
@@ -19,6 +21,7 @@ function renderRevisionHistoryRows(values, reportName, issueDate, revision) {
         <tr class="tr">
           <td class="td" style="${tdStyle}">${rev.revision ?? ""}</td>
           <td class="td" style="${tdStyle}">${rev.issueDate ?? ""}</td>
+          <td class="td" style="${tdStyle}">${rev.documentNumber ?? rev.documentNo ?? rev.docNo ?? defaultDocNo}</td>
           <td class="td" style="${tdStyle}">${rev.documentName ?? reportName}</td>
           <td class="td" style="${tdStyle}">${rev.description ?? ""}</td>
         </tr>
@@ -42,6 +45,7 @@ function renderRevisionHistoryRows(values, reportName, issueDate, revision) {
           <tr class="tr">
             <td class="td" style="${tdStyle}">${rev.num ?? idx}</td>
             <td class="td" style="${tdStyle}">${rev.date ?? issueDate}</td>
+            <td class="td" style="${tdStyle}">${defaultDocNo}</td>
             <td class="td" style="${tdStyle}">${reportName}</td>
             <td class="td" style="${tdStyle}">${rev.desc ?? ""}</td>
           </tr>
@@ -56,6 +60,7 @@ function renderRevisionHistoryRows(values, reportName, issueDate, revision) {
       <tr class="tr">
         <td class="td" style="${tdStyle}">${revision ?? "0"}</td>
         <td class="td" style="${tdStyle}">${issueDate}</td>
+        <td class="td" style="${tdStyle}">${defaultDocNo}</td>
         <td class="td" style="${tdStyle}">${reportName}</td>
         <td class="td" style="${tdStyle}">Initial Release</td>
       </tr>
@@ -66,18 +71,45 @@ function renderRevisionHistoryRows(values, reportName, issueDate, revision) {
 }
 
 export function buildReportMeta(values = {}, report = {}) {
-  const reportTitle =
+  let rawReportTitle =
     values.reportTitle ||
     values.reportName ||
     report?.name ||
-    "";
+    "Design Basis Report – PV Electrical";
+
+  if (rawReportTitle === "Design Basis Report" || rawReportTitle === "PV Design Basis Report") {
+    rawReportTitle = "Design Basis Report – PV Electrical";
+  }
+
+  const projectCode = values.projectCode ? `${values.projectCode}`.trim() : "";
+  let reportTitle = rawReportTitle;
+  if (projectCode && !rawReportTitle.toLowerCase().includes(projectCode.toLowerCase())) {
+    reportTitle = `${projectCode} ${rawReportTitle}`;
+  }
+
+  const acCapVal = (values.ac_capacity !== undefined && values.ac_capacity !== null && values.ac_capacity !== "")
+    ? `${values.ac_capacity}`.trim().replace(/\s*MW(ac)?$/i, "")
+    : "";
+
+  const acCapStr = acCapVal ? `${acCapVal}MWac ` : "";
+  const rawProjectName = values.projectName || values.plant_name || "";
+
+  let projectName = rawProjectName;
+  if (acCapStr && rawProjectName) {
+    if (!rawProjectName.toLowerCase().includes("mwac") && !rawProjectName.toLowerCase().includes("solar power plant")) {
+      projectName = `${acCapStr}Solar Power Plant – ${rawProjectName}`;
+    } else if (!rawProjectName.toLowerCase().includes("mwac")) {
+      projectName = `${acCapStr}${rawProjectName}`;
+    }
+  } else if (acCapStr && !rawProjectName) {
+    projectName = `${acCapStr}Solar Power Plant`;
+  }
 
   const revision = values.revision || "R0";
   const issueDate = values.issueDate || formatIssueDate();
 
   return {
-    PROJECT_NAME:
-      values.projectName || values.plant_name || "",
+    PROJECT_NAME: projectName,
 
     REPORT_TITLE: reportTitle,
 
@@ -117,8 +149,8 @@ export function buildReportMeta(values = {}, report = {}) {
 
     submittedToAddress:
       (values.submittedToAddress ||
-      values.clientAddress ||
-      "2034 Hamilton Place BLVD. Suite 100 Chattanooga, TN 37421").replace(/\r?\n/g, '<br>'),
+        values.clientAddress ||
+        "2034 Hamilton Place BLVD. Suite 100 Chattanooga, TN 37421").replace(/\r?\n/g, '<br>'),
 
     REVISION_HISTORY_ROWS:
       renderRevisionHistoryRows(values, reportTitle, issueDate, revision),

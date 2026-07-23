@@ -58,7 +58,7 @@
 
     .lot-row {
       display: flex;
-      align-items: flex-end;
+      align-items: center;
       width: 100%;
       color: #334155;
       font-size: 0.95rem;
@@ -78,7 +78,9 @@
     .dot-leader {
       flex-grow: 1;
       border-bottom: 1px dotted #94a3b8;
-      margin-bottom: 0;
+      height: 0;
+      align-self: center;
+      margin: 0 0.25rem;
     }
 
     .page-number {
@@ -92,13 +94,21 @@
     /* Support classes for dynamically rendered simple lists */
     .toc-row {
       display: flex;
-      align-items: flex-end;
+      align-items: center;
       width: 100%;
       color: #334155;
       font-size: 0.95rem;
       margin: 0; /* remove any margin, top and bottom */
       padding: 0; /* remove any padding, in case it exists elsewhere */
       line-height: 1.4;
+    }
+
+    .toc-dots {
+      flex: 1;
+      border-bottom: 1px dotted #94a3b8;
+      height: 0;
+      align-self: center;
+      margin: 0 0.25rem;
     }
 
     .toc-title {
