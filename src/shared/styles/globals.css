@@ -657,6 +657,21 @@ textarea.input { height: auto; min-height: 78px; padding: 9px 11px; line-height:
   white-space: nowrap !important;
 }
 
+a.toc-link,
+a.toc-link:link,
+a.toc-link:visited,
+a.toc-link:hover,
+a.toc-link:active,
+a.toc-link *,
+.toc-row a,
+.toc-row a * {
+  color: inherit !important;
+  text-decoration: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+  cursor: pointer !important;
+}
+
 .toc-dots {
   flex: 1 !important;
   border-bottom: 1px dotted #94a3b8 !important;

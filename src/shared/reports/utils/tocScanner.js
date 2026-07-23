@@ -1,11 +1,32 @@
 // Generic scanner + numbering + renderer — works for any report, no report-specific logic.
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Helpers: slugify a heading title into a safe id
+// ─────────────────────────────────────────────────────────────────────────────
+function slugify(text) {
+  return text
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, "")
+    .trim()
+    .replace(/[\s_]+/g, "-")
+    .replace(/-+/g, "-");
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// renderSimpleList — renders TOC rows as clickable anchor links
+// ─────────────────────────────────────────────────────────────────────────────
 export function renderSimpleList(entries, { key = "displayTitle" } = {}) {
   return entries
     .map((e) => {
       const pageNum = e.page != null ? e.page : "";
+      const title = e[key] || e.title;
+      const anchorId = e.anchorId || "";
+      const linkOpen = anchorId
+        ? `<a href="#${anchorId}" class="toc-link" style="color: inherit !important; text-decoration: none !important; border: none !important; outline: none !important;" onclick="event.preventDefault(); const t=document.getElementById('${anchorId}'); if(t){t.scrollIntoView({behavior:'smooth',block:'start'});}; return false;">`
+        : "<span>";
+      const linkClose = anchorId ? `</a>` : `</span>`;
       return `<div class="toc-row toc-level-${e.level || 1}">
-        <span class="toc-title">${e[key] || e.title}</span>
+        ${linkOpen}<span class="toc-title" style="color: inherit !important; text-decoration: none !important;">${title}</span>${linkClose}
         <span class="toc-dots"></span>
         <span class="toc-page-num">${pageNum}</span>
       </div>`;
@@ -18,10 +39,16 @@ export function renderSectionIfNotEmpty(title, entries, { key = "displayTitle" }
   return `<h2 class="heading">${title}</h2><div class="toc-section">${renderSimpleList(entries, { key })}</div>`;
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// scanAndNumberReportContent — parse HTML string, number headings, stamp ids
+// ─────────────────────────────────────────────────────────────────────────────
 export function scanAndNumberReportContent(bodyHtml) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(bodyHtml, "text/html");
 
+  const usedIds = new Set();
+
+  // 1. Headings
   const headingEls = Array.from(doc.querySelectorAll(".toc-heading"));
   const rawHeadings = headingEls.map((el) => ({
     title: el.textContent.trim(),
@@ -32,18 +59,151 @@ export function scanAndNumberReportContent(bodyHtml) {
 
   headingEls.forEach((el, i) => {
     el.textContent = numberedHeadings[i].displayTitle;
+    const raw = slugify(numberedHeadings[i].displayTitle);
+    let id = raw;
+    let counter = 1;
+    while (usedIds.has(id)) { id = `${raw}-${counter++}`; }
+    usedIds.add(id);
+    el.id = id;
+    numberedHeadings[i].anchorId = id;
   });
 
-  const numberedBodyHtml = doc.body.innerHTML;
+  // 2. Tables
+  const tableEls = Array.from(doc.querySelectorAll(".toc-table-caption"));
+  const tables = tableEls.map((el, i) => {
+    const rawText = el.textContent.trim().replace(/^Table\s+\d+[\s:.-]*/i, "");
+    const title = rawText ? `Table ${i + 1}: ${rawText}` : el.textContent.trim();
+    el.textContent = title;
+    
+    const rawId = slugify(title || `table-${i + 1}`);
+    let id = rawId;
+    let counter = 1;
+    while (usedIds.has(id)) { id = `${rawId}-${counter++}`; }
+    usedIds.add(id);
+    el.id = id;
 
-  const tables = Array.from(doc.querySelectorAll(".toc-table-caption")).map((el) => ({ title: el.textContent.trim() }));
-  const figures = Array.from(doc.querySelectorAll(".toc-figure-caption")).map((el) => ({ title: el.textContent.trim() }));
+    return { title, anchorId: id };
+  });
+
+  // 3. Figures
+  const figureEls = Array.from(doc.querySelectorAll(".toc-figure-caption"));
+  const figures = figureEls.map((el, i) => {
+    const rawText = el.textContent.trim().replace(/^Figure\s+\d+[\s:.-]*/i, "");
+    const title = rawText ? `Figure ${i + 1}: ${rawText}` : el.textContent.trim();
+    el.textContent = title;
+
+    const rawId = slugify(title || `figure-${i + 1}`);
+    let id = rawId;
+    let counter = 1;
+    while (usedIds.has(id)) { id = `${rawId}-${counter++}`; }
+    usedIds.add(id);
+    el.id = id;
+
+    return { title, anchorId: id };
+  });
+
   const abbreviations = Array.from(doc.querySelectorAll(".toc-abbreviation")).map((el) => ({
     term: el.getAttribute("data-term") || "",
     meaning: el.textContent.trim(),
   }));
 
+  const numberedBodyHtml = doc.body.innerHTML;
+
   return { numberedBodyHtml, headings: numberedHeadings, tables, figures, abbreviations };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// resyncReportDom — re-scans a live DOM element, renumbers headings/tables/
+// figures that are still present, and rewrites the TOC / list pages in-place.
+// Call this just before saving custom_html so the snapshot is consistent.
+// Returns the corrected innerHTML of the container element.
+// ─────────────────────────────────────────────────────────────────────────────
+export function resyncReportDom(containerEl) {
+  if (!containerEl) return null;
+
+  const usedIds = new Set();
+
+  // ── 1. Re-number headings that still exist in the body ───────────────────
+  const headingEls = Array.from(containerEl.querySelectorAll(".toc-heading"));
+  const rawHeadings = headingEls.map((el) => {
+    const text = el.textContent.trim();
+    const strippedTitle = text.replace(/^[\d.]+\s+/, "");
+    return {
+      title: strippedTitle,
+      level: Number(el.getAttribute("data-toc-level")) || 1,
+    };
+  });
+
+  const numberedHeadings = assignHeadingNumbers(rawHeadings);
+
+  headingEls.forEach((el, i) => {
+    el.textContent = numberedHeadings[i].displayTitle;
+    const raw = slugify(numberedHeadings[i].displayTitle);
+    let id = raw;
+    let counter = 1;
+    while (usedIds.has(id)) { id = `${raw}-${counter++}`; }
+    usedIds.add(id);
+    el.id = id;
+    numberedHeadings[i].anchorId = id;
+  });
+
+  // ── 2. Re-number table captions still in the body & assign anchor IDs ───
+  const tableCapEls = Array.from(containerEl.querySelectorAll(".toc-table-caption"));
+  const tables = tableCapEls.map((el, i) => {
+    const rawText = el.textContent.trim().replace(/^Table\s+\d+[\s:.-]*/i, "");
+    const title = `Table ${i + 1}: ${rawText}`;
+    el.textContent = title;
+
+    const rawId = slugify(title);
+    let id = rawId;
+    let counter = 1;
+    while (usedIds.has(id)) { id = `${rawId}-${counter++}`; }
+    usedIds.add(id);
+    el.id = id;
+
+    return { title, anchorId: id };
+  });
+
+  // ── 3. Re-number figure captions still in the body & assign anchor IDs ──
+  const figCapEls = Array.from(containerEl.querySelectorAll(".toc-figure-caption"));
+  const figures = figCapEls.map((el, i) => {
+    const rawText = el.textContent.trim().replace(/^Figure\s+\d+[\s:.-]*/i, "");
+    const title = `Figure ${i + 1}: ${rawText}`;
+    el.textContent = title;
+
+    const rawId = slugify(title);
+    let id = rawId;
+    let counter = 1;
+    while (usedIds.has(id)) { id = `${rawId}-${counter++}`; }
+    usedIds.add(id);
+    el.id = id;
+
+    return { title, anchorId: id };
+  });
+
+  // ── 4. Rewrite TOC page ───────────────────────────────────────────────────
+  const tocContent = containerEl.querySelector("#toc-content");
+  if (tocContent) {
+    tocContent.innerHTML = renderSimpleList(numberedHeadings);
+  }
+
+  // ── 5. Rewrite List of Tables page ───────────────────────────────────────
+  const lotContent = containerEl.querySelector("#lot-content");
+  if (lotContent) {
+    lotContent.innerHTML = tables.length > 0
+      ? `<h2 class="heading">List of Tables</h2><div class="toc-section">${renderSimpleList(tables.map(t => ({ ...t, displayTitle: t.title, level: 1 })), { key: "title" })}</div>`
+      : "";
+  }
+
+  // ── 6. Rewrite List of Figures page ──────────────────────────────────────
+  const lofContent = containerEl.querySelector("#lof-content");
+  if (lofContent) {
+    lofContent.innerHTML = figures.length > 0
+      ? `<h2 class="heading">List of Figures</h2><div class="toc-section">${renderSimpleList(figures.map(f => ({ ...f, displayTitle: f.title, level: 1 })), { key: "title" })}</div>`
+      : "";
+  }
+
+  return containerEl.innerHTML;
 }
 
 function assignHeadingNumbers(rawHeadings) {
