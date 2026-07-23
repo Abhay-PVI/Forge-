@@ -165,8 +165,8 @@ export default function ReportDoc({ values = {}, calc = {}, files = {}, solarCal
   const peakTableData = values?.peakTableData || {};
 
 
-  const voltImg = values["Results_of_26-year_voltage"] || "";
-  const currImg = values["Results_of_26-year_current"] || "";
+  const voltImg = values["Results_of_26-year_voltage"] || values["Results_of_26-year_Voltage"] || "";
+  const currImg = values["Results_of_26-year_current"] || values["Results_of_26-year_Current"] || "";
 
   const formatImgReplacement = (imgData) => {
     if (!imgData) return 'style="display: none;"';
@@ -177,8 +177,19 @@ export default function ReportDoc({ values = {}, calc = {}, files = {}, solarCal
     return `src="${base64}" style="max-width: 100%; height: auto; border: 1px solid #cbd5e1; border-radius: 6px; display: block; margin: 15px auto;"`;
   };
 
+  const formatPvFigure = (imgData, captionText) => {
+    if (!imgData) return "";
+    const base64 = imgData.startsWith('src="')
+      ? imgData.match(/src="([^"]+)"/)?.[1] || imgData
+      : imgData;
+    if (!base64 || base64.trim() === "" || base64 === 'style="display: none;"') return "";
+    return `<figure class="fig-wrap"><img src="${base64}" style="max-width: 100%; height: auto; border: 1px solid #cbd5e1; border-radius: 6px; display: block; margin: 15px auto;" /><div class="fig-caption toc-figure-caption">${captionText}</div></figure>`;
+  };
+
   const voltReplacement = formatImgReplacement(voltImg);
   const currReplacement = formatImgReplacement(currImg);
+  const voltBlock = formatPvFigure(voltImg, "Results of 26-years Historical SAM Simulation Voltage");
+  const currBlock = formatPvFigure(currImg, "Results of 26-years Historical SAM Simulation Current");
 
   const sealContent = values.SEAL_IMAGE
     ? `<img src="${values.SEAL_IMAGE}" alt="Professional Engineer Seal" class="seal-img" />`
@@ -246,6 +257,10 @@ export default function ReportDoc({ values = {}, calc = {}, files = {}, solarCal
     "Results_of_26-year_Voltage": voltReplacement,
     "Results_of_26-year_current": currReplacement,
     "Results_of_26-year_Current": currReplacement,
+    "Results_of_26-year_voltage_BLOCK": voltBlock,
+    "Results_of_26-year_Voltage_BLOCK": voltBlock,
+    "Results_of_26-year_current_BLOCK": currBlock,
+    "Results_of_26-year_Current_BLOCK": currBlock,
     SEAL_CONTENT: sealContent,
   };
 
