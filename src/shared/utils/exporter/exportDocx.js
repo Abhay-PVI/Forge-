@@ -403,7 +403,7 @@ function processNode(node, childrenList) {
     const tagName = node.tagName.toLowerCase();
     const style = node.getAttribute("style") || "";
     
-    if (/display\s*:\s*none/i.test(style) || node.getAttribute("data-display") === "none") {
+    if (/display\s*:\s*none/i.test(style) || node.getAttribute("data-display") === "none" || node.getAttribute("data-pdf-export-exclude") === "true" || node.getAttribute("data-docx-export-exclude") === "true") {
       return;
     }
     

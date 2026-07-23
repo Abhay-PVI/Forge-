@@ -65,6 +65,75 @@ function assignHeadingNumbers(rawHeadings) {
   });
 }
 
+if (typeof window !== "undefined") {
+  window.__addAbbreviationRow = function (btn) {
+    const page = btn.closest(".loa-page, #loa-content") || document;
+    const tbody = page.querySelector(".abbreviations-table tbody");
+    if (!tbody) return;
+    const tr = document.createElement("tr");
+    tr.className = "abbreviation-row";
+    tr.innerHTML = `
+      <td class="loa-term-cell" contenteditable="true">NEW</td>
+      <td class="loa-meaning-cell" contenteditable="true">Description</td>
+      <td class="loa-action-cell" data-pdf-export-exclude="true" style="width: 32px; text-align: center; vertical-align: middle;">
+        <button type="button" class="loa-del-btn" title="Remove row" onclick="this.closest('tr').remove()">&times;</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+    const termCell = tr.querySelector(".loa-term-cell");
+    if (termCell) termCell.focus();
+  };
+
+  window.__syncAndCleanAbbreviations = function (btn) {
+    const container = btn.closest('[id$="-report"]') || document.querySelector('[id$="-report"]') || document.body;
+    const table = (btn.closest(".loa-page, #loa-content") || document).querySelector(".abbreviations-table");
+    if (!table || !container) return;
+
+    // Collect body text (excluding TOC, LOA, and Cover pages)
+    const bodyPages = Array.from(container.querySelectorAll(".report-page, .page"))
+      .filter((p) => !p.classList.contains("loa-page") && !p.classList.contains("toc-page") && !p.classList.contains("cover-page"));
+
+    const bodyText = (bodyPages.length > 0 ? bodyPages : [container])
+      .map((el) => el.textContent || "")
+      .join(" ");
+
+    const rows = Array.from(table.querySelectorAll("tbody tr"));
+    const unusedItems = [];
+
+    rows.forEach((tr) => {
+      const termCell = tr.querySelector(".loa-term-cell") || tr.cells[0];
+      const meaningCell = tr.querySelector(".loa-meaning-cell") || tr.cells[1];
+      if (!termCell) return;
+      const term = termCell.textContent.trim();
+      const meaning = meaningCell ? meaningCell.textContent.trim() : "";
+      if (!term) return;
+
+      const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const regex = new RegExp(`\\b${escaped}\\b`, "i");
+      if (!regex.test(bodyText)) {
+        unusedItems.push({ term, meaning, tr });
+      }
+    });
+
+    if (unusedItems.length === 0) {
+      alert("Sync complete! All listed abbreviations are present in the report text.");
+      return;
+    }
+
+    const termListStr = unusedItems
+      .map((item) => `• ${item.term}: ${item.meaning}`)
+      .join("\n");
+
+    const confirmMessage = `The following ${unusedItems.length} abbreviation(s) were NOT found in the report text:\n\n${termListStr}\n\nDo you want to delete these unused abbreviation(s)?`;
+
+    const userApproved = window.confirm(confirmMessage);
+    if (userApproved) {
+      unusedItems.forEach((item) => item.tr.remove());
+      alert(`Deleted ${unusedItems.length} unused abbreviation(s).`);
+    }
+  };
+}
+
 export function renderAbbreviationsTable(entries) {
   if (!entries || entries.length === 0) return "";
 
@@ -81,18 +150,40 @@ export function renderAbbreviationsTable(entries) {
   );
 
   const rows = sorted
-    .map((e) => `<tr><td>${e.term}</td><td>${e.meaning}</td></tr>`)
+    .map(
+      (e) => `
+      <tr class="abbreviation-row">
+        <td class="loa-term-cell" contenteditable="true">${e.term}</td>
+        <td class="loa-meaning-cell" contenteditable="true">${e.meaning}</td>
+        <td class="loa-action-cell" data-pdf-export-exclude="true" style="width: 32px; text-align: center; vertical-align: middle;">
+          <button type="button" class="loa-del-btn" title="Remove row" onclick="this.closest('tr').remove()">&times;</button>
+        </td>
+      </tr>
+    `
+    )
     .join("\n");
 
   return `
     <h2 class="heading">List of Abbreviations</h2>
     <table class="abbreviations-table">
       <thead>
-        <tr><th>Abbreviation</th><th>Term/Phrase/Name</th></tr>
+        <tr>
+          <th style="width: 25%;">Abbreviation</th>
+          <th>Term/Phrase/Name</th>
+          <th class="loa-action-cell" data-pdf-export-exclude="true" style="width: 32px;"></th>
+        </tr>
       </thead>
       <tbody>
         ${rows}
       </tbody>
     </table>
+    <div class="loa-edit-controls" data-pdf-export-exclude="true">
+      <button type="button" class="loa-add-btn" onclick="window.__addAbbreviationRow && window.__addAbbreviationRow(this)">
+        + Add Abbreviation Row
+      </button>
+      <button type="button" class="loa-clean-btn" onclick="window.__syncAndCleanAbbreviations && window.__syncAndCleanAbbreviations(this)">
+        &#8635; Sync & Clean Unused
+      </button>
+    </div>
   `;
 }
